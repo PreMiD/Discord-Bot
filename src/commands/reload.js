@@ -1,4 +1,5 @@
 exports.run = (client, message, args) => {
+  message.delete()
   let command;
   if (client.commands.has(args[0])) {
     command = args[0];

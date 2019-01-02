@@ -1,5 +1,6 @@
 
 exports.run = async (client, message) => {
+  message.delete()
   message.channel.send('Pinging...')
   .then(msg => {
     msg.edit(`🏓 Pong! (took: ${msg.createdTimestamp - message.createdTimestamp}ms)`)
