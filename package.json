@@ -1,0 +1,12 @@
+{
+  "name": "premid-bot",
+  "version": "2.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/PreMiD/PreMiD-Bot",
+  "scripts": {
+    "start": "npm start --prefix src/.",
+    "dev": "npm run dev --prefix src/."
+  },
+  "author": "Timeraa",
+  "license": "MIT"
+}
