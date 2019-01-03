@@ -1,7 +1,9 @@
 const config = require('../config.json');
 
-module.exports = message => {
+module.exports = async message => {
   let client = message.client;
+  //* Run filter stuff
+  await filterMessage(message)
   //* Bot == STOP
   if (message.author.bot) return;
   //* Message starts with Prefix
@@ -20,5 +22,14 @@ module.exports = message => {
   if (cmd) {
     if (perms < cmd.conf.permLevel) return;
     cmd.run(client, message, params, perms);
+  }
+}
+
+async function filterMessage(message) {
+  //* Filter invite links
+  if (message.content.includes('discord.gg/' || 'discordapp.com/invite/') && message.client.elevation(message) < 1) {
+    await message.delete()
+    message.reply('**Invite links are not allowed on this server!**')
+    .then(msg => setTimeout(() => msg.delete(), 15*1000))
   }
 }
