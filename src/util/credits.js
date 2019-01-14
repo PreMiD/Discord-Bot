@@ -26,7 +26,6 @@ async function updateCredits() {
     modRole = await getRoleID("Moderator"),
     jrModRole = await getRoleID("Jr.Moderator"),
     conRole = await getRoleID("Contributor"),
-    creDesRole = await getRoleID("Creative Designer"),
     desRole = await getRoleID("Designer"),
     patRole = await getRoleID("Patron"),
     donRole = await getRoleID("Donator"),
@@ -50,7 +49,6 @@ async function updateCredits() {
         || m.roles.get(modRole)
         || m.roles.get(jrModRole)
         || m.roles.get(conRole)
-        || m.roles.get(creDesRole)
         || m.roles.get(desRole)
         || m.roles.get(patRole)
         || m.roles.get(donRole)
