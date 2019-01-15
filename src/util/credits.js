@@ -94,7 +94,7 @@ async function updateCredits() {
               result[1].position,
               allRoles.join(','),
               result[0].id
-            ]).then(console.log)
+            ])
           } else {
           query(
             'INSERT INTO credits (userID, name, avatarURL, type, color, patronColor, position, roles) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
@@ -107,7 +107,7 @@ async function updateCredits() {
               patronColor,
               result[1].calculatedPosition,
               allRoles.join(',')
-            ]).then(console.log)
+            ])
         }
       } else {
         if(dbRows.find(row => row.userID == result[0].id)) {
