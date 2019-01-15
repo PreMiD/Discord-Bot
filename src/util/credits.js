@@ -26,7 +26,6 @@ async function updateCredits() {
     modRole = await getRoleID("Moderator"),
     jrModRole = await getRoleID("Jr.Moderator"),
     conRole = await getRoleID("Contributor"),
-    creDesRole = await getRoleID("Creative Designer"),
     desRole = await getRoleID("Designer"),
     patRole = await getRoleID("Patron"),
     donRole = await getRoleID("Donator"),
@@ -50,7 +49,6 @@ async function updateCredits() {
         || m.roles.get(modRole)
         || m.roles.get(jrModRole)
         || m.roles.get(conRole)
-        || m.roles.get(creDesRole)
         || m.roles.get(desRole)
         || m.roles.get(patRole)
         || m.roles.get(donRole)
@@ -79,22 +77,27 @@ async function updateCredits() {
 
       //* If user has one of the roles above
       if(result[1]) {
+      	// get all the users roles
+      	allRoles = client.guilds.first().members.get(result[0].id)._roles.map(r => {
+    		return client.guilds.first().roles.get(r).name
+    	})
         //* If user exists in DB -> update ELSE create
         if(dbRows.find(row => row.userID == result[0].id)) {
           query(
-            'UPDATE credits SET name = ?, avatarURL = ?, type = ?, color = ?, patronColor = ?, position = ? WHERE userID = ?',
+            'UPDATE credits SET name = ?, avatarURL = ?, type = ?, color = ?, patronColor = ?, position = ?, roles = ? WHERE userID = ?',
             [
               utf8.encode(result[0].displayName), 
               result[0].user.avatarURL, 
               result[1].name, 
               result[1].hexColor, 
               patronColor, 
-              result[1].position, 
+              result[1].position,
+              allRoles.join(','),
               result[0].id
-            ])
+            ]).then(console.log)
           } else {
           query(
-            'INSERT INTO credits (userID, name, avatarURL, type, color, patronColor, position) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO credits (userID, name, avatarURL, type, color, patronColor, position, roles) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             [
               result[0].id,
               utf8.encode(result[0].displayName),
@@ -102,8 +105,9 @@ async function updateCredits() {
               result[1].name,
               result[1].hexColor,
               patronColor,
-              result[1].calculatedPosition
-            ])
+              result[1].calculatedPosition,
+              allRoles.join(',')
+            ]).then(console.log)
         }
       } else {
         if(dbRows.find(row => row.userID == result[0].id)) {
