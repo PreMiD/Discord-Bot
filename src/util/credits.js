@@ -58,9 +58,8 @@ async function updateCredits() {
     })
 
   for(i=0;i<dbData.rows.length;i++){
-  	console.log('See: '+dbData[i].userID);
-  	if(client.guilds.first().members.get(dbData.rows[i].userID) === undefined){
-  		console.log('Delete '+dbData.rows[i].userID);//query(`DELETE FROM credits WHERE userID = ?`, dbData.rows[row].userID)
+  	if(client.guilds.first().members.get(dbData.rows[i].userID) === undefined || dbData.rows[i].roles == 'NULL'){
+  		query(`DELETE FROM credits WHERE userID = ?`, dbData.rows[i].userID)
   	}
   }
 
@@ -99,7 +98,7 @@ async function updateCredits() {
               result[1].hexColor, 
               patronColor, 
               result[1].position,
-              allRoles
+              allRoles.join(','),
               result[0].id
             ])
           } else {
@@ -113,7 +112,7 @@ async function updateCredits() {
               result[1].hexColor,
               patronColor,
               result[1].calculatedPosition,
-              allRoles
+              allRoles.join(',')
             ])
         }
       } else {
