@@ -57,6 +57,13 @@ async function updateCredits() {
       ]
     })
 
+  for(i=0;i<dbData.rows.length;i++){
+  	console.log('See: '+dbData[i].userID);
+  	if(client.guilds.first().members.get(dbData.rows[i].userID) === undefined){
+  		console.log('Delete '+dbData.rows[i].userID);//query(`DELETE FROM credits WHERE userID = ?`, dbData.rows[row].userID)
+  	}
+  }
+
   var patronColor
   //* Wait until all promises resolved
   Promise.all(results).then(completed => {
@@ -84,7 +91,7 @@ async function updateCredits() {
         //* If user exists in DB -> update ELSE create
         if(dbRows.find(row => row.userID == result[0].id)) {
           query(
-            'UPDATE credits SET name = ?, avatarURL = ?, type = ?, color = ?, patronColor = ?, position = ?, roles = ? WHERE userID = ?',
+            "UPDATE credits SET name = ?, avatarURL = ?, type = ?, color = ?, patronColor = ?, position = ?, roles = ? WHERE userID = ?",
             [
               utf8.encode(result[0].displayName), 
               result[0].user.avatarURL, 
@@ -92,12 +99,12 @@ async function updateCredits() {
               result[1].hexColor, 
               patronColor, 
               result[1].position,
-              allRoles.join(','),
+              allRoles
               result[0].id
             ])
           } else {
           query(
-            'INSERT INTO credits (userID, name, avatarURL, type, color, patronColor, position, roles) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            "INSERT INTO credits (userID, name, avatarURL, type, color, patronColor, position, roles) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             [
               result[0].id,
               utf8.encode(result[0].displayName),
@@ -106,7 +113,7 @@ async function updateCredits() {
               result[1].hexColor,
               patronColor,
               result[1].calculatedPosition,
-              allRoles.join(',')
+              allRoles
             ])
         }
       } else {

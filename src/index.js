@@ -5,7 +5,7 @@ var utf8 = require('utf8')
 require('dotenv').load()
 
 var con = mysql.createConnection({
-  host: "localhost",
+  host: process.env.NODE_ENV == "dev" ? "premid.app" : "localhost",
   user: process.env.dbUser,
   password: process.env.dbPassword,
   database: 'premid'
