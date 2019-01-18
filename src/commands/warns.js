@@ -26,6 +26,7 @@ exports.run = async (client, message, params) => {
   } else {
     if(client.elevation(message) > 0) {
       var user = message.mentions.users.first()
+      if(!user) user = await message.guild.members.find(m => m.displayName == params.slice(0, params.length).join(" "))
       if(user) {
         var warns = (await query('SELECT * FROM warns WHERE user_id = ?', user.id)).rows
         if(warns == 0) {
@@ -42,7 +43,6 @@ exports.run = async (client, message, params) => {
           });
           
           await message.reply({embed: embed})
-          .then(msg => setTimeout(() => msg.delete(), 10*1000))
         }
       }
     } else {
