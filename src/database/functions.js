@@ -15,4 +15,4 @@ function query(...data) {
 }
 
 //* Export function
-module.exports.query = query
+module.exports.query = query 

@@ -57,6 +57,12 @@ async function updateCredits() {
       ]
     })
 
+  for(i=0;i<dbData.rows.length;i++){
+  	if(client.guilds.first().members.get(dbData.rows[i].userID) === undefined || dbData.rows[i].roles == 'NULL'){
+  		query(`DELETE FROM credits WHERE userID = ?`, dbData.rows[i].userID)
+  	}
+  }
+
   var patronColor
   //* Wait until all promises resolved
   Promise.all(results).then(completed => {
@@ -77,22 +83,27 @@ async function updateCredits() {
 
       //* If user has one of the roles above
       if(result[1]) {
+      	// get all the users roles
+      	allRoles = client.guilds.first().members.get(result[0].id)._roles.map(r => {
+    		return client.guilds.first().roles.get(r).name
+    	})
         //* If user exists in DB -> update ELSE create
         if(dbRows.find(row => row.userID == result[0].id)) {
           query(
-            'UPDATE credits SET name = ?, avatarURL = ?, type = ?, color = ?, patronColor = ?, position = ? WHERE userID = ?',
+            "UPDATE credits SET name = ?, avatarURL = ?, type = ?, color = ?, patronColor = ?, position = ?, roles = ? WHERE userID = ?",
             [
               utf8.encode(result[0].displayName), 
               result[0].user.avatarURL, 
               result[1].name, 
               result[1].hexColor, 
               patronColor, 
-              result[1].position, 
+              result[1].position,
+              allRoles.join(','),
               result[0].id
             ])
           } else {
           query(
-            'INSERT INTO credits (userID, name, avatarURL, type, color, patronColor, position) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            "INSERT INTO credits (userID, name, avatarURL, type, color, patronColor, position, roles) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             [
               result[0].id,
               utf8.encode(result[0].displayName),
@@ -100,7 +111,8 @@ async function updateCredits() {
               result[1].name,
               result[1].hexColor,
               patronColor,
-              result[1].calculatedPosition
+              result[1].calculatedPosition,
+              allRoles.join(',')
             ])
         }
       } else {

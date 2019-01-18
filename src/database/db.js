@@ -23,4 +23,4 @@ function connectDatabase() {
 }
 
 //* Export function
-module.exports = connectDatabase()
+module.exports = connectDatabase() 
