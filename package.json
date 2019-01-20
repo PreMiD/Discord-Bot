@@ -8,5 +8,9 @@
     "dev": "npm run dev --prefix src/."
   },
   "author": "Timeraa",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5"
+  }
 }
