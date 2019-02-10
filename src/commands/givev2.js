@@ -1,6 +1,6 @@
 exports.run = async (client, message) => {
   message.delete()
-  message.channel.send('@Timeraa#7947 GIVE ME V2 NOW')
+  message.channel.send('<@223238938716798978> GIVE ME V2 NOW')
 };
 
 exports.conf = {
