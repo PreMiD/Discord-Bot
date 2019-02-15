@@ -24,6 +24,17 @@ exports.run = async (client, message, params) => {
           message.reply("You don't have access to **NSFW** channels!")
           .then((msg) => setTimeout(() => msg.delete(), 5*1000));
         break;
+      case "gimmesatania":
+        var role = message.guild.roles.find(role => role.name.toLowerCase() == "❤ Satania ❤")
+        if(message.member.roles.has(role.id)) {
+          await message.member.removeRole(role.id)
+          message.reply("You can now no longer see this **demonic** channel :(!")
+          .then((msg) => setTimeout(() => msg.delete(), 10*1000))
+        }
+        else
+          message.reply("You don't have access to this **demonic** channel!")
+          .then((msg) => setTimeout(() => msg.delete(), 5*1000));
+        break;
         default:
         message.reply("You can unassign these roles: **Updates**, **NSFW**")
         .then((msg) => setTimeout(() => msg.delete(), 10*1000))
