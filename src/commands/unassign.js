@@ -4,8 +4,8 @@ exports.run = async (client, message, params) => {
   if(params.length == 1) {
     switch(params[0].toLowerCase()) {
       case "updates":
-        var role = message.guild.roles.find(role => role.name == "Updates")
-        if(message.member.roles.get(role.id)) {
+        var role = message.guild.roles.find(role => role.name.toLowerCase() == "updates")
+        if(message.member.roles.has(role.id)) {
           await message.member.removeRole(role.id)
           message.reply("You no longer receive the latest updates!")
           .then((msg) => setTimeout(() => msg.delete(), 10*1000));
@@ -14,8 +14,8 @@ exports.run = async (client, message, params) => {
           .then((msg) => setTimeout(() => msg.delete(), 5*1000));
         break;
       case "nsfw":
-        var role = message.guild.roles.find(role => role.name == "NSFW")
-        if(message.member.roles.get(role.id)) {
+        var role = message.guild.roles.find(role => role.name.toLowerCase() == "nsfw")
+        if(message.member.roles.has(role.id)) {
           await message.member.removeRole(role.id)
           message.reply("You can now no longer see **NSFW** channels!")
           .then((msg) => setTimeout(() => msg.delete(), 10*1000))

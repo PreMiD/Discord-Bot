@@ -5,7 +5,7 @@ exports.run = async (client, message, params) => {
     switch(params[0].toLowerCase()) {
       case "updates":
         var role = message.guild.roles.find(role => role.name == "Updates")
-        if(message.member.roles.get(role.id))
+        if(message.member.roles.has(role.id))
           message.reply("You already receive the latest updates!")
           .then((msg) => setTimeout(() => msg.delete(), 5*1000)); 
         else {
@@ -16,7 +16,7 @@ exports.run = async (client, message, params) => {
         break;
       case "nsfw":
         var role = message.guild.roles.find(role => role.name == "NSFW")
-        if(message.member.roles.get(role.id))
+        if(message.member.roles.has(role.id))
           message.reply("You already access to **NSFW** channels!")
           .then((msg) => setTimeout(() => msg.delete(), 5*1000)); 
         else {
