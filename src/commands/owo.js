@@ -19,11 +19,11 @@ exports.run = async (client, message, params) => {
 						`${message.guild.members.get(user.id).displayName} said OwO/UwU **${userOwORank.rows[0]
 							.count}** times.`
 					)
-					.then((m) => setTimeout(() => m.delete()), 10 * 1000);
+					.then((m) => setTimeout(() => m.delete(), 10 * 1000));
 			} else {
 				message
 					.reply('Sorry but the provided user did not use these fancy words.')
-					.then((m) => setTimeout(() => m.delete()), 10 * 1000);
+					.then((m) => setTimeout(() => m.delete(), 10 * 1000));
 			}
 		}
 	} else {
