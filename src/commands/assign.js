@@ -25,6 +25,17 @@ exports.run = async (client, message, params) => {
           .then((msg) => setTimeout(() => msg.delete(), 10*1000))
         }
         break;
+      case "gabriel":
+        var role = message.guild.roles.find(role => role.name == "❤ Gabriel ❤")
+        if(message.member.roles.get(role.id))
+          message.reply("You already access to this **holy** channel!")
+          .then((msg) => setTimeout(() => msg.delete(), 5*1000)); 
+        else {
+          await message.member.addRole(role.id)
+          message.reply("You can now see this **holy** channel!")
+          .then((msg) => setTimeout(() => msg.delete(), 10*1000))
+        }
+        break;
       case "gimmesatania":
         var role = message.guild.roles.find(role => role.name == "❤ Satania ❤")
         if(message.member.roles.get(role.id))
