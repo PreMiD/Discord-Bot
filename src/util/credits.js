@@ -22,7 +22,6 @@ async function updateCredits() {
   if(!updaterRunning) {
     //* Retrieve all role IDs
     devRole = await getRoleID("Developer"),
-    admRole = await getRoleID("Admin"),
     modRole = await getRoleID("Moderator"),
     jrModRole = await getRoleID("Jr.Moderator"),
     conRole = await getRoleID("Contributor"),
