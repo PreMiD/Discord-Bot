@@ -23,7 +23,13 @@ module.exports = async (message) => {
 	}
 	if (cmd) {
 		if (perms < cmd.conf.permLevel) return;
-		cmd.run(client, message, params, perms);
+		if (cmd.conf.botChannelOnly && message.channel.id != config.botChannel && perms < 4) {
+			message
+				.reply(`This command can only be used in <#${config.botChannel}>`)
+				.then((msg) => setTimeout(() => msg.delete(), 15 * 1000));
+		} else {
+			cmd.run(client, message, params, perms);
+		}
 	}
 };
 

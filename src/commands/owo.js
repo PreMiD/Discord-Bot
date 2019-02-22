@@ -54,7 +54,6 @@ exports.run = async (client, message, params) => {
 
 exports.conf = {
 	enabled: true,
-	guildOnly: false,
 	aliases: [ 'uwu' ],
 	permLevel: 0
 };
@@ -62,5 +61,6 @@ exports.conf = {
 exports.help = {
 	name: 'owo',
 	description: 'Displays your IQ',
-	usage: 'owo'
+	usage: 'owo',
+	botChannelOnly: true
 };
