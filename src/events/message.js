@@ -4,8 +4,8 @@ module.exports = async (message) => {
 	let client = message.client;
 	//* Run filter stuff
 	await filterMessage(message);
-
-	if (!message.content.startsWith(config.prefix)) require('../util/owo_counter')(message);
+	
+	if (!message.content.startsWith(config.prefix) && (message.channel.type === 'text' && message.channel.name === 'memey')) require('../util/owo_counter')(message);
 	//* Bot == STOP
 	if (message.author.bot) return;
 	//* Message starts with Prefix
