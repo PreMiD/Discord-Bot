@@ -12,5 +12,5 @@ module.exports = async (message) => {
 		.setFooter('MESSAGE DELETED')
 		.setTimestamp();
 
-	message.guild.channels.get(logs).send(embed);
+	if (message.guild.channels.has(logs)) message.guild.channels.get(logs).send(embed);
 };

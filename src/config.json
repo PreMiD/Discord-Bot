@@ -1,5 +1,8 @@
 {
 	"prefix": "p!",
 	"logs": "548596032355958784",
-	"botChannel": "527692294942490635"
+	"botChannel": "527692294942490635",
+	"supportCategory": "566848569374408705",
+	"supportChannel": "566738846650335232",
+	"ticketChannel": "566738864606281743"
 }

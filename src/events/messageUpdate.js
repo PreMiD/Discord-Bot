@@ -13,5 +13,5 @@ module.exports = async (oldMessage, newMessage) => {
 		.setFooter('MESSAGE EDITED')
 		.setTimestamp();
 
-	oldMessage.guild.channels.get(logs).send(embed);
+	if (oldMessage.guild.channels.has(logs)) oldMessage.guild.channels.get(logs).send(embed);
 };

@@ -5,6 +5,8 @@ module.exports = async (message) => {
 	//* Run filter stuff
 	await filterMessage(message);
 
+	require('../util/supportHandler')(message);
+
 	if (!message.content.startsWith(config.prefix)) require('../util/owo_counter')(message);
 	//* Bot == STOP
 	if (message.author.bot) return;
