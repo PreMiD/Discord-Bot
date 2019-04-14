@@ -1,49 +1,38 @@
+var assignRoles = require('../assignRoles.json');
 
 exports.run = async (client, message, params) => {
-  await message.delete()
-  if(params.length == 1) {
-    switch(params[0].toLowerCase()) {
-      case "updates":
-        var role = message.guild.roles.find(role => role.name == "Updates")
-        if(message.member.roles.get(role.id)) {
-          await message.member.removeRole(role.id)
-          message.reply("You no longer receive the latest updates!")
-          .then((msg) => setTimeout(() => msg.delete(), 10*1000));
-        } else
-          message.reply("You don't receive the latest updates!")
-          .then((msg) => setTimeout(() => msg.delete(), 5*1000));
-        break;
-      case "nsfw":
-        var role = message.guild.roles.find(role => role.name == "NSFW")
-        if(message.member.roles.get(role.id)) {
-          await message.member.removeRole(role.id)
-          message.reply("You can now no longer see **NSFW** channels!")
-          .then((msg) => setTimeout(() => msg.delete(), 10*1000))
-        }
-        else
-          message.reply("You don't have access to **NSFW** channels!")
-          .then((msg) => setTimeout(() => msg.delete(), 5*1000));
-        break;
-        default:
-        message.reply("You can unassign these roles: **Updates**, **NSFW**")
-        .then((msg) => setTimeout(() => msg.delete(), 10*1000))
-        break;
-      }
-    } else {
-      message.reply("You can unassign these roles: **Updates**, **NSFW**")
-      .then((msg) => setTimeout(() => msg.delete(), 10*1000))
-    }
+	if (params.length < 1 || !assignRoles.find((r) => r.name.toLowerCase() == params.join(' ').toLowerCase())) {
+		message.delete();
+		message
+			.reply(
+				`These roles are unassignable: ${assignRoles
+					.map((r) => {
+						return `**${r.name}**`;
+					})
+					.join(', ')}`
+			)
+			.then((msg) => setTimeout(() => msg.delete(), 15 * 1000));
+		return;
+	}
+
+	var assignRole = message.guild.roles.find((r) => r.name.toLowerCase() == params.join(' ').toLowerCase());
+	if (!message.member.roles.has(assignRole.id)) {
+		message.react('❌').then(() => setTimeout(() => message.delete(), 15 * 1000));
+		message.reply("You don't have this role.").then((msg) => setTimeout(() => msg.delete(), 15 * 1000));
+	} else {
+		message.react('✅').then(() => setTimeout(() => message.delete(), 15 * 1000));
+		message.member.removeRole(assignRole);
+	}
 };
 
 exports.conf = {
-  enabled: true,
-  guildOnly: false,
-  aliases: [],
-  permLevel: 0
+	enabled: true,
+	aliases: [],
+	permLevel: 0
 };
 
 exports.help = {
-  name: 'unassign',
-  description: 'Remove a role from yourself.',
-  usage: 'unassign <role>'
+	name: 'unassign',
+	description: 'Unassign specific roles.',
+	usage: 'unassign <role>'
 };

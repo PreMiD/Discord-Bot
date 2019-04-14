@@ -13,9 +13,11 @@
     "discord.js": "^11.4.2",
     "dotenv": "^6.2.0",
     "form-data": "^2.3.3",
+    "get-urls": "^9.0.0",
     "mysql": "^2.16.0",
     "node-fetch": "^2.3.0",
     "request": "^2.88.0",
+    "request-promise-native": "^1.0.5",
     "sqlstring": "^2.3.1",
     "utf8": "^3.0.0"
   },
