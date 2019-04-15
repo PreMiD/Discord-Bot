@@ -132,7 +132,7 @@ module.exports = async (message) => {
 	}
 
 	var ticketID = (await query('SELECT MAX(id) as count FROM tickets')).rows[0].count;
-	ticketID = ticketID === null ? 1 : +1;
+	ticketID = ticketID === null ? 1 : ticketID + 1;
 
 	var urls = getUrls(message.content);
 	var attachments = message.attachments.map((at) => at.url).concat(Array.from(urls));
