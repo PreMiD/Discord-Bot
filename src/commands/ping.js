@@ -1,10 +1,10 @@
 exports.run = async (client, message) => {
-	message.delete();
 	message.channel.send('Pinging...').then((msg) => {
 		msg
-			.edit(`🏓 Pong! (took: ${msg.createdTimestamp - message.createdTimestamp}ms)`)
+			.edit(`🏓 **Pong!** (took: \`\`${msg.createdTimestamp - message.createdTimestamp}ms\`\`)`)
 			.then((msg) => setTimeout(() => msg.delete(), 5 * 1000));
 	});
+	message.delete();
 };
 
 exports.conf = {
