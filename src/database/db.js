@@ -11,7 +11,8 @@ function connectDatabase() {
 			host: process.env.NODE_ENV == 'dev' ? 'premid.app' : 'localhost',
 			user: process.env.dbUser,
 			password: process.env.dbPassword,
-			database: 'premid'
+			database: 'premid',
+			charset: 'utf8mb4'
 		});
 
 		//* When connected give debug
