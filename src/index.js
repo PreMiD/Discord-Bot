@@ -21,26 +21,6 @@ fs.readdir('./commands/', (err, files) => {
 	});
 });
 
-client.reload = (command) => {
-	return new Promise((resolve, reject) => {
-		try {
-			delete require.cache[require.resolve(`./commands/${command}`)];
-			let cmd = require(`./commands/${command}`);
-			client.commands.delete(command);
-			client.aliases.forEach((cmd, alias) => {
-				if (cmd === command) client.aliases.delete(alias);
-			});
-			client.commands.set(command, cmd);
-			cmd.conf.aliases.forEach((alias) => {
-				client.aliases.set(alias, cmd.help.name);
-			});
-			resolve();
-		} catch (e) {
-			reject(e);
-		}
-	});
-};
-
 client.elevation = (message) => {
 	/* This function should resolve to an ELEVATION level which
      is then sent to the command handler for verification*/
