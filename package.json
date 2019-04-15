@@ -1,16 +1,10 @@
 {
-  "name": "premid-bot",
-  "version": "2.0.0",
-  "main": "index.js",
-  "repository": "https://github.com/PreMiD/Discord-Bot",
-  "scripts": {
-    "start": "npm start --prefix src/.",
-    "dev": "npm run dev --prefix src/."
-  },
-  "author": "Timeraa",
-  "license": "MIT",
-  "dependencies": {
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.5"
-  }
+	"name": "premid-bot",
+	"version": "2.1.0",
+	"author": "Timeraa",
+	"repository": "https://github.com/PreMiD/Discord-Bot",
+	"scripts": {
+		"start": "npm start --prefix src/.",
+		"dev": "npm run dev --prefix src/."
+	}
 }
