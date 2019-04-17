@@ -1,9 +1,18 @@
+var Discord = require('discord.js');
+
 exports.run = async (client, message) => {
-	message.channel.send('Pinging...').then((msg) => {
-		msg
-			.edit(`🏓 **Pong!** (took: \`\`${msg.createdTimestamp - message.createdTimestamp}ms\`\`)`)
-			.then((msg) => setTimeout(() => msg.delete(), 5 * 1000));
-	});
+	console.log(client.pings);
+	var embed = new Discord.RichEmbed().setTitle('Ping').setDescription('Pinging...'),
+		msg = await message.channel.send(embed),
+		ping = msg.createdTimestamp - message.createdTimestamp;
+
+	if (ping < 250) embed.setColor('#00ff00');
+	if (ping > 250 && ping < 500) embed.setColor('#ffff00');
+	if (ping > 500) embed.setColor('#ff0000');
+
+	embed.setDescription(`**Discord** (\`\`${ping}ms\`\`)\n**Discord API** (\`\`${client.ping}ms\`\`)`);
+
+	msg.edit(embed).then((msg) => setTimeout(() => msg.delete(), 5 * 1000));
 	message.delete();
 };
 
