@@ -1,7 +1,6 @@
 var Discord = require('discord.js');
 
 exports.run = async (client, message) => {
-	console.log(client.pings);
 	var embed = new Discord.RichEmbed().setTitle('Ping').setDescription('Pinging...'),
 		msg = await message.channel.send(embed),
 		ping = msg.createdTimestamp - message.createdTimestamp;
