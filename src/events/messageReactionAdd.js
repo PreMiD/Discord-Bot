@@ -1,8 +1,10 @@
 var { query } = require('../database/functions'),
 	{ supportCategory } = require('../config.json'),
-	Discord = require('discord.js');
+	Discord = require('discord.js'),
+	{ starAdd } = require('../util/starboard');
 
 module.exports = async (reaction, user) => {
+	starAdd(reaction)
 	if (user.bot) return;
 
 	var ticket = (await query('SELECT * FROM tickets WHERE messageId = ?', reaction.message.id)).rows;

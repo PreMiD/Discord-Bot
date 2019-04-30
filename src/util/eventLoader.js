@@ -1,4 +1,5 @@
 const reqEvent = (event) => require(`../events/${event}`);
+const { starRemove } = require('../util/starboard');
 
 module.exports = (client) => {
 	client.on('ready', () => reqEvent('ready')(client));
@@ -8,4 +9,5 @@ module.exports = (client) => {
 	client.on('guildMemberAdd', reqEvent('guildMemberAdd'));
 	client.on('presenceUpdate', reqEvent('presenceUpdate'));
 	client.on('messageReactionAdd', reqEvent('messageReactionAdd'));
+	client.on('messageReactionRemove', r => starAdd(r));
 };

@@ -1,7 +1,9 @@
 var { logs } = require('../config.json'),
-	Discord = require('discord.js');
+	Discord = require('discord.js'),
+	{ starRemove } = require('../util/starboard')
 
 module.exports = async (message) => {
+	starRemove(message)
 	if (message.author.bot) return;
 
 	var embed = new Discord.RichEmbed()
