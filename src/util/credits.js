@@ -26,7 +26,7 @@ async function updateCredits() {
 		(preRole = await getRoleID('PreMiD')),
 			(devRole = await getRoleID('Developer')),
 			(modRole = await getRoleID('Moderator')),
-			(jrModRole = await getRoleID('Jr.Moderator')),
+			(jrModRole = await getRoleID('Jr. Moderator')),
 			(tsuRole = await getRoleID('Ticket Supporter')),
 			(conRole = await getRoleID('Contributor')),
 			(desRole = await getRoleID('Designer')),
@@ -91,9 +91,10 @@ async function updateCredits() {
 				//* If user exists in DB -> update ELSE create
 				if (dbRows.find((row) => row.userID == result[0].id)) {
 					query(
-						'UPDATE credits SET name = ?, avatarURL = ?, type = ?, color = ?, patronColor = ?, position = ?, roles = ? WHERE userID = ?',
+						'UPDATE credits SET name = ?, tag = ?, avatarURL = ?, type = ?, color = ?, patronColor = ?, position = ?, roles = ? WHERE userID = ?',
 						[
 							utf8.encode(result[0].displayName),
+							result[0].user.discriminator,
 							result[0].user.avatarURL,
 							result[1].name,
 							result[1].hexColor,
@@ -105,10 +106,11 @@ async function updateCredits() {
 					);
 				} else {
 					query(
-						'INSERT INTO credits (userID, name, avatarURL, type, color, patronColor, position, roles) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+						'INSERT INTO credits (userID, name, tag, avatarURL, type, color, patronColor, position, roles) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
 						[
 							result[0].id,
 							utf8.encode(result[0].displayName),
+							result[0].user.discriminator,
 							result[0].user.avatarURL,
 							result[1].name,
 							result[1].hexColor,
