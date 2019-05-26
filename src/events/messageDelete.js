@@ -28,5 +28,5 @@ module.exports = async (message) => {
 		.setFooter(`${message.member.displayName}'s message was deleted by ${user}`, 'https://raw.githubusercontent.com/PreMiD/Discord-Bot/master/.discord/red_circle.png')
 		.setTimestamp();
 
-	if (message.guild.channels.has('515995590199345185')) message.guild.channels.get('515995590199345185').send(embed);
+	if (message.guild.channels.has(logs)) message.guild.channels.get(logs).send(embed);
 };
