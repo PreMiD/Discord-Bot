@@ -6,5 +6,13 @@
 	"scripts": {
 		"start": "npm start --prefix src/.",
 		"dev": "npm run dev --prefix src/."
+	},
+	"dependencies": {
+		"discord.js": "^11.5.0",
+		"dotenv": "^8.0.0",
+		"get-urls": "^9.1.0",
+		"mysql": "^2.17.1",
+		"request": "^2.88.0",
+		"request-promise-native": "^1.0.7"
 	}
 }
