@@ -9,8 +9,8 @@ module.exports = async (oldMessage, newMessage) => {
 		.addField('Channel', `<#${oldMessage.channel.id}>`)
 		.addField('Old Message', oldMessage.content, true)
 		.addField('New Message', newMessage.content, true)
-		.setColor('#fc3c3c')
-		.setFooter('MESSAGE EDITED')
+		.setColor('#F4DD1A')
+		.setFooter(`${oldMessage.member.displayName} edited message`, 'https://raw.githubusercontent.com/PreMiD/Discord-Bot/master/.discord/yellow_circle.png')
 		.setTimestamp();
 
 	if (oldMessage.guild.channels.has(logs)) oldMessage.guild.channels.get(logs).send(embed);
