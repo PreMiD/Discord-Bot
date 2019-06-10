@@ -1,4 +1,5 @@
 const config = require('../config.json');
+const filterMessages = require('../messageFiltered.json');
 
 module.exports = async (message) => {
 	let client = message.client;
@@ -36,11 +37,14 @@ module.exports = async (message) => {
 };
 
 async function filterMessage(message) {
-	//* Filter invite links
-	if (message.content.includes('discord.gg/' || 'discordapp.com/invite/') && message.client.elevation(message) < 1) {
-		await message.delete();
-		message
-			.reply('**Invite links are not allowed on this server!**')
-			.then((msg) => setTimeout(() => msg.delete(), 15 * 1000));
-	}
+	//* Messages
+	var filtered = filterMessages.find((m) => message.content.includes(m.message));
+	if(!filtered || message.member.hasPermission("BAN_MEMBERS")) return; //message allowed or is mod/admin
+
+	if(filtered.ban) message.guild.ban(message.author).then(console.log).catch(console.error);
+
+	await message.delete();
+	message
+		.reply(filtered.botMessage)
+		.then((msg) => setTimeout(() => msg.delete(), 15 * 1000));
 }
