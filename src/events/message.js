@@ -41,7 +41,19 @@ async function filterMessage(message) {
 	var filtered = filterMessages.find((m) => message.content.includes(m.message));
 	if(!filtered || message.member.hasPermission("BAN_MEMBERS")) return; //message allowed or is mod/admin
 
-	if(filtered.ban) message.guild.ban(message.author).then(console.log).catch(console.error);
+	if(filtered.mute){
+		//I should check if the user already has this role but how does he talking muted?
+		 message.member.addRole('521413330481446933');
+
+		var embed = new Discord.RichEmbed()
+			.setAuthor(`${message.member.displayName}`, message.author.avatarURL)
+			.addField('Channel', `<#${message.channel.id}>`)
+			.addField('Message', message.content)
+			.setColor('#fc3c3c')
+			.setFooter('USER MUTED - <@&514546359865442304> or <@&526734093560315925> please check!')
+			.setTimestamp();
+			if (message.guild.channels.has(config.logs)) message.guild.channels.get(config.logs).send(embed);
+	}
 
 	await message.delete();
 	message

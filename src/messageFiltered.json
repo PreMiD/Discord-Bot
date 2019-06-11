@@ -2,21 +2,21 @@
     {
        "message": "My naked photos",
        "botMessage": "**Selfbot banned!**",
-       "ban": true
+       "mute": true
     },
     {
         "message": "privatepage.vip",
         "botMessage": "**Selfbot banned!**",
-        "ban": true
+        "mute": true
      },
     {
         "message": "discord.gg/",
         "botMessage": "**Invite links are not allowed on this server!**",
-        "ban": false
+        "mute": false
     },
     {
         "message": "discordapp.com/invite/",
         "botMessage": "**Invite links are not allowed on this server!**",
-        "ban": false
+        "mute": false
     }
 ]
