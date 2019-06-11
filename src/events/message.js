@@ -1,3 +1,4 @@
+var Discord = require('discord.js');
 const config = require('../config.json');
 const filterMessages = require('../messageFiltered.json');
 
@@ -38,7 +39,7 @@ module.exports = async (message) => {
 
 async function filterMessage(message) {
 	//* Messages
-	var filtered = filterMessages.find((m) => message.content.includes(m.message));
+	var filtered = filterMessages.find((m) => message.content.toLowerCase().includes(m.message.toLowerCase()));
 	if(!filtered || message.member.hasPermission("BAN_MEMBERS")) return; //message allowed or is mod/admin
 
 	if(filtered.mute){
