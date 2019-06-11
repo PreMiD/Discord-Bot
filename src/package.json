@@ -1,21 +1,26 @@
 {
 	"description": "Discord Bot for PreMiD",
 	"repository": "https://github.com/PreMiD/Discord-Bot",
+	"version": "2.2.0",
 	"scripts": {
 		"start": "node index",
-		"dev": "nodemon index"
+		"dev": "nodemon -L index"
 	},
 	"license": "MIT",
 	"dependencies": {
-		"discord.js": "^11.4.2",
+		"@types/ws": "^6.0.1",
+		"discord.js": "github:discordjs/discord.js",
 		"dotenv": "^6.2.0",
-		"get-urls": "^9.0.0",
-		"mysql": "^2.16.0",
+		"get-urls": "^9.1.0",
+		"mysql2": "^1.6.5",
 		"request": "^2.88.0",
 		"request-promise-native": "^1.0.7",
 		"utf8": "^3.0.0"
 	},
 	"devDependencies": {
+		"@types/dotenv": "^6.1.1",
+		"@types/mysql2": "github:types/mysql2#semver:1.0",
+		"chalk": "^2.4.2",
 		"nodemon": "^1.18.9"
 	}
 }
