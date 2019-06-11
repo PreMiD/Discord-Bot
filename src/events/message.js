@@ -40,7 +40,7 @@ module.exports = async (message) => {
 async function filterMessage(message) {
 	//* Messages
 	var filtered = filterMessages.find((m) => message.content.toLowerCase().includes(m.message.toLowerCase()));
-	if(!filtered || message.member.hasPermission("BAN_MEMBERS")) return; //message allowed or is mod/admin
+	if(!filtered || client.elevation(message) > 0) return; //message allowed or is mod/admin
 
 	if(filtered.mute){
 		//I should check if the user already has this role but how does he talking muted?
@@ -51,9 +51,9 @@ async function filterMessage(message) {
 			.addField('Channel', `<#${message.channel.id}>`)
 			.addField('Message', message.content)
 			.setColor('#fc3c3c')
-			.setFooter('USER MUTED - <@&514546359865442304> or <@&526734093560315925> please check!')
+			.setFooter('USER MUTED')
 			.setTimestamp();
-			if (message.guild.channels.has(config.logs)) message.guild.channels.get(config.logs).send(embed);
+			if (message.guild.channels.has(config.logs)) message.guild.channels.get(config.logs).send("<@&514546359865442304> or <@&526734093560315925> please check this mute!", { embed: embed });
 	}
 
 	await message.delete();
