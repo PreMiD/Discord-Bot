@@ -1,4 +1,5 @@
 const config = require('../config.json');
+const filterMessages = require('../messageFiltered.json');
 
 module.exports = async (message) => {
 	let client = message.client;
@@ -36,11 +37,26 @@ module.exports = async (message) => {
 };
 
 async function filterMessage(message) {
-	//* Filter invite links
-	if (message.content.includes('discord.gg/' || 'discordapp.com/invite/') && message.client.elevation(message) < 1) {
-		await message.delete();
-		message
-			.reply('**Invite links are not allowed on this server!**')
-			.then((msg) => setTimeout(() => msg.delete(), 15 * 1000));
+	//* Messages
+	var filtered = filterMessages.find((m) => message.content.includes(m.message));
+	if(!filtered || message.member.hasPermission("BAN_MEMBERS")) return; //message allowed or is mod/admin
+
+	if(filtered.mute){
+		//I should check if the user already has this role but how does he talking muted?
+		 message.member.addRole('521413330481446933');
+
+		var embed = new Discord.RichEmbed()
+			.setAuthor(`${message.member.displayName}`, message.author.avatarURL)
+			.addField('Channel', `<#${message.channel.id}>`)
+			.addField('Message', message.content)
+			.setColor('#fc3c3c')
+			.setFooter('USER MUTED - <@&514546359865442304> or <@&526734093560315925> please check!')
+			.setTimestamp();
+			if (message.guild.channels.has(config.logs)) message.guild.channels.get(config.logs).send(embed);
 	}
+
+	await message.delete();
+	message
+		.reply(filtered.botMessage)
+		.then((msg) => setTimeout(() => msg.delete(), 15 * 1000));
 }
