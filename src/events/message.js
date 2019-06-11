@@ -39,6 +39,7 @@ module.exports = async (message) => {
 
 async function filterMessage(message) {
 	//* Messages
+	let client = message.client;
 	var filtered = filterMessages.find((m) => message.content.toLowerCase().includes(m.message.toLowerCase()));
 	if(!filtered || client.elevation(message) > 0) return; //message allowed or is mod/admin
 
