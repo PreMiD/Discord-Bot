@@ -1,12 +1,12 @@
 [
     {
        "message": "My naked photos",
-       "botMessage": "**Selfbot banned!**",
+       "botMessage": "**You have been muted, please wait while our moderators check it**",
        "mute": true
     },
     {
         "message": "privatepage.vip",
-        "botMessage": "**Selfbot banned!**",
+        "botMessage": "**You have been muted, please wait while our moderators check it**",
         "mute": true
      },
     {
