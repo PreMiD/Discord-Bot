@@ -1,0 +1,22 @@
+[
+    {
+       "message": "My naked photos",
+       "botMessage": "**You have been muted, please wait while our moderators check it**",
+       "mute": true
+    },
+    {
+        "message": "privatepage.vip",
+        "botMessage": "**You have been muted, please wait while our moderators check it**",
+        "mute": true
+     },
+    {
+        "message": "discord.gg/",
+        "botMessage": "**Invite links are not allowed on this server!**",
+        "mute": false
+    },
+    {
+        "message": "discordapp.com/invite/",
+        "botMessage": "**Invite links are not allowed on this server!**",
+        "mute": false
+    }
+]
