@@ -10,7 +10,7 @@ exports.run = async (client, message, params) => {
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000));
             return;
     }
-    if (!message.member.roles.has("521413330481446933")) {
+    if (!user.roles.has("521413330481446933")) {
         message.reply("This user is not muted <:mildpanic:580112641737883668>")
         .then((msg) => setTimeout(() => msg.delete(), 10 * 1000));
         return;
