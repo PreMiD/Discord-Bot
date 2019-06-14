@@ -40,12 +40,12 @@ module.exports = async (message) => {
 async function filterMessage(message) {
 	//* Messages
 	let client = message.client;
-	var filtered = filterMessages.find((m) => message.content.toLowerCase().includes(m.message.toLowerCase()));
+	var filtered = filterMessages.find((m) => message.content.toLowerCase().match(new RegExp(m.message.toLowerCase(), 'i')));
 	if(!filtered || client.elevation(message) > 0) return; //message allowed or is mod/admin
 
 	if(filtered.mute){
 		//I should check if the user already has this role but how does he talking muted?
-		 message.member.addRole('521413330481446933');
+		 message.member.addRole(config.mutedRole);
 
 		var embed = new Discord.RichEmbed()
 			.setAuthor(`${message.member.displayName}`, message.author.avatarURL)

@@ -1,4 +1,4 @@
-var { prefix } = require('../config.json');
+var config = require('../config.json');
 
 exports.run = async (client, message, params) => {
 	await message.delete();
@@ -6,17 +6,17 @@ exports.run = async (client, message, params) => {
     // some checks
     if(!user || user.user.bot){
         message
-			.reply(`Usage: \`\`${prefix}unmute <user>\`\``)
+			.reply(`Usage: \`\`${config.prefix}unmute <user>\`\``)
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000));
             return;
     }
-    if (!user.roles.has("521413330481446933")) {
+    if (!user.roles.has(config.mutedRole)) {
         message.reply("This user is not muted <:mildpanic:580112641737883668>")
         .then((msg) => setTimeout(() => msg.delete(), 10 * 1000));
         return;
     }
     if (user.id != message.author.id) {
-        user.removeRole("521413330481446933");
+        user.removeRole(config.mutedRole);
         message.channel.send(`<@${user.id}> you have been unmuted by **${message.member.displayName}**, We hope you have understood the rules!`);
     } else {
         message
