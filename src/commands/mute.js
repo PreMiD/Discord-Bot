@@ -1,5 +1,5 @@
 var Discord = require('discord.js');
-var { prefix } = require('../config.json');
+var config = require('../config.json');
 
 exports.run = async (client, message, params) => {
 	await message.delete();
@@ -9,11 +9,11 @@ exports.run = async (client, message, params) => {
     // some checks
     if(params < 1 || !user){
         message
-			.reply(`Usage: \`\`${prefix}mute <user> <reason> (optional)\`\``)
+			.reply(`Usage: \`\`${config.prefix}mute <user> <reason> (optional)\`\``)
             .then((msg) => setTimeout(() => msg.delete(), 10 * 1000));
             return;
     }
-    if (message.member.roles.has("521413330481446933")) {
+    if (user.roles.has(config.mutedRole)) {
         message.reply("This user is already muted <:thenking:587780453864308766>")
         .then((msg) => setTimeout(() => msg.delete(), 10 * 1000));
         return;
@@ -21,7 +21,7 @@ exports.run = async (client, message, params) => {
     
     if (!user.user.bot) {
         if (user.id != message.author.id) {
-            user.addRole("521413330481446933");
+            user.addRole(config.mutedRole);
 
             var embed = new Discord.RichEmbed()
                 .setColor('#FF6400')
