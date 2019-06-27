@@ -39,21 +39,22 @@ module.exports = async (message) => {
 
 async function filterMessage(message) {
 	//* Messages
-	var filtered = filterMessages.find((m) => message.content.toLowerCase().includes(m.message.toLowerCase()));
-	if(!filtered || message.member.hasPermission("BAN_MEMBERS")) return; //message allowed or is mod/admin
+	let client = message.client;
+	var filtered = filterMessages.find((m) => message.content.toLowerCase().match(new RegExp(m.message.toLowerCase(), 'i')));
+	if(!filtered || client.elevation(message) > 0) return; //message allowed or is mod/admin
 
 	if(filtered.mute){
 		//I should check if the user already has this role but how does he talking muted?
-		 message.member.addRole('521413330481446933');
+		 message.member.addRole(config.mutedRole);
 
 		var embed = new Discord.RichEmbed()
 			.setAuthor(`${message.member.displayName}`, message.author.avatarURL)
 			.addField('Channel', `<#${message.channel.id}>`)
 			.addField('Message', message.content)
 			.setColor('#fc3c3c')
-			.setFooter('USER MUTED - <@&514546359865442304> or <@&526734093560315925> please check!')
+			.setFooter('USER MUTED')
 			.setTimestamp();
-			if (message.guild.channels.has(config.logs)) message.guild.channels.get(config.logs).send(embed);
+			if (message.guild.channels.has(config.logs)) message.guild.channels.get(config.logs).send("<@&514546359865442304> or <@&526734093560315925> please check this mute!", { embed: embed });
 	}
 
 	await message.delete();
