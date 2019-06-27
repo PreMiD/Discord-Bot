@@ -1,6 +1,6 @@
-var { info } = require("../util/debug");
+import { info } from "../util/debug";
 
 module.exports = () => {
-  info("Bot token changed, exiting.");
+  info("Token changed, exiting.");
   process.exit(1);
 };

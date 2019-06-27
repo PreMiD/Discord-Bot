@@ -1,10 +1,11 @@
-const { info, error } = require("../util/debug");
+import { info, error } from "../util/debug";
 import * as fs from "fs";
 import * as path from "path";
-var moduleFolder: fs.PathLike = path.resolve("./modules");
 import * as Discord from "discord.js";
 
-module.exports = async (client: Discord.Client) => {
+var moduleFolder: fs.PathLike = path.resolve("./modules");
+
+export default async (client: Discord.Client) => {
   loadModules(client);
   //* Load global events
   loadEvents(path.resolve(`./events`), client);
@@ -15,11 +16,62 @@ module.exports = async (client: Discord.Client) => {
  * @param {client} client
  */
 async function loadModules(client: Discord.Client) {
-  var files = await fs.readdirSync(moduleFolder);
+  var modules = await fs.readdirSync(moduleFolder);
 
-  info(`Loading ${files.length} module${files.length == 1 ? "" : "s"}`);
+  modules = modules.filter(module => {
+    if (
+      fs.existsSync(`${moduleFolder}/${module}/config.json`) &&
+      typeof require(`${moduleFolder}/${module}/config.json`).enabled !=
+        undefined
+    )
+      return require(`${moduleFolder}/${module}/config.json`).enabled;
+    else return true;
+  });
 
-  files.map(async module => {
+  var commandCount = await Promise.all(
+    modules.map(async module => {
+      if (await fs.existsSync(`${moduleFolder}/${module}/commands`))
+        return (await fs.readdirSync(
+          `${moduleFolder}/${module}/commands`
+        )).filter(f => {
+          if (f.endsWith(".ts")) return false;
+          var props = require(`${moduleFolder}/${module}/commands/${f}`);
+          if (typeof props["config"].enabled == "undefined") return true;
+          else props["config"].enabled;
+        });
+    })
+  ).then(cmds => {
+    // @ts-ignore
+    return [].concat(...cmds).filter(f => f).length;
+  });
+
+  var eventCount = await Promise.all(
+    modules.map(async module => {
+      if (await fs.existsSync(`${moduleFolder}/${module}/events`))
+        return (await fs.readdirSync(
+          `${moduleFolder}/${module}/events`
+        )).filter(f => {
+          if (f.endsWith(".ts")) return false;
+          var props = require(`${moduleFolder}/${module}/events/${f}`);
+          if (typeof props == "function" || typeof props.config != "undefined")
+            return true;
+          else return false;
+        });
+    })
+  ).then(events => {
+    // @ts-ignore
+    return [].concat(...events).filter(f => f).length;
+  });
+
+  info(
+    `${modules.length} module${
+      modules.length == 1 ? "" : "s"
+    } | ${commandCount} command${
+      commandCount == 1 ? "" : "s"
+    } | ${eventCount} event${eventCount == 1 ? "" : "s"}`
+  );
+
+  modules.map(async module => {
     if (await fs.existsSync(`${moduleFolder}/${module}/commands`))
       loadCommands(`${moduleFolder}/${module}/commands`, client);
     if (await fs.existsSync(`${moduleFolder}/${module}/events`))
@@ -37,14 +89,8 @@ async function loadModules(client: Discord.Client) {
  * @param {String} filePath Path to folder with command files
  * @param {client} client Client which will be used to save the command
  */
-async function loadCommands(filePath: any, client: Discord.Client) {
+async function loadCommands(filePath: string, client: Discord.Client) {
   var files = await fs.readdirSync(filePath);
-
-  info(
-    `Loading ${files.length} command${
-      files.length == 1 ? "" : "s"
-    } in ${path.basename(path.dirname(filePath))}`
-  );
 
   files = files.filter(file => !file.endsWith(".ts"));
   files = files.map(file => file.split(".")[0]);
@@ -86,15 +132,10 @@ async function loadCommands(filePath: any, client: Discord.Client) {
  * @param {String} filePath Path to folder with event files
  * @param {client} client Client which will be used to bind the event
  */
-async function loadEvents(filePath: any, client: Discord.Client) {
+async function loadEvents(filePath: string, client: Discord.Client) {
   var eventFile: any,
     files = await fs.readdirSync(filePath);
 
-  info(
-    `Loading ${files.length} event${
-      files.length == 1 ? "" : "s"
-    } in ${path.basename(path.dirname(filePath))}`
-  );
   files = files.filter(file => !file.endsWith(".ts"));
   files = files.map(file => file.split(".")[0]);
 

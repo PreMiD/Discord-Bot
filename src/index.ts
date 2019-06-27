@@ -3,42 +3,34 @@ import { config } from "dotenv";
 config();
 import * as Discord from "discord.js";
 import { connectDb } from "./database/db";
+import { error } from "./util/debug";
+import moduleLoader from "./util/moduleLoader";
 
 var {
-    jrModerator,
-    moderator,
-    administrator,
-    developer
-  } = require("./roles.json"),
-  { error } = require("./util/debug");
+  jrModerator,
+  moderator,
+  administrator,
+  developer
+} = require("./roles.json");
 
-//* Extend Client from discord.js
-declare module "discord.js" {
-  interface Client {
-    commands: Discord.Collection<String | undefined, CommandProps>;
-    aliases: Discord.Collection<String, String>;
-    elevation: Function;
-  }
-}
-
-//* Command Properties
-interface CommandProps {
-  name: String;
-  permLevel: Number;
-  enabled: Boolean;
-  aliases: Array<String>;
-}
-
-//TODO Idle presence when production env
 //* Create new client & set login presence
 var client = new Discord.Client({
-  presence: {
-    status: process.env.NODE_ENV == "dev" ? "dnd" : "online",
-    activity: {
-      name: "Netflix",
-      type: "WATCHING"
-    }
-  }
+  presence:
+    process.env.NODE_ENV == "dev"
+      ? {
+          status: "dnd",
+          activity: {
+            name: "devs code",
+            type: "WATCHING"
+          }
+        }
+      : {
+          status: "online",
+          activity: {
+            name: "Timeraa",
+            type: "LISTENING"
+          }
+        }
 });
 
 //* Commands, Command aliases, Command permission levels
@@ -66,7 +58,7 @@ client.elevation = (message: Discord.Message) => {
 //! Make sure that database is connected first then proceed
 (async () => {
   await connectDb();
-  require("./util/moduleLoader")(client);
+  moduleLoader(client);
   client.login(
     process.env.NODE_ENV == "dev" ? process.env.TOKEN_BETA : process.env.TOKEN
   );

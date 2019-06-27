@@ -1,36 +1,32 @@
 //* Import stuff
 import * as mysql from "mysql2/promise";
+import { success, error } from "../util/debug";
 
-var { success, error } = require("../util/debug"),
-  db,
-  connection: mysql.Connection;
+var db, connection: mysql.Connection;
 
 function connectDb() {
-  //@ts-ignore
   if (typeof connection == "undefined") {
-    return new Promise(function(resolve, reject) {
+    return new Promise<mysql.Connection>(function(resolve, reject) {
       //! localhost -> premid.app if development instance
       db = mysql.createConnection({
-        host: process.env.NODE_ENV == "dev" ? "premid.app" : "localhost",
+        host: process.env.NODE_ENV == "dev" ? process.env.DBHOST : "localhost",
         user: process.env.DBUSER,
         password: process.env.DBPASSWORD,
         database: process.env.DBDATABASE,
         charset: "utf8mb4"
       });
 
-      // @ts-ignore
       //* Output info and resolve promise when connected
-      db.then(function(conn) {
+      db.then(function(conn: mysql.Connection) {
         connection = conn;
-        success("Connected to PreMiD database!");
+        success("Connected to database!");
         resolve(connection);
         connection = conn;
       });
 
-      // @ts-ignore
-      db.catch(function(err: any) {
-        console.log(err);
-        error("Failed to connect to database");
+      db.catch(function(err: Error) {
+        error(`Connection to database failed: ${err.message}`);
+        reject(err);
         process.exit(1);
       });
     });

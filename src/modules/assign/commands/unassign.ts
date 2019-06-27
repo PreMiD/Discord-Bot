@@ -2,13 +2,12 @@ import * as Discord from "discord.js";
 
 var { prefix } = require("../../../config.json"),
   assignRolesFile: Array<string> = require("../assignRoles.json"),
-  embed;
+  embed: Discord.MessageEmbed;
 
 module.exports.run = async (
   message: Discord.Message,
   params: Array<String>
 ) => {
-  // @ts-ignore
   var assignRoles: Discord.Role[] = assignRolesFile
     .map(r => {
       if (message.guild) message.guild.roles.get(r);
