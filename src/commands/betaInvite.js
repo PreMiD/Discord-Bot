@@ -56,7 +56,7 @@ exports.run = async (client, message, params) => {
         .get(message.mentions.users.first().id)
         .addRole("591284574823120909");
       message.guild.channels
-        .get("518468138023649289")
+        .get("527675240231206934")
         .send(
           `:tada: <@${
             message.mentions.users.first().id
