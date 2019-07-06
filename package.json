@@ -8,7 +8,7 @@
 		"dev": "npm run dev --prefix src/."
 	},
 	"dependencies": {
-		"discord.js": "^11.5.0",
+		"discord.js": "^11.5.1",
 		"dotenv": "^8.0.0",
 		"get-urls": "^9.1.0",
 		"mysql": "^2.17.1",
