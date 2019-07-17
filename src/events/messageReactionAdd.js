@@ -60,7 +60,8 @@ module.exports = async (reaction, user) => {
 			else if (
 				ticket.status == 1 &&
 				reaction.emoji.name == '🔴' &&
-				ticket.supporters.split(',').includes(user.id)
+				ticket.supporters.split(',').includes(user.id) ||
+				reaction.message.guild.members.get(user.id).roles.has('493135149274365975')
 			)
 				handleEndSupport(reaction, user, ticket);
 		}
