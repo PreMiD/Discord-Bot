@@ -1,46 +1,21 @@
 {
-<<<<<<< HEAD
-	"description": "Discord Bot for PreMiD",
-	"repository": "https://github.com/PreMiD/Discord-Bot",
-	"scripts": {
-		"start": "node index",
-		"dev": "nodemon index"
-	},
-	"license": "MIT",
-	"dependencies": {
-		"discord.js": "^11.4.2",
-		"dotenv": "^6.2.0",
-		"get-urls": "^9.0.0",
-		"mysql": "^2.16.0",
-		"request": "^2.88.0",
-		"request-promise-native": "^1.0.6",
-		"utf8": "^3.0.0"
-	},
-	"devDependencies": {
-		"nodemon": "^1.18.9"
-	}
-=======
-  "name": "premid-bot",
   "description": "Discord Bot for PreMiD",
   "repository": "https://github.com/PreMiD/Discord-Bot",
-  "version": "2.0.0",
   "scripts": {
-    "compile": "tsc && tsc devMode && node devMode.js && cd dist && npm i --production",
-    "dev": "nodemon --quiet --exec 'node devMode.js & cd dist && node -r source-map-support/register index.js' -w dist -e js"
+    "start": "node index",
+    "dev": "nodemon index"
   },
   "license": "MIT",
   "dependencies": {
-    "chalk": "^2.4.2",
-    "discord.js": "github:discordjs/discord.js",
+    "discord.js": "^11.4.2",
     "dotenv": "^6.2.0",
-    "mongodb": "^3.2.7"
+    "get-urls": "^9.0.0",
+    "mysql": "^2.16.0",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.6",
+    "utf8": "^3.0.0"
   },
   "devDependencies": {
-    "@types/dotenv": "^6.1.1",
-    "@types/mongodb": "^3.1.28",
-    "nodemon": "^1.18.9",
-    "source-map-support": "^0.5.12",
-    "typescript": "^3.5.3"
+    "nodemon": "^1.18.9"
   }
->>>>>>> discord.js-12
 }
