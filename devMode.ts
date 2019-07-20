@@ -21,8 +21,12 @@ import * as glob from "fast-glob";
             )
             .includes(d[0])
       )
+      .filter(f => extname(f[1]) !== ".map")
       .map(f => removeSync(f[1]))
   );
+
+  //* Copy package.json
+  await copySync("package.json", "src/package.json");
 
   //* Copy files from src to dist
   copySync("src", "dist", {

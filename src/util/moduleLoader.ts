@@ -34,7 +34,7 @@ async function loadModules(client: Discord.Client) {
         return (await fs.readdirSync(
           `${moduleFolder}/${module}/commands`
         )).filter(f => {
-          if (f.endsWith(".ts")) return false;
+          if (f.endsWith(".ts") || f.endsWith(".map")) return false;
           var props = require(`${moduleFolder}/${module}/commands/${f}`);
           if (typeof props["config"].enabled == "undefined") return true;
           else props["config"].enabled;
@@ -51,7 +51,7 @@ async function loadModules(client: Discord.Client) {
         return (await fs.readdirSync(
           `${moduleFolder}/${module}/events`
         )).filter(f => {
-          if (f.endsWith(".ts")) return false;
+          if (f.endsWith(".ts") || f.endsWith(".map")) return false;
           var props = require(`${moduleFolder}/${module}/events/${f}`);
           if (typeof props == "function" || typeof props.config != "undefined")
             return true;
@@ -136,7 +136,7 @@ async function loadEvents(filePath: string, client: Discord.Client) {
   var eventFile: any,
     files = await fs.readdirSync(filePath);
 
-  files = files.filter(file => !file.endsWith(".ts"));
+  files = files.filter(file => !file.endsWith(".ts") && !file.endsWith(".map"));
   files = files.map(file => file.split(".")[0]);
 
   files.map(event => {

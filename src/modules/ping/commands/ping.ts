@@ -23,7 +23,7 @@ module.exports.run = async (message: Discord.Message) => {
       }ms\`\`)`
     );
 
-    msg.edit(embed).then(msg => setTimeout(() => msg.delete(), 10 * 1000));
+    msg.edit(embed).then(msg => msg.delete({ timeout: 10 * 1000 }));
   });
   message.delete();
 };

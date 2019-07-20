@@ -2,9 +2,9 @@
 import { config } from "dotenv";
 config();
 import * as Discord from "discord.js";
-import { connectDb } from "./database/db";
-import { error } from "./util/debug";
+import { error, success } from "./util/debug";
 import moduleLoader from "./util/moduleLoader";
+import { connect, MongoClient } from "./database/client";
 
 var {
   jrModerator,
@@ -57,11 +57,21 @@ client.elevation = (message: Discord.Message) => {
 
 //! Make sure that database is connected first then proceed
 (async () => {
-  await connectDb();
-  moduleLoader(client);
-  client.login(
-    process.env.NODE_ENV == "dev" ? process.env.TOKEN_BETA : process.env.TOKEN
-  );
+  //* Connect to Mongo DB
+  await connect()
+    .then(_ => success("Connected to the database"))
+    .catch((err: Error) => {
+      error(`Could not connect to database: ${err.name}`);
+      process.exit();
+    });
+
+  client
+    .login(
+      process.env.NODE_ENV == "dev" ? process.env.TOKEN_BETA : process.env.TOKEN
+    )
+    .then(() => {
+      moduleLoader(client);
+    });
 })().catch(error);
 
 export { client };

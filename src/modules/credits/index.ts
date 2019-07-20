@@ -1,73 +1,72 @@
-import { db } from "../../database/db";
 import { client } from "../../index";
-import * as Discord from "discord.js";
-import { encode } from "utf8";
-import { readFileSync } from "fs";
+import { MongoClient } from "../../database/client";
+
+var creditRoles = require("./creditRoles.json");
 
 async function updateCredits() {
-  var creditRoles = JSON.parse(
-    await readFileSync("./modules/credits/creditRoles.json", "utf8")
+  var coll = MongoClient.db("PreMiD").collection("credits");
+
+  var users = await client.guilds
+    .get("493130730549805057")
+    .members.fetch({ limit: 0 });
+
+  users = users.filter(
+    m =>
+      containsAny(creditRoles.map(cr => cr.roleId), m.roles.keyArray()).length >
+      0
   );
+  var creditUsers = users.map(m => {
+    var mCreditRoles = containsAny(
+        creditRoles.filter(cr => !cr.patreonRole).map(cr => cr.roleId),
+        m.roles.keyArray()
+      ),
+      highestRole = m.roles.get(mCreditRoles[0]),
+      patronRole = containsAny(
+        creditRoles.filter(cr => cr.patreonRole).map(cr => cr.roleId),
+        m.roles.keyArray()
+      );
 
-  var credits = (await db.query(
-    "SELECT userID as id, roles, name, tag FROM credits "
-  ))[0];
+    var result = {
+      userId: m.id,
+      name: m.nickname || m.user.username,
+      tag: m.user.discriminator,
+      avatar: m.user.displayAvatarURL(),
+      role: highestRole.name,
+      roleColor: highestRole.hexColor,
+      rolePosition: highestRole.position
+    };
 
-  (await ((await client.guilds.first()) as Discord.Guild).members.fetch()).map(
-    m => {
+    if (patronRole.length > 0)
       //@ts-ignore
-      var u = credits.find((md: any) => md.id == m.id);
-      if (u) {
-        /*
-              u.name != m.user.username ||
-        u.tag != m.user.discriminator ||
-        u.avatarURL != m.user.avatarURL ||
-        u.roles != m.roles
-            .filter(r => r.name != "@everyone")
-            .sort((a, b) => a.position + b.position)
-            .map(r => r.name)
-            .join(",")
-      */
-        if (
-          u.name != m.user.username ||
-          u.tag != m.user.discriminator ||
-          u.avatarURL != m.user.displayAvatarURL() ||
-          u.roles !=
-            m.roles
-              .filter(r => r.name != "@everyone")
-              .sort((a, b) => a.position + b.position)
-              .map(r => r.name)
-              .join(",")
-        )
-          db.query("UPDATE credits SET name = ?, tag = ? WHERE userID = ?", [
-            encode(m.user.username),
-            m.user.discriminator,
-            m.id
-          ]);
-      } else {
-        return;
+      result.patronColor = m.roles.get(patronRole[0]).hexColor;
 
-        var cRoles = creditRoles.filter((r: any) => m.roles.has(r.roleId));
-        if (cRoles.length > 0) {
-          /*
-          db.query('INSERT INTO credits (userID, name, tag, avatarURL, type, color, patronColor, position, roles)', [
-            m.id, m.nickname == null ? m.user.username : m.nickname, m.user.discriminator, m.user.avatarURL, , , , m.roles.highest.position, m.roles.map(r => r.name)
-          ])
-         */
-          console.log(
-            Math.max.apply(
-              Math,
-              cRoles.map((r: any) => m.guild.roles.resolve(r.roleId).position)
-            ),
-            /*cRoles.filter(r => {
-            
-                      }),*/
-            m.user.username
-          );
-        }
-      }
+    return result;
+  });
+
+  var coll = MongoClient.db("PreMiD").collection("credits"),
+    mongoCredits = await coll.find().toArray(),
+    usersToRemove = mongoCredits
+      .map(mC => mC.userId)
+      .filter(mC => !creditUsers.map(cU => cU.userId).includes(mC));
+
+  usersToRemove.map(uTR => coll.findOneAndDelete({ userId: uTR }));
+
+  creditUsers.map(async cu => {
+    if (
+      !(await coll.findOneAndReplace({ userId: cu.userId }, cu)).lastErrorObject
+        .updatedExisting
+    ) {
+      coll.insertOne(cu);
     }
-  );
+  });
 }
 
 updateCredits();
+setInterval(updateCredits, 5 * 1000 * 60);
+
+function containsAny(source, target) {
+  var result = source.filter(function(item) {
+    return target.indexOf(item) > -1;
+  });
+  return result;
+}

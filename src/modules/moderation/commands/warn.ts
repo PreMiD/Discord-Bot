@@ -1,83 +1,98 @@
 import * as Discord from "discord.js";
-import { db } from "../../../database/db";
+import { MongoClient } from "../../../database/client";
 
-var { prefix } = require("../../../config.json"),
-  embed = new Discord.MessageEmbed({
+var { prefix } = require("../../../config.json");
+
+module.exports.run = async (
+  message: Discord.Message,
+  params: Array<string>
+) => {
+  var embed = new Discord.MessageEmbed({
     title: "Warn",
     description: `*You can warn a user by typing
     \`\`${prefix}warn <user> <reason>\`\`*`,
     color: "#FF7000"
   });
 
-module.exports.run = async (
-  message: Discord.Message,
-  params: Array<string>
-) => {
   message.delete();
   if (params.length < 2 || message.mentions.users.size == 0) {
     message.channel
       .send(embed)
-      .then(msg =>
-        setTimeout(() => (msg as Discord.Message).delete(), 10 * 1000)
-      );
+      .then(msg => (msg as Discord.Message).delete({ timeout: 10 * 1000 }));
     return;
   }
 
-  //@ts-ignore
   if (message.mentions.users.first().id == message.author.id) {
     embed.setDescription("You can't warn yourself!");
     message.channel
       .send(embed)
-      .then(msg =>
-        setTimeout(() => (msg as Discord.Message).delete(), 10 * 1000)
-      );
+      .then(msg => (msg as Discord.Message).delete({ timeout: 10 * 1000 }));
     return;
   }
 
-  if (message.mentions.users.size < 1) {
-    embed.setDescription("Please mentions the user you want to warn.");
+  if (message.mentions.users.first().bot) {
+    embed.setDescription("You can't warn bots!");
     message.channel
       .send(embed)
-      .then(msg =>
-        setTimeout(() => (msg as Discord.Message).delete(), 10 * 1000)
-      );
+      .then(msg => (msg as Discord.Message).delete({ timeout: 10 * 1000 }));
     return;
   }
-  var warns =
-    1 +
-    //@ts-ignore
-    (await db.query(
-      "SELECT COUNT(user_id) AS warns FROM warns WHERE user_id = ?",
-      //@ts-ignore
-      message.mentions.users.first().id
-    ))[0][0].warns;
-  db.query(
-    "INSERT INTO warns (user_id, reason, moderator_id) VALUES (?, ?, ?)",
-    [
-      //@ts-ignore
-      message.mentions.users.first().id,
-      params
+
+  var coll = MongoClient.db("PreMiD").collection("warns"),
+    user = await coll.findOne({ userId: message.mentions.users.first().id }),
+    warns = 1;
+
+  if (!user)
+    coll.insertOne({
+      userId: message.mentions.users.first().id,
+      warns: [
+        {
+          userId: message.author.id,
+          reason: params
+            .slice(1, params.length)
+            .join(" ")
+            .trim(),
+          timestamp: Date.now()
+        }
+      ]
+    });
+  else {
+    user.warns.push({
+      userId: message.author.id,
+      reason: params
         .slice(1, params.length)
         .join(" ")
         .trim(),
-      //@ts-ignore
-      message.author.id
-    ]
-  );
+      timestamp: Date.now()
+    });
+    coll.findOneAndReplace({ userId: user.userId }, user);
+    warns = user.warns.length++;
+  }
 
-  embed.setDescription("");
-  embed.setTitle("Warning");
-  // @ts-ignore
-  embed.addField("Moderator", `<@${message.author.id}>`, true);
-  embed.addField(
-    "Reason",
-    params
-      .slice(1, params.length)
-      .join(" ")
-      .trim(),
-    true
-  );
-  embed.addField(`Warning${warns == 1 ? "" : "s"}`, warns);
+  embed = new Discord.MessageEmbed({
+    title: "Warning",
+    color: "#FF7000",
+    fields: [
+      {
+        name: "Moderator",
+        value: `<@${message.author.id}>`,
+        inline: true
+      },
+      {
+        name: "Reason",
+        value: params
+          .slice(1, params.length)
+          .join(" ")
+          .trim(),
+        inline: true
+      },
+      {
+        name: `Warning${warns == 1 ? "" : "s"}`,
+        value: warns.toString()
+      }
+    ]
+  });
+
   message.channel.send(
     //@ts-ignore
     `<@${message.mentions.users.first().id}>, you have been warned by **${

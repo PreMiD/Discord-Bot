@@ -9,10 +9,7 @@ module.exports.run = async (
   params: Array<String>
 ) => {
   var assignRoles: Discord.Role[] = assignRolesFile
-    .map(r => {
-      if (message.guild) message.guild.roles.get(r);
-      else return undefined;
-    })
+    .map(r => message.guild.roles.get(r))
     .filter(v => v != undefined);
 
   if (params.length == 0) {
@@ -28,9 +25,7 @@ module.exports.run = async (
 
     message.channel
       .send(embed)
-      .then(msg =>
-        setTimeout(() => (msg as Discord.Message).delete(), 10 * 1000)
-      );
+      .then(msg => (msg as Discord.Message).delete({ timeout: 10 * 1000 }));
     return;
   }
 
@@ -46,9 +41,7 @@ module.exports.run = async (
     });
     message.channel
       .send(embed)
-      .then(msg =>
-        setTimeout(() => (msg as Discord.Message).delete(), 10 * 1000)
-      );
+      .then(msg => (msg as Discord.Message).delete({ timeout: 10 * 1000 }));
     return;
   }
 
@@ -62,12 +55,10 @@ module.exports.run = async (
       color: "#ff5050"
     });
 
-    message.channel.send(embed).then(msg =>
-      setTimeout(() => {
-        message.delete();
-        (msg as Discord.Message).delete();
-      }, 10 * 1000)
-    );
+    message.channel.send(embed).then(msg => {
+      message.delete({ timeout: 10 * 1000 });
+      (msg as Discord.Message).delete({ timeout: 10 * 1000 });
+    });
   } else {
     if (message.member) message.member.roles.add(asRole.id);
     message.react("✅");
@@ -77,12 +68,10 @@ module.exports.run = async (
       color: "#50ff50"
     });
 
-    message.channel.send(embed).then(msg =>
-      setTimeout(() => {
-        message.delete();
-        (msg as Discord.Message).delete();
-      }, 10 * 1000)
-    );
+    message.channel.send(embed).then(msg => {
+      message.delete({ timeout: 10 * 1000 });
+      (msg as Discord.Message).delete({ timeout: 10 * 1000 });
+    });
   }
 };
 
