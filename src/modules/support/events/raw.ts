@@ -17,6 +17,7 @@ module.exports = async packet => {
   var ticket = await coll.findOne({ ticketMessage: packet.d.message_id });
 
   if (!ticket) return;
+  delete ticket._id;
 
   var ticketchannel = guild.channels.get(ticketChannel) as Discord.TextChannel,
     ticketMessage = await ticketchannel.messages.fetch(ticket.ticketMessage),
@@ -67,9 +68,15 @@ module.exports = async packet => {
     packet.d.emoji.id === "521018476870107156" &&
     typeof ticket.status === "undefined"
   ) {
+    var supportersToAdd = await MongoClient.db("PreMiD")
+      .collection("userSettings")
+      .find({ seeAllTickets: true })
+      .toArray();
+
     var channel = (await guild.channels.create(ticket.ticketId.toString(), {
       parent: ticketCategory,
       type: "text",
+      //@ts-ignore
       permissionOverwrites: [
         {
           id: guild.id,
@@ -95,7 +102,20 @@ module.exports = async packet => {
             "USE_EXTERNAL_EMOJIS"
           ]
         }
-      ]
+      ].concat(
+        supportersToAdd.map(uSett => {
+          return {
+            id: uSett.userId,
+            allow: [
+              "VIEW_CHANNEL",
+              "SEND_MESSAGES",
+              "EMBED_LINKS",
+              "ATTACH_FILES",
+              "USE_EXTERNAL_EMOJIS"
+            ]
+          };
+        })
+      )
     })) as Discord.TextChannel;
 
     embed.setAuthor(
@@ -125,7 +145,8 @@ module.exports = async packet => {
     ticket.supportChannel = channel.id;
     ticket.status = 1;
     ticket.supporters = [packet.d.user_id];
-    coll.findOneAndReplace({ ticketId: ticket.ticketId }, ticket);
+
+    coll.findOneAndUpdate({ ticketId: ticket.ticketId }, { $set: ticket });
     return;
   }
 
@@ -161,7 +182,7 @@ module.exports = async packet => {
     delete ticket.supporters;
     delete ticket.supportEmbed;
     ticket.status = 2;
-    coll.findOneAndReplace({ ticketId: ticket.ticketId }, ticket);
+    coll.findOneAndUpdate({ ticketId: ticket.ticketId }, { $set: ticket });
     return;
   }
 };

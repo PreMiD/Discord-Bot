@@ -10,6 +10,29 @@ var { supportChannel, ticketChannel } = require("../channels.json"),
 var coll = MongoClient.db("PreMiD").collection("tickets");
 module.exports = async (message: Discord.Message) => {
   var ticket = await coll.findOne({ supportChannel: message.channel.id });
+  if (ticket) delete ticket._id;
+
+  if (
+    ticket &&
+    !ticket.supporters.includes(message.author.id) &&
+    !message.author.bot &&
+    (message.member.roles.has(ticketManager) ||
+      message.member.permissions.has("ADMINISTRATOR"))
+  ) {
+    message.channel.send(`<@${message.author.id}> joined this ticket.`);
+
+    ticket.supporters.push(message.author.id);
+    addToTicket(
+      message,
+      ticket,
+      await (message.guild.channels.get(
+        ticket.supportChannel
+      ) as Discord.TextChannel)
+    );
+    coll.findOneAndUpdate({ ticketId: ticket.ticketId }, { $set: ticket });
+    return;
+  }
+
   if (ticket && ticket.supporters.includes(message.author.id)) {
     var suppChannel = await (message.guild.channels.get(
       ticket.supportChannel
@@ -43,59 +66,9 @@ module.exports = async (message: Discord.Message) => {
           `<@${userToAdd.id}> has been added to this ticket.`
         );
 
-        var ticketMessage = await (message.guild.channels.get(
-            ticketChannel
-          ) as Discord.TextChannel).messages.fetch(ticket.ticketMessage),
-          embed = ticketMessage.embeds[0];
-
         ticket.supporters.push(userToAdd.id);
-
-        suppChannel.overwritePermissions({
-          //@ts-ignore
-          permissionOverwrites: [
-            {
-              id: message.guild.id,
-              deny: ["VIEW_CHANNEL"]
-            },
-            {
-              id: ticket.userId,
-              allow: [
-                "VIEW_CHANNEL",
-                "SEND_MESSAGES",
-                "EMBED_LINKS",
-                "ATTACH_FILES",
-                "USE_EXTERNAL_EMOJIS"
-              ]
-            }
-          ].concat(
-            ticket.supporters.map(supp => {
-              return {
-                id: supp,
-                allow: [
-                  "VIEW_CHANNEL",
-                  "SEND_MESSAGES",
-                  "EMBED_LINKS",
-                  "ATTACH_FILES",
-                  "USE_EXTERNAL_EMOJIS"
-                ]
-              };
-            })
-          )
-        });
-
-        embed.fields = [
-          {
-            name: "Supporters",
-            value: `${ticket.supporters
-              .map(supp => "<@" + supp + ">")
-              .join(", ")}`
-          }
-        ];
-
-        ticketMessage.edit({ embed: embed });
-        (await suppChannel.messages.fetch(ticket.supportEmbed)).edit(embed);
-
-        coll.findOneAndReplace({ ticketId: ticket.ticketId }, ticket);
+        addToTicket(message, ticket, suppChannel);
+        coll.findOneAndUpdate({ ticketId: ticket.ticketId }, { $set: ticket });
       }
     } else if (
       message.content.startsWith("<<") &&
@@ -103,6 +76,8 @@ module.exports = async (message: Discord.Message) => {
         message.member.hasPermission("ADMINISTRATOR")) &&
       ticket.supporters.includes(message.author.id)
     ) {
+      message.delete();
+
       ticket.supporters = ticket.supporters.filter(
         supp => supp !== message.author.id
       );
@@ -165,7 +140,7 @@ module.exports = async (message: Discord.Message) => {
       ticketMessage.edit({ embed: embed });
       (await suppChannel.messages.fetch(ticket.supportEmbed)).edit(embed);
 
-      coll.findOneAndReplace({ ticketId: ticket.ticketId }, ticket);
+      coll.findOneAndUpdate({ ticketId: ticket.ticketId }, { $set: ticket });
     }
     return;
   }
@@ -243,3 +218,57 @@ module.exports = async (message: Discord.Message) => {
 
   message.delete();
 };
+
+async function addToTicket(
+  message: Discord.Message,
+  ticket,
+  suppChannel: Discord.TextChannel
+) {
+  var ticketMessage = await (message.guild.channels.get(
+      ticketChannel
+    ) as Discord.TextChannel).messages.fetch(ticket.ticketMessage),
+    embed = ticketMessage.embeds[0];
+
+  suppChannel.overwritePermissions({
+    //@ts-ignore
+    permissionOverwrites: [
+      {
+        id: message.guild.id,
+        deny: ["VIEW_CHANNEL"]
+      },
+      {
+        id: ticket.userId,
+        allow: [
+          "VIEW_CHANNEL",
+          "SEND_MESSAGES",
+          "EMBED_LINKS",
+          "ATTACH_FILES",
+          "USE_EXTERNAL_EMOJIS"
+        ]
+      }
+    ].concat(
+      ticket.supporters.map(supp => {
+        return {
+          id: supp,
+          allow: [
+            "VIEW_CHANNEL",
+            "SEND_MESSAGES",
+            "EMBED_LINKS",
+            "ATTACH_FILES",
+            "USE_EXTERNAL_EMOJIS"
+          ]
+        };
+      })
+    )
+  });
+
+  embed.fields = [
+    {
+      name: "Supporters",
+      value: `${ticket.supporters.map(supp => "<@" + supp + ">").join(", ")}`
+    }
+  ];
+
+  ticketMessage.edit({ embed: embed });
+  (await suppChannel.messages.fetch(ticket.supportEmbed)).edit(embed);
+}
