@@ -2,12 +2,7 @@ import * as Discord from "discord.js";
 import { extname } from "path";
 import request from "request-promise-native";
 
-var { prefix } = require("../../../config.json");
-
-module.exports.run = async (
-  message: Discord.Message,
-  params: Array<string>
-) => {
+module.exports.run = async (message: Discord.Message) => {
   if (
     message.attachments.size == 0 ||
     extname(message.attachments.first().name) !== ".json"
