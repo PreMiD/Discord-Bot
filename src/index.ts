@@ -4,9 +4,10 @@ config();
 import * as Discord from "discord.js";
 import { error, success } from "./util/debug";
 import moduleLoader from "./util/moduleLoader";
-import { connect, MongoClient } from "./database/client";
+import { connect } from "./database/client";
 
 var {
+  ticketManager,
   jrModerator,
   moderator,
   administrator,
@@ -42,14 +43,16 @@ client.elevation = (message: Discord.Message) => {
 
   if (!message.member) return 0;
 
+  //* Ticket Manager
+  if (message.member.roles.has(ticketManager)) permlvl = 1;
   //* Jr Mod
-  if (message.member.roles.has(jrModerator)) permlvl = 1;
+  if (message.member.roles.has(jrModerator)) permlvl = 2;
   //* Mod
-  if (message.member.roles.has(moderator)) permlvl = 2;
+  if (message.member.roles.has(moderator)) permlvl = 3;
   //* Admin
-  if (message.member.roles.has(administrator)) permlvl = 3;
+  if (message.member.roles.has(administrator)) permlvl = 4;
   //* Dev
-  if (message.member.roles.has(developer)) permlvl = 4;
+  if (message.member.roles.has(developer)) permlvl = 5;
 
   //* Return permlvl
   return permlvl;

@@ -29,5 +29,6 @@ module.exports.run = async (message: Discord.Message) => {
 };
 
 module.exports.config = {
-  name: "ping"
+  name: "ping",
+  description: "Shows ping information."
 };

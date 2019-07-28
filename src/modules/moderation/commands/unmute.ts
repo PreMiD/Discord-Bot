@@ -35,5 +35,6 @@ module.exports.run = async (message: Discord.Message) => {
 
 module.exports.config = {
   name: "unmute",
-  permLevel: 1
+  description: "Unmutes a user.",
+  permLevel: 2
 };

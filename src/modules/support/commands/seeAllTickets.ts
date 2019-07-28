@@ -112,5 +112,7 @@ module.exports.run = async (
 };
 
 module.exports.config = {
-  name: "seealltickets"
+  name: "seealltickets",
+  description: "Enable/Disable this option to see all tickets.",
+  permLevel: 1
 };

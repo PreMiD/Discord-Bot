@@ -76,5 +76,6 @@ module.exports.run = async (
 };
 
 module.exports.config = {
-  name: "assign"
+  name: "assign",
+  description: "Assign yourself roles."
 };

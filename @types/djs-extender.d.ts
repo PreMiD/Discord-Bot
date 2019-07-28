@@ -11,6 +11,7 @@ declare module "discord.js" {
 
 //* Command Properties
 interface CommandProps {
+  description: any;
   name: String;
   permLevel: Number;
   enabled: Boolean;

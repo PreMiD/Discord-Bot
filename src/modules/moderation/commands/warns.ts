@@ -69,5 +69,5 @@ module.exports.run = async (
 
 module.exports.config = {
   name: "warns",
-  permLevel: 0
+  description: "Shows your/a users warnings."
 };

@@ -76,5 +76,6 @@ module.exports.run = async (
 };
 
 module.exports.config = {
-  name: "unassign"
+  name: "unassign",
+  description: "Unassign yourself roles."
 };

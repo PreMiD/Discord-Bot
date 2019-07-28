@@ -49,5 +49,6 @@ module.exports.run = async (message: Discord.Message) => {
 };
 
 module.exports.config = {
-  name: "betainvite"
+  name: "betainvite",
+  description: "Gift a user BETA access."
 };
