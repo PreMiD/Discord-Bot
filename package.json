@@ -9,21 +9,21 @@
   },
   "license": "MIT",
   "dependencies": {
-    "chalk": "^2.4.2",
+    "chalk": "2.4.2",
     "discord.js": "github:discordjs/discord.js",
-    "dotenv": "^6.2.0",
-    "fast-glob": "^3.0.4",
-    "fs-extra": "^8.1.0",
-    "mongodb": "^3.2.7",
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.7"
+    "dotenv": "6.2.0",
+    "fast-glob": "3.0.4",
+    "fs-extra": "8.1.0",
+    "mongodb": "3.2.7",
+    "request": "2.88.0",
+    "request-promise-native": "1.0.7"
   },
   "devDependencies": {
-    "@types/dotenv": "^6.1.1",
-    "@types/mongodb": "^3.1.28",
-    "@types/request-promise-native": "^1.0.16",
-    "nodemon": "^1.18.9",
-    "source-map-support": "^0.5.12",
-    "typescript": "^3.5.3"
+    "@types/dotenv": "6.1.1",
+    "@types/mongodb": "3.1.28",
+    "@types/request-promise-native": "1.0.16",
+    "nodemon": "1.19.1",
+    "source-map-support": "0.5.12",
+    "typescript": "3.5.3"
   }
 }
