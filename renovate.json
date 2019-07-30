@@ -3,7 +3,11 @@
     "config:base"
   ],
   "automerge": true,
-    "major": {
-      "automerge": false
-    }
+  "major": {
+    "automerge": false
+  },
+  "packageRules": [{
+    "depTypeList": ["devDependencies"],
+    "automerge": true
+  }]
 }
