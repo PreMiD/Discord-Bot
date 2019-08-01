@@ -12,8 +12,9 @@ module.exports = async (message: Discord.Message, _params, permLevel) => {
   );
   if (!filterResult || permLevel > 0) return;
 
+  message.delete();
+  
   if (filterResult.mute) {
-    message.delete();
     message.member.roles.add(muted);
 
     var embed = new Discord.MessageEmbed({
