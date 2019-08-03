@@ -1,7 +1,10 @@
 import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
+import { client } from "../../..";
 
-var { prefix } = require("../../../config.json");
+var { prefix } = require("../../../config.json"),
+  { moderators } = require(".././channels.json"),
+  { muted } = require("../../../roles.json");
 
 module.exports.run = async (
   message: Discord.Message,
@@ -58,7 +61,7 @@ module.exports.run = async (
     });
   else {
     user.warns.push({
-      userId: message.author.id,
+      userId: message.mentions.users.first().id,
       reason: params
         .slice(1, params.length)
         .join(" ")
@@ -69,9 +72,36 @@ module.exports.run = async (
     warns = user.warns.length++;
   }
 
+  var muteTime: string = null;
+  switch (warns) {
+    case 1: {
+      break;
+    }
+    case 2: {
+      muteTill(message.mentions.users.first().id, 60 * 60 * 1000);
+      muteTime = "3 hours";
+      break;
+    }
+    case 3: {
+      muteTill(message.mentions.users.first().id, 3 * 24 * 60 * 60 * 1000);
+      muteTime = "3 days";
+      break;
+    }
+    case 4: {
+      muteTill(message.mentions.users.first().id);
+    }
+  }
+
+  var warnNumberText = `${warns}th`;
+  if (warns == 1) warnNumberText = "1st";
+  if (warns == 2) warnNumberText = "2nd";
+  if (warns == 3) warnNumberText = "3rd";
+
   embed = new Discord.MessageEmbed({
-    title: "Warning",
+    title:
+      "<:lolipatrol:606599634567168089> WARNING <:lolipatrol:606599634567168089>",
     color: "#FF7000",
+    description: `This is your ${warnNumberText} warning. More will cause a mute or other consequenses!\nPlease read our rules in <#518466088263090176> carefully to prevent more warnings!`,
     fields: [
       {
         name: "Moderator",
@@ -85,25 +115,97 @@ module.exports.run = async (
           .join(" ")
           .trim(),
         inline: true
-      },
-      {
-        name: `Warning${warns == 1 ? "" : "s"}`,
-        value: warns.toString()
       }
-    ]
+    ],
+    timestamp: new Date(),
+    thumbnail: {
+      url:
+        "https://pbs.twimg.com/profile_images/1087819203011375114/tpYmYFg9_400x400.png"
+    }
   });
 
-  message.channel.send(
-    //@ts-ignore
-    `<@${message.mentions.users.first().id}>, you have been warned by **${
-      //@ts-ignore
-      message.author.username
-    }**`,
-    {
-      embed: embed
-    }
-  );
+  if (warns > 1 && warns < 4) {
+    embed.setFooter(`Your mute ends in ${muteTime}.`);
+    message.channel.send(
+      `**${
+        message.mentions.users.first().tag
+      }** has been warned and muted for ${muteTime}.`
+    );
+  } else if (warns == 4) {
+    (message.guild.channels.get(moderators) as Discord.TextChannel).send(
+      `<@${
+        message.mentions.users.first().id
+      }> has been muted permanently. Please discuss and take further action!`
+    );
+    message.channel.send(
+      `**${
+        message.mentions.users.first().tag
+      }** has been warned and muted permanently. Moderators can and will take action!`
+    );
+  } else {
+    message.channel.send(
+      `**${message.mentions.users.first().tag}** has been warned.`
+    );
+  }
+
+  await message.mentions.users.first().send("You have been warned!", embed);
 };
+
+function muteTill(id: string, time: number = 0) {
+  client.guilds
+    .first()
+    .members.fetch(id)
+    .then(async m => {
+      m.roles.add(muted, "Warn penalty.");
+
+      var data = {
+        userId: id,
+        mutedUntil: Date.now() + time
+      };
+
+      if (time == 0) delete data.mutedUntil;
+
+      if (
+        await MongoClient.db("PreMiD")
+          .collection("mutes")
+          .findOne({ userId: id })
+      )
+        MongoClient.db("PreMiD")
+          .collection("mutes")
+          .findOneAndUpdate(
+            { userId: m.id },
+            { $set: { mutedUntil: Date.now() + time } }
+          );
+      else
+        MongoClient.db("PreMiD")
+          .collection("mutes")
+          .insertOne(data);
+
+      if (time == 0) {
+        MongoClient.db("PreMiD")
+          .collection("mutes")
+          .findOneAndDelete({ userId: id });
+      } else setTimeout(() => unmute(m.id), time);
+    });
+}
+
+export async function unmute(id: string) {
+  var mute = await MongoClient.db("PreMiD")
+    .collection("mutes")
+    .findOne({ userId: id });
+
+  if (mute.mutedUntil >= Date.now() || !mute) return;
+
+  client.guilds
+    .first()
+    .members.fetch(id)
+    .then(m => m.roles.remove(muted, "Warn penalty over."))
+    .catch(() => {});
+
+  MongoClient.db("PreMiD")
+    .collection("mutes")
+    .findOneAndDelete({ userId: id });
+}
 
 module.exports.config = {
   name: "warn",
