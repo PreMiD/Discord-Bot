@@ -33,7 +33,8 @@ async function updateCredits() {
       avatar: m.user.displayAvatarURL(),
       role: highestRole.name,
       roleColor: highestRole.hexColor,
-      rolePosition: highestRole.position
+      rolePosition: highestRole.position,
+      status: m.user.presence.status
     };
 
     if (patronRole.length > 0)
