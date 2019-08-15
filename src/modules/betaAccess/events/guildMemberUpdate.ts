@@ -23,7 +23,7 @@ module.exports = async (
 
   //* If user boosts and doesn't have beta role, give it to them
   if (newMember.roles.has(booster) && !newMember.roles.has(beta)) {
-    newMember.roles.add(beta);
+    newMember.roles.add([beta, supporter]);
 
     coll.insertOne({ userId: newMember.id });
 
@@ -33,6 +33,7 @@ module.exports = async (
   //* Remove beta access when boost expires
   if (oldMember.roles.has(booster) && !newMember.roles.has(booster)) {
     newMember.roles.remove(beta);
+    if (!oldMember.roles.has(patron)) newMember.roles.remove(supporter);
 
     coll.findOneAndDelete({ userId: newMember.id });
 

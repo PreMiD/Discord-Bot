@@ -2,7 +2,7 @@
 import { config } from "dotenv";
 config();
 import * as Discord from "discord.js";
-import { error, success } from "./util/debug";
+import { error, success, info } from "./util/debug";
 import moduleLoader from "./util/moduleLoader";
 import { connect } from "./database/client";
 
@@ -48,7 +48,11 @@ client.elevation = (message: Discord.Message) => {
   //* Jr Mod
   if (message.member.roles.has(jrModerator)) permlvl = 2;
   //* Mod
-  if (message.member.roles.has(moderator)) permlvl = 3;
+  if (
+    message.member.roles.has(moderator) &&
+    !message.member.roles.has(jrModerator)
+  )
+    permlvl = 3;
   //* Admin
   if (message.member.roles.has(administrator)) permlvl = 4;
   //* Dev
@@ -68,13 +72,9 @@ client.elevation = (message: Discord.Message) => {
       process.exit();
     });
 
-  client
-    .login(
-      process.env.NODE_ENV == "dev" ? process.env.TOKEN_BETA : process.env.TOKEN
-    )
-    .then(() => {
-      moduleLoader(client);
-    });
+  client.login(process.env.TOKEN).then(() => {
+    moduleLoader(client);
+  });
 })().catch(error);
 
 export { client };
