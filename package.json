@@ -14,14 +14,13 @@
     "dotenv": "8.0.0",
     "fast-glob": "3.0.4",
     "fs-extra": "8.1.0",
-    "mongodb": "3.2.7",
+    "mongodb": "3.3.0",
     "request": "2.88.0",
     "request-promise-native": "1.0.7"
   },
   "devDependencies": {
     "@types/dotenv": "6.1.1",
-    "@types/mongodb": "3.2.1",
-    "@types/node": "^12.7.2",
+    "@types/mongodb": "3.2.2",
     "@types/request-promise-native": "1.0.16",
     "nodemon": "1.19.1",
     "source-map-support": "0.5.13",
