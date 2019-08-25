@@ -11,6 +11,7 @@ export function connect() {
         }:${27017}`,
         {
           useNewUrlParser: true,
+          autoReconnect: true,
           appname: "PreMiD Discord Bot"
         }
       )
