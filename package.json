@@ -4,7 +4,7 @@
   "repository": "https://github.com/PreMiD/Discord-Bot",
   "version": "2.1.1",
   "scripts": {
-    "compile": "tsc && tsc devMode && node devMode.js && cd dist && npm i --production",
+    "compile": "tsc && tsc devMode && node devMode.js && cd dist && npm i --production --prefer-offline",
     "dev": "nodemon --quiet --exec 'node devMode.js & cd dist && node -r source-map-support/register index.js' -w dist -e js"
   },
   "license": "MIT",
