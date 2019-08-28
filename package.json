@@ -24,6 +24,6 @@
     "@types/request-promise-native": "1.0.16",
     "nodemon": "1.19.1",
     "source-map-support": "0.5.13",
-    "typescript": "3.5.3"
+    "typescript": "3.6.2"
   }
 }
