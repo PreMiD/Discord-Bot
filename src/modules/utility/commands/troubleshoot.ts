@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 
-var embed: Discord.MessageEmbed, ping;
+var embed: Discord.MessageEmbed;
 
 module.exports.run = async (message: Discord.Message) => {
   embed = new Discord.MessageEmbed({
