@@ -18,9 +18,11 @@ module.exports.run = async (message: Discord.Message) => {
     if (ping > 500) embed.setColor("#ff0000");
 
     embed.setDescription(
-      `**Discord** (\`\`${ping}ms\`\`)\n**Discord API** (\`\`${
+      `**Discord** (\`\`${Math.floor(
+        ping
+      )}ms\`\`)\n**Discord API** (\`\`${Math.floor(
         message.client.ws.ping
-      }ms\`\`)`
+      )}ms\`\`)`
     );
 
     msg.edit(embed).then(msg => msg.delete({ timeout: 10 * 1000 }));
