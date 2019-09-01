@@ -1,6 +1,9 @@
 import { client } from "../..";
+import { MongoClient } from "../../database/client";
 
 var { supporter, booster, patron, beta } = require("../../roles.json");
+
+var coll = MongoClient.db("PreMiD").collection("betaAccess");
 
 async function updateBetaAccess() {
   var betaUser = (await client.guilds
@@ -9,8 +12,10 @@ async function updateBetaAccess() {
     m => m.roles.has(supporter) || m.roles.has(patron) || m.roles.has(booster)
   );
 
-  betaUser.map(bU => {
+  betaUser.map(async bU => {
     if (!bU.roles.has(beta)) bU.roles.add(beta);
+    if (!(await coll.findOne({ userId: bU.id })))
+      coll.insertOne({ userId: bU.id });
   });
 }
 
