@@ -15,7 +15,7 @@ var {
 } = require("./roles.json");
 
 //* Create new client & set login presence
-var client = new Discord.Client({
+export var client = new Discord.Client({
   presence:
     process.env.NODE_ENV == "dev"
       ? {
@@ -54,7 +54,11 @@ client.elevation = (message: Discord.Message) => {
   )
     permlvl = 3;
   //* Admin
-  if (message.member.roles.has(administrator)) permlvl = 4;
+  if (
+    message.member.roles.has(administrator) ||
+    message.member.permissions.has("ADMINISTRATOR")
+  )
+    permlvl = 4;
   //* Dev
   if (message.member.roles.has(developer)) permlvl = 5;
 
@@ -62,8 +66,10 @@ client.elevation = (message: Discord.Message) => {
   return permlvl;
 };
 
+run();
+
 //! Make sure that database is connected first then proceed
-(async () => {
+async function run() {
   //* Connect to Mongo DB
   await connect()
     .then(_ => success("Connected to the database"))
@@ -75,6 +81,4 @@ client.elevation = (message: Discord.Message) => {
   client.login(process.env.TOKEN).then(() => {
     moduleLoader(client);
   });
-})().catch(error);
-
-export { client };
+}
