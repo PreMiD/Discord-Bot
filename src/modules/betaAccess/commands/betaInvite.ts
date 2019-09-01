@@ -37,7 +37,7 @@ module.exports.run = async (message: Discord.Message) => {
   (message.guild.channels.get(general) as Discord.TextChannel).send(
     `:tada: <@${
       message.mentions.users.first().id
-    }> just received beta access to **PreMiD** by ${message.author.tag}!`
+    }> just received beta access to **PreMiD** from ${message.author.tag}!`
   );
 
   betaUser.keysLeft = betaUser.keysLeft--;
