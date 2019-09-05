@@ -8,7 +8,7 @@ module.exports = async (
   oldMember: Discord.GuildMember,
   newMember: Discord.GuildMember
 ) => {
-  //* If user is patron and does not have either betaTester or beta role, give it to them
+  //* If user is patron and does not have either betaTester or beta role, give it to them.
   if (
     newMember.roles.has(patron) &&
     (!newMember.roles.has(betaTester) || !newMember.roles.has(beta))
@@ -21,7 +21,7 @@ module.exports = async (
     return;
   }
 
-  //* If user boosts and doesn't have beta role, give it to them
+  //* If user boosts and doesn't have beta role, give it to them.
   if (newMember.roles.has(booster) && !newMember.roles.has(beta)) {
     newMember.roles.add([beta, betaTester]);
 
@@ -30,11 +30,29 @@ module.exports = async (
     return;
   }
 
-  //* Remove beta access when boost expires
+  //* Remove beta access when boost expires.
   if (oldMember.roles.has(booster) && !newMember.roles.has(booster)) {
     newMember.roles.remove(beta);
     if (!oldMember.roles.has(patron)) newMember.roles.remove(betaTester);
 
+    coll.findOneAndDelete({ userId: newMember.id });
+
+    return;
+  }
+  
+  //* Remove beta access when the beta role is removed.
+  if (oldMember.roles.has(beta) && !newMember.roles.has(beta) && newMember.roles.has(betaTester)) {
+    newMember.roles.remove(betaTester);
+    
+    coll.findOneAndDelete({ userId: newMember.id });
+
+    return;
+  }
+  
+  //* Remove beta access when the beta tester is removed.
+  if (oldMember.roles.has(betaTester) && !newMember.roles.has(betaTester) && newMember.roles.has(beta)) {
+    newMember.roles.remove(beta);
+    
     coll.findOneAndDelete({ userId: newMember.id });
 
     return;
