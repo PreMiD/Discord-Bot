@@ -28,7 +28,7 @@ export var client = new Discord.Client({
       : {
           status: "online",
           activity: {
-            name: "Timeraa",
+            name: "p!help",
             type: "LISTENING"
           }
         }
