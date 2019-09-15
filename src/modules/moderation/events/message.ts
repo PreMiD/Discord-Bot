@@ -1,19 +1,34 @@
 import * as Discord from "discord.js";
+import { client } from "../../..";
 
 var messageFilter = require("../messageFilter.json"),
   { muted } = require("../../../roles.json"),
   { moderators } = require("../channels.json");
 
-module.exports = async (message: Discord.Message, _params, permLevel) => {
+module.exports = async (message: Discord.Message) => {
   var filterResult = messageFilter.find(m =>
     message.content
       .toLowerCase()
       .match(new RegExp(m.message.toLowerCase(), "i"))
   );
-  if (!filterResult || permLevel > 0) return;
+
+  //* Allow own invites
+  if (
+    (await message.guild.fetchInvites())
+      .map(invite => invite.url)
+      .find(
+        iURL => message.cleanContent.toLowerCase() === iURL.toLowerCase()
+      ) ||
+    message.cleanContent.toLowerCase() ===
+      "https://discord.gg/PreMiD".toLowerCase()
+  )
+    return;
+
+  //* Return if permission level > 0
+  if (!filterResult || client.elevation(message) > 0) return;
 
   message.delete();
-  
+
   if (filterResult.mute) {
     message.member.roles.add(muted);
 
