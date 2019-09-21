@@ -11,7 +11,7 @@ jobs:
       action "Executing remote ssh commands" {
         uses = "appleboy/ssh-action@master"
         secrets = [
-          "HOST",
+          "HOSTs",
           "PASSWORD",
         ]
         args = [
