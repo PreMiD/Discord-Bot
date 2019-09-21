@@ -17,14 +17,10 @@ async function updateCredits() {
   );
   var creditUsers = users.map(m => {
     var mCreditRoles = containsAny(
-        creditRoles.filter(cr => !cr.patreonRole).map(cr => cr.roleId),
+        creditRoles.map(cr => cr.roleId),
         m.roles.keyArray()
       ),
-      highestRole = m.roles.get(mCreditRoles[0]),
-      patronRole = containsAny(
-        creditRoles.filter(cr => cr.patreonRole).map(cr => cr.roleId),
-        m.roles.keyArray()
-      );
+      highestRole = m.roles.get(mCreditRoles[0]);
 
     var result = {
       userId: m.id,
@@ -36,10 +32,6 @@ async function updateCredits() {
       rolePosition: highestRole.position,
       status: m.user.presence.status
     };
-
-    if (patronRole.length > 0)
-      //@ts-ignore
-      result.patronColor = m.roles.get(patronRole[0]).hexColor;
 
     return result;
   });
