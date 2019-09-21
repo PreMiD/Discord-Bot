@@ -2,7 +2,7 @@
 import { config } from "dotenv";
 config();
 import * as Discord from "discord.js";
-import { error, success, info } from "./util/debug";
+import { error, success } from "./util/debug";
 import moduleLoader from "./util/moduleLoader";
 import { connect } from "./database/client";
 
