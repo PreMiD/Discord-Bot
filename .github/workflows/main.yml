@@ -8,6 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: SSH Commands
-        uses: appleboy/ssh-action@v0.0.2
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'Testing...'
 
