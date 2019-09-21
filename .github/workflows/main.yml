@@ -1,0 +1,21 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+      action "Executing remote ssh commands" {
+        uses = "appleboy/ssh-action@master"
+        secrets = [
+          "HOST",
+          "PASSWORD",
+        ]
+        args = [
+          "--user", "actions",
+          "--script", "whoami",
+        ]
+      }
