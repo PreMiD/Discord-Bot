@@ -8,14 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      action "Executing remote ssh commands" {
-        uses = "appleboy/ssh-action@master"
-        secrets = [
-          "HOSTs",
-          "PASSWORD",
-        ]
-        args = [
-          "--user", "actions",
-          "--script", "whoami",
-        ]
-      }
+      - name: SSH Commands
+        uses: appleboy/ssh-action@v0.0.2
+
