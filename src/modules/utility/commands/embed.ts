@@ -38,5 +38,5 @@ module.exports.run = async (message: Discord.Message) => {
 module.exports.config = {
   name: "embed",
   description: "Sends an embed to a specified channel",
-  permLevel: 4
+  permLevel: 3
 };
