@@ -4,9 +4,6 @@ var { muted } = require("../../../roles.json"),
   { logs, moderators } = require("../channels.json");
 
 module.exports = async (member: Discord.GuildMember) => {
-  //* Auto add @Updates role
-  member.roles.add("527676244494516225");
-
   //* Naked bot check > 2 months (5184000000)
   if (
     (member.user.username.match(/\d$/) ||
