@@ -3,7 +3,7 @@ import { MongoClient } from "../../../database/client";
 
 var coll = MongoClient.db("PreMiD").collection("betaAccess"),
   { general } = require("../channels.json"),
-  { beta, betaTester } = require("../../../roles.json");
+  { beta } = require("../../../roles.json");
 
 module.exports.run = async (message: Discord.Message) => {
   message.delete();
@@ -33,7 +33,7 @@ module.exports.run = async (message: Discord.Message) => {
 
   (await message.guild.members.fetch(
     message.mentions.users.first().id
-  )).roles.add([beta, betaTester]);
+  )).roles.add(beta);
   (message.guild.channels.get(general) as Discord.TextChannel).send(
     `:tada: <@${
       message.mentions.users.first().id
