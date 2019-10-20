@@ -5,7 +5,7 @@
   "version": "2.1.2",
   "scripts": {
     "compile": "tsc && tsc devMode && node devMode.js && cd dist && yarn --production",
-    "dev": "nodemon --quiet --exec 'node devMode.js & cd dist && node -r source-map-support/register index.js' -w dist -e js"
+    "dev": "node devMode"
   },
   "license": "MIT",
   "dependencies": {
