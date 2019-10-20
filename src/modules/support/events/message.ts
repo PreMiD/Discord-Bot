@@ -171,6 +171,10 @@ module.exports = async (message: Discord.Message) => {
       color: "#77ff77"
     });
 
+  message.author.send(
+    `Your ticket #${ticketNumber} has been submitted and will be answered soon. Please be patient.`
+  );
+
   if (
     message.attachments.size > 0 &&
     [".png", ".gif", ".jpg"].includes(
