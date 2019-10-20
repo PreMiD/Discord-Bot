@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import { extname } from "path";
-import request from "request-promise-native";
+import axios from "axios";
 
 module.exports.run = async (message: Discord.Message) => {
   if (
@@ -22,11 +22,10 @@ module.exports.run = async (message: Discord.Message) => {
     return;
   }
 
-  var embed = await request(message.attachments.first().url);
+  let embed = (await axios(message.attachments.first().url)).data;
   message.delete();
 
   try {
-    embed = JSON.parse(embed);
     message.mentions.channels.first().send({ embed: embed });
   } catch (err) {
     message
