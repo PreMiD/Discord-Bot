@@ -1,14 +1,14 @@
 import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
 
-var coll = MongoClient.db("PreMiD").collection("betaAccess"),
+let coll = MongoClient.db("PreMiD").collection("betaAccess"),
   { general } = require("../channels.json"),
   { beta } = require("../../../roles.json");
 
 module.exports.run = async (message: Discord.Message) => {
   message.delete();
 
-  var betaUser = await coll.findOne({ userId: message.author.id });
+  let betaUser = await coll.findOne({ userId: message.author.id });
 
   if (!betaUser || typeof betaUser.keysLeft === "undefined") {
     message

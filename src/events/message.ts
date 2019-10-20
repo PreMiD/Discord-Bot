@@ -1,4 +1,4 @@
-var { prefix } = require("../config.json");
+let { prefix } = require("../config.json");
 
 import * as Discord from "discord.js";
 
@@ -9,7 +9,7 @@ module.exports = (message: Discord.Message) => {
   //* Prevent bots
   if (message.author && message.author.bot) return;
 
-  var command = message.content.split(" ")[0].slice(prefix.length),
+  let command = message.content.split(" ")[0].slice(prefix.length),
     params = message.content.split(" ").slice(1),
     perms = message.client.elevation(message),
     cmd: any;

@@ -1,4 +1,5 @@
-if (process.env.NODE_ENV == "dev") var chalk = require("chalk");
+let chalk = undefined;
+if (process.env.NODE_ENV == "dev") chalk = require("chalk");
 
 export function info(message: string) {
   if (process.env.NODE_ENV != "dev") return;

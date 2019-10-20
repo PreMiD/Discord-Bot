@@ -2,14 +2,14 @@ import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
 import * as path from "path";
 
-var { supportChannel, ticketChannel } = require("../channels.json"),
+let { supportChannel, ticketChannel } = require("../channels.json"),
   { ticketManager } = require("../../../roles.json"),
   circleFolder =
     "https://raw.githubusercontent.com/PreMiD/Discord-Bot/master/.discord/";
 
-var coll = MongoClient.db("PreMiD").collection("tickets");
+let coll = MongoClient.db("PreMiD").collection("tickets");
 module.exports = async (message: Discord.Message) => {
-  var ticket = await coll.findOne({ supportChannel: message.channel.id });
+  let ticket = await coll.findOne({ supportChannel: message.channel.id });
   if (ticket) delete ticket._id;
 
   if (
@@ -34,14 +34,14 @@ module.exports = async (message: Discord.Message) => {
   }
 
   if (ticket && ticket.supporters.includes(message.author.id)) {
-    var suppChannel = await (message.guild.channels.get(
+    let suppChannel = await (message.guild.channels.get(
       ticket.supportChannel
     ) as Discord.TextChannel);
 
     if (message.content.startsWith(">>")) {
       message.delete();
 
-      var userToAdd = message.guild.members.find(
+      let userToAdd = message.guild.members.find(
         m =>
           m.displayName.toLowerCase() ===
             message.content
@@ -123,7 +123,7 @@ module.exports = async (message: Discord.Message) => {
       });
       message.channel.send(`<@${message.author.id}> left this ticket.`);
 
-      var ticketMessage = await (message.guild.channels.get(
+      let ticketMessage = await (message.guild.channels.get(
           ticketChannel
         ) as Discord.TextChannel).messages.fetch(ticket.ticketMessage),
         embed = ticketMessage.embeds[0];
@@ -155,7 +155,7 @@ module.exports = async (message: Discord.Message) => {
     return;
   }
 
-  var ticketNumber = ((await coll.countDocuments()) + 1)
+  let ticketNumber = ((await coll.countDocuments()) + 1)
       .toString()
       .padStart(5, "0"),
     embed = new Discord.MessageEmbed({
@@ -181,7 +181,7 @@ module.exports = async (message: Discord.Message) => {
       url: message.attachments.first().url
     };
 
-  var ticketMessage = (await (message.guild.channels.get(
+  let ticketMessage = (await (message.guild.channels.get(
     ticketChannel
   ) as Discord.TextChannel).send(embed)) as Discord.Message;
   ticketMessage
@@ -195,7 +195,7 @@ module.exports = async (message: Discord.Message) => {
     embed.thumbnail === null &&
     message.attachments.size > 0
   ) {
-    var attachmentMessage = (await (message.guild.channels.get(
+    let attachmentMessage = (await (message.guild.channels.get(
       ticketChannel
     ) as Discord.TextChannel).send({
       files: message.attachments.map(att => att.url)
@@ -224,7 +224,7 @@ async function addToTicket(
   ticket,
   suppChannel: Discord.TextChannel
 ) {
-  var ticketMessage = await (message.guild.channels.get(
+  let ticketMessage = await (message.guild.channels.get(
       ticketChannel
     ) as Discord.TextChannel).messages.fetch(ticket.ticketMessage),
     embed = ticketMessage.embeds[0];

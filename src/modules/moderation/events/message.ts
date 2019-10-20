@@ -1,12 +1,12 @@
 import * as Discord from "discord.js";
 import { client } from "../../..";
 
-var messageFilter = require("../messageFilter.json"),
+let messageFilter = require("../messageFilter.json"),
   { muted } = require("../../../roles.json"),
   { moderators } = require("../channels.json");
 
 module.exports = async (message: Discord.Message) => {
-  var filterResult = messageFilter.find(m =>
+  let filterResult = messageFilter.find(m =>
     message.content
       .toLowerCase()
       .match(new RegExp(m.message.toLowerCase(), "i"))
@@ -32,7 +32,7 @@ module.exports = async (message: Discord.Message) => {
   if (filterResult.mute) {
     message.member.roles.add(muted);
 
-    var embed = new Discord.MessageEmbed({
+    let embed = new Discord.MessageEmbed({
       author: {
         name: message.member.displayName,
         iconURL: message.author.displayAvatarURL({ size: 128 })

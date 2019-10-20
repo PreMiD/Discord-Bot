@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 
-var { muted } = require("../../../roles.json");
+let { muted } = require("../../../roles.json");
 
 module.exports.run = async (message: Discord.Message) => {
   message.delete();

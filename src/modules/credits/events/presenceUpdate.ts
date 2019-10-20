@@ -5,7 +5,7 @@ module.exports = async (
   oldMember: Discord.GuildMember,
   newMember: Discord.GuildMember
 ) => {
-  var creditsCollection = MongoClient.db("PreMiD").collection("credits");
+  let creditsCollection = MongoClient.db("PreMiD").collection("credits");
   if (!newMember && !newMember.user) return;
   if (!(await creditsCollection.findOne({ userId: newMember.user.id }))) return;
 

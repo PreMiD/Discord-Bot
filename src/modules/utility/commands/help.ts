@@ -1,12 +1,12 @@
 import * as Discord from "discord.js";
 import { client } from "../../..";
 
-var { prefix } = require("../../../config.json");
+let { prefix } = require("../../../config.json");
 
 module.exports.run = async (message: Discord.Message) => {
   message.delete();
 
-  var userElevation = client.elevation(message),
+  let userElevation = client.elevation(message),
     cmds = client.commands
       .map(cmd => [
         // @ts-ignore
@@ -18,7 +18,7 @@ module.exports.run = async (message: Discord.Message) => {
       ])
       .filter(cmd => userElevation >= cmd[2]);
 
-  var embed = new Discord.MessageEmbed({
+  let embed = new Discord.MessageEmbed({
     title: "Help",
     description: cmds
       .map(cmd => {

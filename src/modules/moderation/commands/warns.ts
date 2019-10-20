@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
 
-var { prefix } = require("../../../config.json");
+let { prefix } = require("../../../config.json");
 
 module.exports.run = async (
   message: Discord.Message,
@@ -10,10 +10,10 @@ module.exports.run = async (
 ) => {
   message.delete();
 
-  var coll = MongoClient.db("PreMiD").collection("warns");
+  let coll = MongoClient.db("PreMiD").collection("warns");
 
   if (params.length == 0 && message.mentions.users.size == 0) {
-    var user = await coll.findOne({ userId: message.author.id });
+    let user = await coll.findOne({ userId: message.author.id });
     if (!user) {
       ((await message.reply(
         "You don't have any warnings."
@@ -21,7 +21,7 @@ module.exports.run = async (
       return;
     }
 
-    var embed = new Discord.MessageEmbed({
+    let embed = new Discord.MessageEmbed({
       title: "Your Warnings",
       author: {
         name: message.author.tag,
@@ -38,11 +38,11 @@ module.exports.run = async (
     });
     message.author.send(embed);
   } else if (perms > 1) {
-    var user = await coll.findOne({
+    let user = await coll.findOne({
       userId: message.mentions.users.first().id
     });
 
-    var embed = new Discord.MessageEmbed({
+    let embed = new Discord.MessageEmbed({
       title: `${message.mentions.users.first().username}'s Warnings`,
       author: {
         name: message.mentions.users.first().tag,

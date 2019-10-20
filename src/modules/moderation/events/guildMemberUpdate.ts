@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
 
-var { muted } = require("../../../roles.json");
+let { muted } = require("../../../roles.json");
 
 module.exports = async (
   oldMember: Discord.GuildMember,

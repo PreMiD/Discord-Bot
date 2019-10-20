@@ -6,7 +6,7 @@ import { error, success } from "./util/debug";
 import moduleLoader from "./util/moduleLoader";
 import { connect } from "./database/client";
 
-var {
+let {
   ticketManager,
   jrModerator,
   moderator,
@@ -15,7 +15,7 @@ var {
 } = require("./roles.json");
 
 //* Create new client & set login presence
-export var client = new Discord.Client({
+export let client = new Discord.Client({
   presence:
     process.env.NODE_ENV == "dev"
       ? {
@@ -39,7 +39,7 @@ client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 client.elevation = (message: Discord.Message) => {
   //* Permission level checker
-  var permlvl: Number = 0;
+  let permlvl: Number = 0;
 
   if (!message.member) return 0;
 

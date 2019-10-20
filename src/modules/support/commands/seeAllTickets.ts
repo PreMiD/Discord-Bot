@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
 
-var coll = MongoClient.db("PreMiD").collection("userSettings"),
+let coll = MongoClient.db("PreMiD").collection("userSettings"),
   { ticketManager } = require("../../../roles.json"),
   { prefix } = require("../../../config.json");
 
@@ -12,7 +12,7 @@ module.exports.run = async (
   if (!message.member.roles.has(ticketManager)) return;
   message.delete();
 
-  var userSettings = await coll.findOne({ userId: message.author.id });
+  let userSettings = await coll.findOne({ userId: message.author.id });
   if (!userSettings)
     userSettings = await coll.insertOne({
       userId: message.author.id,
@@ -58,7 +58,7 @@ module.exports.run = async (
       break;
   }
 
-  var ticketColl = MongoClient.db("PreMiD").collection("tickets"),
+  let ticketColl = MongoClient.db("PreMiD").collection("tickets"),
     userToModify = await ticketColl.find({ status: 1 }).toArray();
 
   userToModify = userToModify.filter(
@@ -66,7 +66,7 @@ module.exports.run = async (
   );
 
   userToModify.map(ticket => {
-    var ticketChannel = message.guild.channels.get(
+    let ticketChannel = message.guild.channels.get(
       ticket.supportChannel
     ) as Discord.TextChannel;
 

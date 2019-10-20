@@ -2,7 +2,7 @@ import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
 import { client } from "../../..";
 
-var { prefix } = require("../../../config.json"),
+let { prefix } = require("../../../config.json"),
   { moderators } = require(".././channels.json"),
   { muted } = require("../../../roles.json");
 
@@ -10,7 +10,7 @@ module.exports.run = async (
   message: Discord.Message,
   params: Array<string>
 ) => {
-  var embed = new Discord.MessageEmbed({
+  let embed = new Discord.MessageEmbed({
     title: "Warn",
     description: `*You can warn a user by typing
     \`\`${prefix}warn <user> <reason>\`\`*`,
@@ -41,7 +41,7 @@ module.exports.run = async (
     return;
   }
 
-  var coll = MongoClient.db("PreMiD").collection("warns"),
+  let coll = MongoClient.db("PreMiD").collection("warns"),
     user = await coll.findOne({ userId: message.mentions.users.first().id }),
     warns = 1;
 
@@ -72,7 +72,7 @@ module.exports.run = async (
     warns = user.warns.length++;
   }
 
-  var muteTime: string = null;
+  let muteTime: string = null;
   switch (warns) {
     case 1: {
       break;
@@ -92,7 +92,7 @@ module.exports.run = async (
     }
   }
 
-  var warnNumberText = `${warns}th`;
+  let warnNumberText = `${warns}th`;
   if (warns == 1) warnNumberText = "1st";
   if (warns == 2) warnNumberText = "2nd";
   if (warns == 3) warnNumberText = "3rd";
@@ -158,7 +158,7 @@ function muteTill(id: string, time: number = 0) {
     .then(async m => {
       m.roles.add(muted, "Warn penalty.");
 
-      var data = {
+      let data = {
         userId: id,
         mutedUntil: Date.now() + time
       };
@@ -190,7 +190,7 @@ function muteTill(id: string, time: number = 0) {
 }
 
 export async function unmute(id: string) {
-  var mute = await MongoClient.db("PreMiD")
+  let mute = await MongoClient.db("PreMiD")
     .collection("mutes")
     .findOne({ userId: id });
 

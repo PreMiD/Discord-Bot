@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
 
-var { patron, beta, booster, donator } = require("../../../roles.json"),
+let { patron, beta, booster, donator } = require("../../../roles.json"),
   coll = MongoClient.db("PreMiD").collection("betaAccess");
 
 module.exports = async (

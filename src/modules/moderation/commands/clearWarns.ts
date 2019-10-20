@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
 
-var { prefix } = require("../../../config.json");
+let { prefix } = require("../../../config.json");
 
 module.exports.run = async (
   message: Discord.Message,
@@ -9,7 +9,7 @@ module.exports.run = async (
 ) => {
   message.delete();
 
-  var embed = new Discord.MessageEmbed({
+  let embed = new Discord.MessageEmbed({
     title: "Clear Warnings",
     description: `*You can clear a user's warnings by typing
     \`\`${prefix}cwarns <user>\`\`*`,
@@ -23,7 +23,7 @@ module.exports.run = async (
     return;
   }
 
-  var coll = MongoClient.db("PreMiD").collection("warns"),
+  let coll = MongoClient.db("PreMiD").collection("warns"),
     user = await coll.findOneAndDelete({
       userId: message.mentions.users.first().id
     });

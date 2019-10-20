@@ -1,12 +1,10 @@
 import { client } from "../../index";
 import { MongoClient } from "../../database/client";
 
-var creditRoles = require("./creditRoles.json");
+let creditRoles = require("./creditRoles.json");
 
 async function updateCredits() {
-  var coll = MongoClient.db("PreMiD").collection("credits");
-
-  var users = await client.guilds
+  let users = await client.guilds
     .get("493130730549805057")
     .members.fetch({ limit: 0 });
 
@@ -15,14 +13,14 @@ async function updateCredits() {
       containsAny(creditRoles.map(cr => cr.roleId), m.roles.keyArray()).length >
       0
   );
-  var creditUsers = users.map(m => {
-    var mCreditRoles = containsAny(
+  let creditUsers = users.map(m => {
+    let mCreditRoles = containsAny(
         creditRoles.map(cr => cr.roleId),
         m.roles.keyArray()
       ),
       highestRole = m.roles.get(mCreditRoles[0]);
 
-    var result = {
+    let result = {
       userId: m.id,
       name: m.nickname || m.user.username,
       tag: m.user.discriminator,
@@ -36,7 +34,7 @@ async function updateCredits() {
     return result;
   });
 
-  var coll = MongoClient.db("PreMiD").collection("credits"),
+  let coll = MongoClient.db("PreMiD").collection("credits"),
     mongoCredits = await coll.find().toArray(),
     usersToRemove = mongoCredits
       .map(mC => mC.userId)
@@ -58,7 +56,7 @@ updateCredits();
 setInterval(updateCredits, 5 * 1000 * 60);
 
 function containsAny(source, target) {
-  var result = source.filter(function(item) {
+  let result = source.filter(function(item) {
     return target.indexOf(item) > -1;
   });
   return result;

@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 
-var { muted } = require("../../../roles.json"),
+let { muted } = require("../../../roles.json"),
   { logs, moderators } = require("../channels.json");
 
 module.exports = async (member: Discord.GuildMember) => {
@@ -10,7 +10,7 @@ module.exports = async (member: Discord.GuildMember) => {
       member.user.username.match(/[\\w.]+/)) &&
     member.user.createdTimestamp > Date.now() - 5184000000
   ) {
-    var embed = new Discord.MessageEmbed()
+    let embed = new Discord.MessageEmbed()
       .setAuthor(`${member.displayName}`, member.user.displayAvatarURL())
       .addField("Account creation date", member.user.createdAt)
       .setColor("#fc3c3c")

@@ -1,12 +1,12 @@
 import { client } from "../..";
 import { MongoClient } from "../../database/client";
 
-var { booster, patron, beta } = require("../../roles.json");
+let { booster, patron, beta } = require("../../roles.json");
 
-var coll = MongoClient.db("PreMiD").collection("betaAccess");
+let coll = MongoClient.db("PreMiD").collection("betaAccess");
 
 async function updateBetaAccess() {
-  var betaUser = (await client.guilds
+  let betaUser = (await client.guilds
     .get("493130730549805057")
     .members.fetch({ limit: 0 })).filter(
     m => m.roles.has(patron) || m.roles.has(booster)

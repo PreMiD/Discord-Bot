@@ -2,24 +2,24 @@ import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
 import { client } from "../../..";
 
-var { ticketCategory, ticketChannel } = require("../channels.json"),
+let { ticketCategory, ticketChannel } = require("../channels.json"),
   { ticketManager } = require("../../../roles.json"),
   coll = MongoClient.db("PreMiD").collection("tickets");
 
 module.exports = async packet => {
   if (!["MESSAGE_REACTION_ADD"].includes(packet.t)) return;
 
-  var guild = client.guilds.get(packet.d.guild_id),
+  let guild = client.guilds.get(packet.d.guild_id),
     member = guild.members.get(packet.d.user_id);
 
   if (member.user.bot) return;
 
-  var ticket = await coll.findOne({ ticketMessage: packet.d.message_id });
+  let ticket = await coll.findOne({ ticketMessage: packet.d.message_id });
 
   if (!ticket) return;
   delete ticket._id;
 
-  var ticketchannel = guild.channels.get(ticketChannel) as Discord.TextChannel,
+  let ticketchannel = guild.channels.get(ticketChannel) as Discord.TextChannel,
     ticketMessage = await ticketchannel.messages.fetch(ticket.ticketMessage),
     embed = ticketMessage.embeds[0];
 
@@ -68,12 +68,12 @@ module.exports = async packet => {
     packet.d.emoji.id === "521018476870107156" &&
     typeof ticket.status === "undefined"
   ) {
-    var supportersToAdd = await MongoClient.db("PreMiD")
+    let supportersToAdd = await MongoClient.db("PreMiD")
       .collection("userSettings")
       .find({ seeAllTickets: true })
       .toArray();
 
-    var channel = (await guild.channels.create(ticket.ticketId.toString(), {
+    let channel = (await guild.channels.create(ticket.ticketId.toString(), {
       parent: ticketCategory,
       type: "text",
       //@ts-ignore

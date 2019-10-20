@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 
-var { prefix } = require("../../../config.json"),
+let { prefix } = require("../../../config.json"),
   assignRolesFile: Array<string> = require("../assignRoles.json"),
   embed: Discord.MessageEmbed;
 
@@ -8,7 +8,7 @@ module.exports.run = async (
   message: Discord.Message,
   params: Array<String>
 ) => {
-  var assignRoles: Discord.Role[] = assignRolesFile
+  let assignRoles: Discord.Role[] = assignRolesFile
     .map(r => message.guild.roles.get(r))
     .filter(v => v != undefined);
 
@@ -18,7 +18,7 @@ module.exports.run = async (
       title: "Assignable Roles",
       description: `*You can assign these roles by typing
 			\`\`${prefix}assign <roleName>\`\`*
-			
+
 			${assignRoles.map(r => `**${r.name}**`).join(", ")}`,
       color: "#7289DA"
     });
@@ -29,7 +29,7 @@ module.exports.run = async (
     return;
   }
 
-  var assignRole = assignRoles.filter(
+  let assignRole = assignRoles.filter(
     r => r.name.toLowerCase() == params.join(" ").toLowerCase()
   );
 
@@ -45,7 +45,7 @@ module.exports.run = async (
     return;
   }
 
-  var asRole = assignRole[0];
+  let asRole = assignRole[0];
 
   if (message.member && message.member.roles.has(asRole.id)) {
     message.react("❌");

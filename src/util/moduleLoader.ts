@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as Discord from "discord.js";
 
-var moduleFolder: fs.PathLike = path.resolve("./modules");
+let moduleFolder: fs.PathLike = path.resolve("./modules");
 
 export default async (client: Discord.Client) => {
   loadModules(client);
@@ -16,7 +16,7 @@ export default async (client: Discord.Client) => {
  * @param {client} client
  */
 async function loadModules(client: Discord.Client) {
-  var modules = await fs.readdirSync(moduleFolder);
+  let modules = await fs.readdirSync(moduleFolder);
 
   modules = modules.filter(module => {
     if (
@@ -28,14 +28,14 @@ async function loadModules(client: Discord.Client) {
     else return true;
   });
 
-  var commandCount = await Promise.all(
+  let commandCount = await Promise.all(
     modules.map(async module => {
       if (await fs.existsSync(`${moduleFolder}/${module}/commands`))
         return (await fs.readdirSync(
           `${moduleFolder}/${module}/commands`
         )).filter(f => {
           if (f.endsWith(".ts") || f.endsWith(".map")) return false;
-          var props = require(`${moduleFolder}/${module}/commands/${f}`);
+          let props = require(`${moduleFolder}/${module}/commands/${f}`);
           if (typeof props["config"].enabled == "undefined") return true;
           else props["config"].enabled;
         });
@@ -45,14 +45,14 @@ async function loadModules(client: Discord.Client) {
     return [].concat(...cmds).filter(f => f).length;
   });
 
-  var eventCount = await Promise.all(
+  let eventCount = await Promise.all(
     modules.map(async module => {
       if (await fs.existsSync(`${moduleFolder}/${module}/events`))
         return (await fs.readdirSync(
           `${moduleFolder}/${module}/events`
         )).filter(f => {
           if (f.endsWith(".ts") || f.endsWith(".map")) return false;
-          var props = require(`${moduleFolder}/${module}/events/${f}`);
+          let props = require(`${moduleFolder}/${module}/events/${f}`);
           if (typeof props == "function" || typeof props.config != "undefined")
             return true;
           else return false;
@@ -90,13 +90,13 @@ async function loadModules(client: Discord.Client) {
  * @param {client} client Client which will be used to save the command
  */
 async function loadCommands(filePath: string, client: Discord.Client) {
-  var files = await fs.readdirSync(filePath);
+  let files = await fs.readdirSync(filePath);
 
   files = files.filter(file => !file.endsWith(".ts"));
   files = files.map(file => file.split(".")[0]);
 
   files.map(command => {
-    var props = require(`${filePath}/${command}`);
+    let props = require(`${filePath}/${command}`);
     if (typeof props["config"] == "undefined") {
       error(
         `Command ${command} in module ${path.basename(
@@ -133,7 +133,7 @@ async function loadCommands(filePath: string, client: Discord.Client) {
  * @param {client} client Client which will be used to bind the event
  */
 async function loadEvents(filePath: string, client: Discord.Client) {
-  var eventFile: any,
+  let eventFile: any,
     files = await fs.readdirSync(filePath);
 
   files = files.filter(file => !file.endsWith(".ts") && !file.endsWith(".map"));

@@ -2,10 +2,10 @@ import { MongoClient } from "../../database/client";
 import { unmute } from "./commands/warn";
 import { client } from "../..";
 
-var { muted } = require("../../roles.json");
+let { muted } = require("../../roles.json");
 
 (async () => {
-  var coll = MongoClient.db("PreMiD").collection("mutes"),
+  let coll = MongoClient.db("PreMiD").collection("mutes"),
     mutes = await coll.find({ mutedUntil: { $exists: true } }).toArray();
 
   mutes.map(mute => {
