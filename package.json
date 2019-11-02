@@ -4,7 +4,7 @@
   "repository": "https://github.com/PreMiD/Discord-Bot",
   "version": "2.1.2",
   "scripts": {
-    "compile": "tsc && tsc devMode && node devMode.js && cd dist && yarn --production",
+    "compile": "yarn && tsc && devScript --compile",
     "dev": "devScript"
   },
   "license": "MIT",
@@ -16,10 +16,6 @@
     "mongodb": "3.3.3"
   },
   "devDependencies": {
-<<<<<<< HEAD
-=======
-    "@types/dotenv": "8.2.0",
->>>>>>> 027577033c75652b247712cb23fdc5649c942dcf
     "@types/mongodb": "3.3.6",
     "@types/node": "12.11.7",
     "source-map-support": "0.5.13"
