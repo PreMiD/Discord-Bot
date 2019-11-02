@@ -2,7 +2,7 @@
   "name": "premid-bot",
   "description": "Discord Bot for PreMiD",
   "repository": "https://github.com/PreMiD/Discord-Bot",
-  "version": "2.1.2",
+  "version": "2.2",
   "scripts": {
     "compile": "yarn && tsc && devScript --compile",
     "dev": "devScript"
