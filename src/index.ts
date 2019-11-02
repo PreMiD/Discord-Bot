@@ -37,30 +37,29 @@ export let client = new Discord.Client({
 //* Commands, Command aliases, Command permission levels
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
-client.elevation = (message: Discord.Message) => {
+client.elevation = (userId: string) => {
   //* Permission level checker
   let permlvl: Number = 0;
 
-  if (!message.member) return 0;
+  const member = client.guilds.first().members.get(userId);
+
+  if (!member) return 0;
 
   //* Ticket Manager
-  if (message.member.roles.has(ticketManager)) permlvl = 1;
+  if (member.roles.has(ticketManager)) permlvl = 1;
   //* Jr Mod
-  if (message.member.roles.has(jrModerator)) permlvl = 2;
+  if (member.roles.has(jrModerator)) permlvl = 2;
   //* Mod
-  if (
-    message.member.roles.has(moderator) &&
-    !message.member.roles.has(jrModerator)
-  )
+  if (member.roles.has(moderator) && !member.roles.has(jrModerator))
     permlvl = 3;
   //* Admin
   if (
-    message.member.roles.has(administrator) ||
-    message.member.permissions.has("ADMINISTRATOR")
+    member.roles.has(administrator) ||
+    member.permissions.has("ADMINISTRATOR")
   )
     permlvl = 4;
   //* Dev
-  if (message.member.roles.has(developer)) permlvl = 5;
+  if (member.roles.has(developer)) permlvl = 5;
 
   //* Return permlvl
   return permlvl;
@@ -78,7 +77,5 @@ async function run() {
       process.exit();
     });
 
-  client.login(process.env.TOKEN).then(() => {
-    moduleLoader(client);
-  });
+  client.login(process.env.TOKEN).then(async () => moduleLoader(client));
 }

@@ -6,7 +6,7 @@ let { prefix } = require("../../../config.json");
 module.exports.run = async (message: Discord.Message) => {
   message.delete();
 
-  let userElevation = client.elevation(message),
+  let userElevation = client.elevation(message.author.id),
     cmds = client.commands
       .map(cmd => [
         // @ts-ignore

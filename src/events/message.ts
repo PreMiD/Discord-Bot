@@ -11,7 +11,7 @@ module.exports = (message: Discord.Message) => {
 
   let command = message.content.split(" ")[0].slice(prefix.length),
     params = message.content.split(" ").slice(1),
-    perms = message.client.elevation(message),
+    perms = message.client.elevation(message.author.id),
     cmd: any;
 
   //* Get current command from commands/aliases

@@ -1,6 +1,7 @@
-import { MongoClient as mongoClient } from "mongodb";
+import { MongoClient as mongoClient, Db } from "mongodb";
 
 export let MongoClient: mongoClient;
+export let pmdDB: Db;
 
 export function connect() {
   return new Promise<mongoClient>((resolve, reject) => {
@@ -10,13 +11,15 @@ export function connect() {
           process.env.MONGOIP
         }:${27017}`,
         {
+          useUnifiedTopology: true,
           useNewUrlParser: true,
           autoReconnect: true,
-          appname: "PreMiD Discord Bot"
+          appname: "PreMiD Discord-Bot"
         }
       )
       .then(mongoClient => {
         MongoClient = mongoClient;
+        pmdDB = MongoClient.db("PreMiD");
         resolve(mongoClient);
       })
       .catch(reject);
