@@ -47,7 +47,6 @@ module.exports = async packet => {
             ticketchannel.messages
               .fetch(ticket.attachmentMessage)
               .then(msg => msg.delete());
-          coll.findOneAndDelete({ ticketId: ticket.ticketId });
         })
         .catch(() => {
           ticketMessage.reactions
@@ -137,9 +136,7 @@ module.exports = async packet => {
       });
     }
     channel.send(
-      `<@${ticket.userId}>, Your ticket \`\`#${
-        ticket.ticketId
-      }\`\` has been accepted by **${member.displayName}**`
+      `<@${ticket.userId}>, Your ticket \`\`#${ticket.ticketId}\`\` has been accepted by **${member.displayName}**`
     );
 
     ticket.supportChannel = channel.id;
