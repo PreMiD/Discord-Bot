@@ -9,8 +9,10 @@ let { supportChannel, ticketChannel } = require("../channels.json"),
 
 let coll = MongoClient.db("PreMiD").collection("tickets");
 module.exports = async (message: Discord.Message) => {
-  let ticket = await coll.findOne({ supportChannel: message.channel.id });
-  if (ticket) delete ticket._id;
+  let ticket = await coll.findOne(
+    { supportChannel: message.channel.id },
+    { projection: { _id: false } }
+  );
 
   if (
     ticket &&
@@ -19,24 +21,20 @@ module.exports = async (message: Discord.Message) => {
     (message.member.roles.has(ticketManager) ||
       message.member.permissions.has("ADMINISTRATOR"))
   ) {
-    message.channel.send(`<@${message.author.id}> joined this ticket.`);
+    message.channel.send(`> **>** ${message.member.displayName}`);
 
     ticket.supporters.push(message.author.id);
-    addToTicket(
-      message,
-      ticket,
-      await (message.guild.channels.get(
-        ticket.supportChannel
-      ) as Discord.TextChannel)
-    );
+    addToTicket(message, ticket, message.guild.channels.get(
+      ticket.supportChannel
+    ) as Discord.TextChannel);
     coll.findOneAndUpdate({ ticketId: ticket.ticketId }, { $set: ticket });
     return;
   }
 
   if (ticket && ticket.supporters.includes(message.author.id)) {
-    let suppChannel = await (message.guild.channels.get(
+    let suppChannel = message.guild.channels.get(
       ticket.supportChannel
-    ) as Discord.TextChannel);
+    ) as Discord.TextChannel;
 
     if (message.content.startsWith(">>")) {
       message.delete();
@@ -62,9 +60,7 @@ module.exports = async (message: Discord.Message) => {
           .then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }));
         return;
       } else {
-        await message.channel.send(
-          `<@${userToAdd.id}> has been added to this ticket.`
-        );
+        await message.channel.send(`> **>** ${userToAdd.displayName}`);
 
         ticket.supporters.push(userToAdd.id);
         addToTicket(message, ticket, suppChannel);
@@ -121,7 +117,7 @@ module.exports = async (message: Discord.Message) => {
           })
         )
       });
-      message.channel.send(`<@${message.author.id}> left this ticket.`);
+      message.channel.send(`> **<** ${message.member.displayName}`);
 
       let ticketMessage = await (message.guild.channels.get(
           ticketChannel
