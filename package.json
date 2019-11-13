@@ -16,7 +16,7 @@
     "mongodb": "3.3.4"
   },
   "devDependencies": {
-    "@types/mongodb": "3.3.6",
+    "@types/mongodb": "3.3.10",
     "@types/node": "12.12.7",
     "source-map-support": "0.5.13"
   }
