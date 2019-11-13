@@ -13,7 +13,7 @@
     "devscript": "Timeraa/DevScript",
     "discord.js": "github:discordjs/discord.js",
     "dotenv": "8.2.0",
-    "mongodb": "3.3.3"
+    "mongodb": "3.3.4"
   },
   "devDependencies": {
     "@types/mongodb": "3.3.6",
