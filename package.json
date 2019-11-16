@@ -1,23 +1,24 @@
 {
   "name": "premid-bot",
-  "description": "Discord Bot for PreMiD",
+  "description": "Official PreMiD Discord Bot.",
   "repository": "https://github.com/PreMiD/Discord-Bot",
-  "version": "2.2",
+  "version": "2.2.1",
   "scripts": {
-    "compile": "yarn && tsc && devScript --compile",
+    "start": "node index",
+    "compile": "yarn --silent && tsc && devScript --copyOnly",
     "dev": "devScript"
   },
-  "license": "MIT",
+  "license": "MPL-2.0",
   "dependencies": {
+    "@timeraa/devscript": "Timeraa/DevScript",
     "axios": "0.19.0",
-    "devscript": "Timeraa/DevScript",
     "discord.js": "github:discordjs/discord.js",
     "dotenv": "8.2.0",
     "mongodb": "3.3.4"
   },
   "devDependencies": {
-    "@types/mongodb": "3.3.10",
-    "@types/node": "12.12.7",
-    "source-map-support": "0.5.13"
+    "@types/mongodb": "^3.3.10",
+    "@types/node": "^12.12.7",
+    "source-map-support": "^0.5.13"
   }
 }
