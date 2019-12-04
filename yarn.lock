@@ -29,8 +29,9 @@
     fastq "^1.6.0"
 
 "@timeraa/devscript@Timeraa/DevScript":
-  version "1.0.1"
-  resolved "https://codeload.github.com/Timeraa/DevScript/tar.gz/37188cb5d378725559e9cf11477d3b78ff1a257f"
+  version "1.0.2"
+  uid ef9b9ec5bcc4c2c220f6340478d80c351b868e1e
+  resolved "https://codeload.github.com/Timeraa/DevScript/tar.gz/ef9b9ec5bcc4c2c220f6340478d80c351b868e1e"
   dependencies:
     chalk "^2.4.2"
     fast-glob "^3.1.0"
