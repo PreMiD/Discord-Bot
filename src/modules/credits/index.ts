@@ -22,7 +22,7 @@ async function updateCredits() {
 
     let result = {
       userId: m.id,
-      name: m.nickname || m.user.username,
+      name: m.user.username,
       tag: m.user.discriminator,
       avatar: m.user.displayAvatarURL(),
       role: highestRole.name,
