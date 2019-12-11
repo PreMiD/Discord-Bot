@@ -37,6 +37,9 @@ export let client = new Discord.Client({
 //* Commands, Command aliases, Command permission levels
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
+client.infos = new Discord.Collection();
+client.infoAliases = new Discord.Collection();
+
 client.elevation = (userId: string) => {
   //* Permission level checker
   let permlvl: Number = 0;
