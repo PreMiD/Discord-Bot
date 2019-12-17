@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@types/mongodb": "^3.3.12",
-    "@types/node": "^12.12.14",
+    "@types/node": "^12.12.20",
     "source-map-support": "^0.5.13"
   }
 }
