@@ -6,6 +6,8 @@ declare module "discord.js" {
     commands: Discord.Collection<String | undefined, CommandProps>;
     aliases: Discord.Collection<String, String>;
     elevation: Function;
+    infos: Discord.Collection<string, any>;
+    infoAliases: Discord.Collection<string, string>;
   }
 }
 
