@@ -3,7 +3,7 @@
     "title": "Troubleshooting",
     "color": "RANDOM",
     "aliases": ["troubleshooting", "trouble", "ts", "tshoot"],
-    "description": "If you didn't read our troubleshooting page when you got the error, please make sure you read everything carefully before creating a ticket. Check our troubleshooting page by clicking [here](https://docs.premid.app/en/troubleshooting) and see if anything in there will fix your issue. You can or you may continue to discuss more about it in your ticket after that.",
+    "description": "If you didn't read our troubleshooting page yet, please make sure you read everything carefully before creating a ticket. Check our troubleshooting page by clicking [here](https://docs.premid.app/en/troubleshooting) and see if anything in there will fix your issue. You can or you may continue to discuss more about it in your ticket after that.",
     "footer": false
   },
   "betterdiscord": {
