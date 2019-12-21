@@ -3,7 +3,7 @@
     "title": "Troubleshooting",
     "color": "RANDOM",
     "aliases": ["troubleshooting", "trouble", "ts", "tshoot"],
-    "description": "If you haven't read our troubleshooting page when you encountered the error you got, please make sure you read everything carefully before contacting our team. Check our troubleshooting page by clicking [here](https://docs.premid.app/en/troubleshooting) and see if anything in there will fix your issue. If not, feel free to create a ticket in <#566738846650335232>.",
+    "description": "If you didn't read our troubleshooting page when you got the error, please make sure you read everything carefully before creating a ticket. Check our troubleshooting page by clicking [here](https://docs.premid.app/en/troubleshooting) and see if anything in there will fix your issue. You can or you may continue to discuss more about it in your ticket after that.",
     "footer": false
   },
   "betterdiscord": {
@@ -24,7 +24,7 @@
     "title": "Read the Docs!",
     "color": "RANDOM",
     "aliases": ["documentation", "readthedocs"],
-    "description": "If you have any questions regarding to PreMiD, PreMiD API, creating presences for PreMiD or how to do **x** with PreMiD, please read our documentation before creating a ticket by clicking [here](https://docs.premid.app).",
+    "description": "If you have any questions regarding to PreMiD, PreMiD API, presence development or how to do **x** with PreMiD, please read our documentation before creating a ticket by clicking [here](https://docs.premid.app).",
     "footer": false
   },
   "website": {

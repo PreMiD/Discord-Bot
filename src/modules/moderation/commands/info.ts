@@ -18,7 +18,7 @@ module.exports.run = async (message: Discord.Message, params: Array<string>) => 
   } else if (message.client.infos.get(params[0].toLowerCase()) || message.client.infos.get(message.client.infoAliases.get(params[0].toLowerCase()))) {
     const info = message.client.infos.get(params[0].toLowerCase()) || message.client.infos.get(message.client.infoAliases.get(params[0].toLowerCase()));
 
-    let embed = Discord.MessageEmbed({
+    let embed = new Discord.MessageEmbed({
       title: info.title || "No Title",
       description: info.description || "No description provided.",
       color: info.color || "36393F",
