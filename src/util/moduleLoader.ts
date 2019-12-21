@@ -2,7 +2,7 @@ import { info, error } from "../util/debug";
 import * as fs from "fs";
 import * as path from "path";
 import * as Discord from "discord.js";
-import * as infos from "../modules/moderation/short-infos.json";
+let infos = require("../modules/moderation/short-infos.json");
 
 let moduleFolder: fs.PathLike = path.resolve("./modules");
 
@@ -23,7 +23,7 @@ async function loadModules(client: Discord.Client) {
     if (
       fs.existsSync(`${moduleFolder}/${module}/config.json`) &&
       typeof require(`${moduleFolder}/${module}/config.json`).enabled !=
-      undefined
+        undefined
     )
       return require(`${moduleFolder}/${module}/config.json`).enabled;
     else return true;
@@ -64,9 +64,9 @@ async function loadModules(client: Discord.Client) {
 
   info(
     `${modules.length} module${
-    modules.length == 1 ? "" : "s"
+      modules.length == 1 ? "" : "s"
     } | ${commandCount} command${
-    commandCount == 1 ? "" : "s"
+      commandCount == 1 ? "" : "s"
     } | ${eventCount} event${eventCount == 1 ? "" : "s"}`
   );
 
@@ -85,10 +85,11 @@ async function loadModules(client: Discord.Client) {
   for (let i in infos) {
     client.infos.set(i, infos[i]);
 
-    if (infos[i].aliases) infos[i].aliases.forEach(alias => {
-      client.infoAliases.set(alias, i);
-    });
-  };
+    if (infos[i].aliases)
+      infos[i].aliases.forEach(alias => {
+        client.infoAliases.set(alias, i);
+      });
+  }
 }
 
 /**

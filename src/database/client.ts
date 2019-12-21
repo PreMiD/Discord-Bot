@@ -13,7 +13,6 @@ export function connect() {
         {
           useUnifiedTopology: true,
           useNewUrlParser: true,
-          autoReconnect: true,
           appname: "PreMiD Discord-Bot"
         }
       )
