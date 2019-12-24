@@ -17,7 +17,7 @@ jobs:
           username: ${{ secrets.SSHUSERNAME }}
           password: ${{ secrets.SSHPASSWORD }}
           script: |
-            cd /home/PreMiD/Discord-Bot/src
+            cd /home/PreMiD/Discord-Bot
             git reset --hard
             git pull
             yarn run compile
