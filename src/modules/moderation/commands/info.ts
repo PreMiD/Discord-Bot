@@ -1,24 +1,56 @@
 import * as Discord from "discord.js";
+import { client } from "../../..";
 
-module.exports.run = async (message: Discord.Message, params: Array<string>) => {
-  if (params.length < 1) {
-    message.delete();
+module.exports.run = async (
+  message: Discord.Message,
+  params: Array<string>
+) => {
+  message.delete();
 
-    message.channel
-      .send("Please enter a name to search.")
-      .then(msg => (msg as Discord.Message).delete({ timeout: 5 * 1000 }));
+  if (params.length === 0) {
+    (await message.reply("Please enter a name to search.")).delete({
+      timeout: 5 * 1000
+    });
     return;
-  } else if (!message.client.infos.get(params[0].toLowerCase()) || !message.client.infos.get(message.client.infoAliases.get(params[0].toLowerCase()))) {
-    message.delete();
+  }
 
-    message.channel
-      .send("Please enter a valid name.")
-      .then(msg => (msg as Discord.Message).delete({ timeout: 5 * 1000 }));
+  if (params[0].toLowerCase() === "list") {
+    message.reply(
+      new Discord.MessageEmbed({
+        title: "Shortcut list",
+        color: "RANDOM",
+        description: client.infos
+          .keyArray()
+          .map(k => {
+            return "``" + k + "``";
+          })
+          .join(", "),
+        footer: {
+          text: message.author.tag,
+          iconURL: message.author.avatarURL()
+        }
+      })
+    );
     return;
-  } else if (message.client.infos.get(params[0].toLowerCase()) || message.client.infos.get(message.client.infoAliases.get(params[0].toLowerCase()))) {
-    const info = message.client.infos.get(params[0].toLowerCase()) || message.client.infos.get(message.client.infoAliases.get(params[0].toLowerCase()));
+  }
 
-    let embed = new Discord.MessageEmbed({
+  if (
+    !(
+      client.infos.has(params[0].toLowerCase()) ||
+      client.infoAliases.has(params[0].toLowerCase()) ||
+      client.infos.has(client.infoAliases.get(params[0].toLowerCase()))
+    )
+  ) {
+    (await message.reply("Please enter a valid name")).delete({
+      timeout: 5 * 1000
+    });
+    return;
+  }
+
+  const info =
+      client.infos.get(params[0].toLowerCase()) ||
+      client.infos.get(client.infoAliases.get(params[0].toLowerCase())),
+    embed = new Discord.MessageEmbed({
       title: info.title || "No Title",
       description: info.description || "No description provided.",
       color: info.color || "36393F",
@@ -28,8 +60,7 @@ module.exports.run = async (message: Discord.Message, params: Array<string>) => 
       }
     });
 
-    message.channel.send({ embed });
-  }
+  message.channel.send(embed);
 };
 
 module.exports.config = {
