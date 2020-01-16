@@ -4,7 +4,7 @@ let { muted } = require("../../../roles.json"),
   { logs, moderators } = require("../channels.json");
 
 module.exports = async (member: Discord.GuildMember) => {
-  //* Naked bot check > 2 months (5184000000)
+  //* Bot check > 2 months (5184000000)
   if (
     (member.user.username.match(/\d$/) ||
       member.user.username.match(/[\\w.]+/)) &&
@@ -14,7 +14,7 @@ module.exports = async (member: Discord.GuildMember) => {
       .setAuthor(`${member.displayName}`, member.user.displayAvatarURL())
       .addField("Account creation date", member.user.createdAt)
       .setColor("#fc3c3c")
-      .setFooter("POSSIBLE NAKED BOT")
+      .setFooter("POSSIBLE BOT")
       .setTimestamp();
 
     if (member.user.defaultAvatarURL === member.user.displayAvatarURL()) {
@@ -26,10 +26,10 @@ module.exports = async (member: Discord.GuildMember) => {
         (member.guild.channels.get(logs) as Discord.TextChannel)
           .send(embed)
           .then(function() {
-            member.kick("Possible naked bot");
+            member.kick("Possible bot");
           });
     } else {
-      member.roles.add(muted, "Possible naked bot");
+      member.roles.add(muted, "Possible bot");
       embed.addField("Action", "User muted");
       member.user.send(
         "Oops, your account looks a bit robotic _beep boop_, contact one of our mods to gain write access our channels."
