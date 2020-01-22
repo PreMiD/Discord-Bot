@@ -11,7 +11,7 @@
   "license": "MPL-2.0",
   "dependencies": {
     "@timeraa/devscript": "Timeraa/DevScript",
-    "axios": "0.19.1",
+    "axios": "0.19.2",
     "discord.js": "github:discordjs/discord.js",
     "dotenv": "8.2.0",
     "mongodb": "3.5.2"
