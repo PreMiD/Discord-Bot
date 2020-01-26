@@ -2,49 +2,51 @@ import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
 
 let { patron, beta, booster, donator } = require("../../../roles.json"),
-  coll = MongoClient.db("PreMiD").collection("betaAccess");
+	coll = MongoClient.db("PreMiD").collection("betaAccess");
 
 module.exports = async (
-  oldMember: Discord.GuildMember,
-  newMember: Discord.GuildMember
+	oldMember: Discord.GuildMember,
+	newMember: Discord.GuildMember
 ) => {
-  //* If user is patron and does not have either betaTester or beta role, give it to them.
-  if (newMember.roles.has(patron) && !newMember.roles.has(beta)) {
-    newMember.roles.add(beta);
+	//* If user is patron and does not have either betaTester or beta role, give it to them.
+	if (newMember.roles.has(patron) && !newMember.roles.has(beta)) {
+		newMember.roles.add(beta);
 
-    if (!(await coll.findOne({ userId: newMember.id })))
-      await coll.insertOne({ userId: newMember.id });
+		if (!(await coll.findOne({ userId: newMember.id })))
+			await coll.insertOne({ userId: newMember.id });
 
-    return;
-  }
+		return;
+	}
 
-  //* If user boosts and doesn't have beta role, give it to them.
-  if (newMember.roles.has(booster) && !newMember.roles.has(beta)) {
-    newMember.roles.add(beta);
+	//* If user boosts and doesn't have beta role, give it to them.
+	if (newMember.roles.has(booster) && !newMember.roles.has(beta)) {
+		newMember.roles.add(beta);
 
-    coll.insertOne({ userId: newMember.id });
+		coll.insertOne({ userId: newMember.id });
 
-    return;
-  }
+		return;
+	}
 
-  //* Remove beta access when boost expires.
-  if (
-    oldMember.roles.has(booster) &&
-    !newMember.roles.has(booster) &&
-    !newMember.roles.has(patron) &&
-    !newMember.roles.has(donator)
-  ) {
-    newMember.roles.remove(beta);
-    if (!oldMember.roles.has(patron)) newMember.roles.remove(beta);
+	//* Remove beta access when boost expires.
+	if (oldMember.roles.has(donator) && newMember.roles.has(donator)) return;
 
-    coll.findOneAndDelete({ userId: newMember.id });
+	if (
+		oldMember.roles.has(booster) &&
+		!newMember.roles.has(booster) &&
+		!newMember.roles.has(patron) &&
+		!newMember.roles.has(donator)
+	) {
+		newMember.roles.remove(beta);
+		if (!oldMember.roles.has(patron)) newMember.roles.remove(beta);
 
-    return;
-  }
+		coll.findOneAndDelete({ userId: newMember.id });
 
-  //* Remove beta access when the beta role is removed.
-  if (oldMember.roles.has(beta) && !newMember.roles.has(beta)) {
-    coll.findOneAndDelete({ userId: newMember.id });
-    return;
-  }
+		return;
+	}
+
+	//* Remove beta access when the beta role is removed.
+	if (oldMember.roles.has(beta) && !newMember.roles.has(beta)) {
+		coll.findOneAndDelete({ userId: newMember.id });
+		return;
+	}
 };
