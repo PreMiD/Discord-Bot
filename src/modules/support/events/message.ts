@@ -1,274 +1,89 @@
 import * as Discord from "discord.js";
-import { MongoClient } from "../../../database/client";
-import * as path from "path";
+import { Ticket } from "../classes/Ticket";
+const { prefix } = require("../../../config.json");
 
-let { supportChannel, ticketChannel } = require("../channels.json"),
-  { ticketManager } = require("../../../roles.json"),
-  circleFolder =
-    "https://raw.githubusercontent.com/PreMiD/Discord-Bot/master/.discord/";
+let { supportChannel } = require("../channels.json"),
+	{ ticketManager } = require("../../../roles.json");
 
-let coll = MongoClient.db("PreMiD").collection("tickets");
 module.exports = async (message: Discord.Message) => {
-  let ticket = await coll.findOne(
-    { supportChannel: message.channel.id },
-    { projection: { _id: false } }
-  );
+	if (message.author.bot) return;
 
-  if (
-    ticket &&
-    !ticket.supporters.includes(message.author.id) &&
-    !message.author.bot &&
-    (message.member.roles.has(ticketManager) ||
-      message.member.permissions.has("ADMINISTRATOR"))
-  ) {
-    message.channel.send(`> **>** ${message.member.displayName}`);
+	let t = new Ticket();
 
-    ticket.supporters.push(message.author.id);
-    addToTicket(message, ticket, message.guild.channels.get(
-      ticket.supportChannel
-    ) as Discord.TextChannel);
-    coll.findOneAndUpdate({ ticketId: ticket.ticketId }, { $set: ticket });
-    return;
-  }
+	const ticketFound = await t.fetch("channel", message.channel.id);
 
-  if (ticket && ticket.supporters.includes(message.author.id)) {
-    let suppChannel = message.guild.channels.get(
-      ticket.supportChannel
-    ) as Discord.TextChannel;
+	if (
+		!ticketFound &&
+		message.channel.id === supportChannel &&
+		!message.author.bot
+	) {
+		if (message.cleanContent.length > 25) {
+			t.create(message);
+		} else {
+			message.delete();
+			(await message.reply("Please write at least 25 characters.")).delete({
+				timeout: 10 * 1000
+			});
+		}
 
-    if (message.content.startsWith(">>")) {
-      message.delete();
+		return;
+	}
 
-      let userToAdd = message.guild.members.find(
-        m =>
-          m.displayName.toLowerCase() ===
-            message.content
-              .slice(2, message.content.length)
-              .trim()
-              .toLowerCase() &&
-          (m.roles.has(ticketManager) || m.permissions.has("ADMINISTRATOR")) &&
-          !ticket.supporters.includes(m.id)
-      );
+	if (
+		typeof ticketFound === "undefined" &&
+		message.content.startsWith(`${prefix}close`)
+	) {
+		if (
+			message.member.roles.has(ticketManager) ||
+			message.member.permissions.has("ADMINISTRATOR")
+		)
+			t.close(
+				message.content
+					.split(" ")
+					.slice(1, message.content.split(" ").length)
+					.join(" ")
+			);
+		else t.close();
+		return;
+	}
 
-      if (typeof userToAdd === "undefined") {
-        message
-          .reply(
-            `This user either does not exist, is not a ${
-              message.guild.roles.get(ticketManager).name
-            } or is already assigned to this ticket.`
-          )
-          .then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }));
-        return;
-      } else {
-        await message.channel.send(`> **>** ${userToAdd.displayName}`);
+	if (
+		typeof ticketFound === "undefined" &&
+		message.content.startsWith("<<") &&
+		(message.member.roles.has(ticketManager) ||
+			message.member.permissions.has("ADMINISTRATOR"))
+	) {
+		t.removeSupporter(message.member);
+		return;
+	}
 
-        ticket.supporters.push(userToAdd.id);
-        addToTicket(message, ticket, suppChannel);
-        coll.findOneAndUpdate({ ticketId: ticket.ticketId }, { $set: ticket });
-      }
-    } else if (
-      message.content.startsWith("<<") &&
-      (message.member.roles.has(ticketManager) ||
-        message.member.hasPermission("ADMINISTRATOR")) &&
-      ticket.supporters.includes(message.author.id)
-    ) {
-      message.delete();
+	if (
+		typeof ticketFound === "undefined" &&
+		message.content.startsWith(">>") &&
+		(message.member.roles.has(ticketManager) ||
+			message.member.permissions.has("ADMINISTRATOR"))
+	) {
+		const args = message.content
+			.split(" ")
+			.slice(1, message.content.split(" ").length);
+		if (args.length === 0) return;
+		const userToAdd = message.guild.members.find(
+			m =>
+				(m.id === args.join(" ") || m.displayName === args.join(" ")) &&
+				(message.member.roles.has(ticketManager) ||
+					message.member.permissions.has("ADMINISTRATOR"))
+		);
+		t.addSupporter(userToAdd);
+		return;
+	}
 
-      ticket.supporters = ticket.supporters.filter(
-        supp => supp !== message.author.id
-      );
-      if (ticket.supporters.length == 0) {
-        message
-          .reply(
-            "You can't leave this ticket because you are the only supporter assigned to it."
-          )
-          .then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }));
-        return;
-      }
-      suppChannel.overwritePermissions({
-        //@ts-ignore
-        permissionOverwrites: [
-          {
-            id: message.guild.id,
-            deny: ["VIEW_CHANNEL"]
-          },
-          {
-            id: ticket.userId,
-            allow: [
-              "VIEW_CHANNEL",
-              "SEND_MESSAGES",
-              "EMBED_LINKS",
-              "ATTACH_FILES",
-              "USE_EXTERNAL_EMOJIS"
-            ]
-          }
-        ].concat(
-          ticket.supporters.map(supp => {
-            return {
-              id: supp,
-              allow: [
-                "VIEW_CHANNEL",
-                "SEND_MESSAGES",
-                "EMBED_LINKS",
-                "ATTACH_FILES",
-                "USE_EXTERNAL_EMOJIS"
-              ]
-            };
-          })
-        )
-      });
-      message.channel.send(`> **<** ${message.member.displayName}`);
-
-      let ticketMessage = await (message.guild.channels.get(
-          ticketChannel
-        ) as Discord.TextChannel).messages.fetch(ticket.ticketMessage),
-        embed = ticketMessage.embeds[0];
-
-      embed.fields = [
-        {
-          name: "Supporters",
-          value: `${ticket.supporters
-            .map(supp => "<@" + supp + ">")
-            .join(", ")}`
-        }
-      ];
-
-      ticketMessage.edit({ embed: embed });
-      (await suppChannel.messages.fetch(ticket.supportEmbed)).edit(embed);
-
-      coll.findOneAndUpdate({ ticketId: ticket.ticketId }, { $set: ticket });
-    }
-    return;
-  }
-
-  if (message.channel.id !== supportChannel || message.author.bot) return;
-
-  if (message.content.length <= 50) {
-    ((await message.reply(
-      "Your message is too short. (minimum is **50 characters**)"
-    )) as Discord.Message).delete({ timeout: 10 * 1000 });
-    message.delete();
-    return;
-  }
-
-  let ticketNumber = ((await coll.countDocuments()) + 1)
-      .toString()
-      .padStart(5, "0"),
-    embed = new Discord.MessageEmbed({
-      author: {
-        name: `Ticket#${ticketNumber} [OPEN]`,
-        iconURL: `${circleFolder}green_circle.png`
-      },
-      description: message.content,
-      footer: {
-        text: message.author.tag,
-        iconURL: message.author.displayAvatarURL({ size: 128 })
-      },
-      color: "#77ff77"
-    });
-
-  message.author.send(
-    `Your ticket #${ticketNumber} has been submitted and will be answered soon. Please be patient.`
-  );
-
-  if (
-    message.attachments.size > 0 &&
-    [".png", ".gif", ".jpg"].includes(
-      path.extname(message.attachments.first().name)
-    )
-  )
-    embed.thumbnail = {
-      url: message.attachments.first().url
-    };
-
-  let ticketMessage = (await (message.guild.channels.get(
-    ticketChannel
-  ) as Discord.TextChannel).send(embed)) as Discord.Message;
-  ticketMessage
-    .react("🚫")
-    .then(() =>
-      ticketMessage.react(message.guild.emojis.get("521018476870107156"))
-    );
-
-  if (
-    // @ts-ignore
-    embed.thumbnail === null &&
-    message.attachments.size > 0
-  ) {
-    let attachmentMessage = (await (message.guild.channels.get(
-      ticketChannel
-    ) as Discord.TextChannel).send({
-      files: message.attachments.map(att => att.url)
-    })) as Discord.Message;
-
-    coll.insertOne({
-      ticketId: ticketNumber,
-      userId: message.author.id,
-      ticketMessage: ticketMessage.id,
-      attachmentMessage: attachmentMessage.id,
-      timestamp: Date.now()
-    });
-  } else
-    coll.insertOne({
-      ticketId: ticketNumber,
-      userId: message.author.id,
-      ticketMessage: ticketMessage.id,
-      timestamp: Date.now()
-    });
-
-  message.delete();
+	if (
+		typeof ticketFound === "undefined" &&
+		!message.content.startsWith("<<") &&
+		(message.member.roles.has(ticketManager) ||
+			message.member.permissions.has("ADMINISTRATOR"))
+	) {
+		t.addSupporter(message.member);
+		return;
+	}
 };
-
-async function addToTicket(
-  message: Discord.Message,
-  ticket,
-  suppChannel: Discord.TextChannel
-) {
-  let ticketMessage = await (message.guild.channels.get(
-      ticketChannel
-    ) as Discord.TextChannel).messages.fetch(ticket.ticketMessage),
-    embed = ticketMessage.embeds[0];
-
-  suppChannel.overwritePermissions({
-    //@ts-ignore
-    permissionOverwrites: [
-      {
-        id: message.guild.id,
-        deny: ["VIEW_CHANNEL"]
-      },
-      {
-        id: ticket.userId,
-        allow: [
-          "VIEW_CHANNEL",
-          "SEND_MESSAGES",
-          "EMBED_LINKS",
-          "ATTACH_FILES",
-          "USE_EXTERNAL_EMOJIS"
-        ]
-      }
-    ].concat(
-      ticket.supporters.map(supp => {
-        return {
-          id: supp,
-          allow: [
-            "VIEW_CHANNEL",
-            "SEND_MESSAGES",
-            "EMBED_LINKS",
-            "ATTACH_FILES",
-            "USE_EXTERNAL_EMOJIS"
-          ]
-        };
-      })
-    )
-  });
-
-  embed.fields = [
-    {
-      name: "Supporters",
-      value: `${ticket.supporters.map(supp => "<@" + supp + ">").join(", ")}`
-    }
-  ];
-
-  ticketMessage.edit({ embed: embed });
-  (await suppChannel.messages.fetch(ticket.supportEmbed)).edit(embed);
-}
