@@ -195,8 +195,8 @@ denque@^1.4.1:
 
 "discord.js@github:discordjs/discord.js":
   version "12.0.0-dev"
-  uid "030d263a9e018a766c5f399624fe4f8ec2b7349c"
-  resolved "https://codeload.github.com/discordjs/discord.js/tar.gz/030d263a9e018a766c5f399624fe4f8ec2b7349c"
+  uid "8e9e93da1d9c96a7acf63cc1c5317a42e56afbd8"
+  resolved "https://codeload.github.com/discordjs/discord.js/tar.gz/8e9e93da1d9c96a7acf63cc1c5317a42e56afbd8"
   dependencies:
     "@discordjs/collection" "^0.1.1"
     abort-controller "^3.0.0"
