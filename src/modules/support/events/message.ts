@@ -86,7 +86,6 @@ module.exports = async (message: Discord.Message) => {
 			message.member.permissions.has("ADMINISTRATOR"))
 	) {
 		t.addSupporter(message.member);
-		message.delete();
 		return;
 	}
 };
