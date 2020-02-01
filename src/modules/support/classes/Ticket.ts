@@ -258,7 +258,13 @@ export class Ticket {
 
 		coll.findOneAndUpdate(
 			{ ticketId: this.id },
-			{ $set: { supporters: this.supporters.map(s => s.id), status: 1 } }
+			{
+				$set: {
+					supportChannel: this.channel.id,
+					supporters: this.supporters.map(s => s.id),
+					status: 1
+				}
+			}
 		);
 	}
 
