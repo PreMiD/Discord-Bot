@@ -54,6 +54,7 @@ module.exports = async (message: Discord.Message) => {
 			message.member.permissions.has("ADMINISTRATOR"))
 	) {
 		t.removeSupporter(message.member);
+		message.delete();
 		return;
 	}
 
@@ -74,6 +75,7 @@ module.exports = async (message: Discord.Message) => {
 					message.member.permissions.has("ADMINISTRATOR"))
 		);
 		t.addSupporter(userToAdd);
+		message.delete();
 		return;
 	}
 
@@ -84,6 +86,7 @@ module.exports = async (message: Discord.Message) => {
 			message.member.permissions.has("ADMINISTRATOR"))
 	) {
 		t.addSupporter(message.member);
+		message.delete();
 		return;
 	}
 };
