@@ -89,17 +89,17 @@ export class Ticket {
 			embed: this.embed
 		});
 
-		if (message.attachments.size > 0)
-			this.attachmentsMessage = await (client.guilds
-				.first()
-				.channels.get(ticketChannel) as Discord.TextChannel).send(
-				message.attachments
-			);
-
 		this.message
 			.react("🚫")
 			.then(() =>
 				this.message.react(message.guild.emojis.get("521018476870107156"))
+			);
+
+		if (message.attachments.size > 0)
+			this.attachmentsMessage = await (client.guilds
+				.first()
+				.channels.get(ticketChannel) as Discord.TextChannel).send(
+				message.attachments.first()
 			);
 
 		message.author.send(
@@ -116,7 +116,7 @@ export class Ticket {
 				: undefined
 		});
 
-		message.delete();
+		message.delete().catch(() => {});
 	}
 
 	async accept(supporter: Discord.GuildMember) {
