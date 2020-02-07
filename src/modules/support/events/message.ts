@@ -29,10 +29,7 @@ module.exports = async (message: Discord.Message) => {
 		return;
 	}
 
-	if (
-		typeof ticketFound === "undefined" &&
-		message.content.startsWith(`${prefix}close`)
-	) {
+	if (ticketFound && message.content.startsWith(`${prefix}close`)) {
 		if (
 			message.member.roles.has(ticketManager) ||
 			message.member.permissions.has("ADMINISTRATOR")
@@ -48,7 +45,7 @@ module.exports = async (message: Discord.Message) => {
 	}
 
 	if (
-		typeof ticketFound === "undefined" &&
+		ticketFound &&
 		message.content.startsWith("<<") &&
 		(message.member.roles.has(ticketManager) ||
 			message.member.permissions.has("ADMINISTRATOR"))
@@ -59,7 +56,7 @@ module.exports = async (message: Discord.Message) => {
 	}
 
 	if (
-		typeof ticketFound === "undefined" &&
+		ticketFound &&
 		message.content.startsWith(">>") &&
 		(message.member.roles.has(ticketManager) ||
 			message.member.permissions.has("ADMINISTRATOR"))
@@ -80,7 +77,7 @@ module.exports = async (message: Discord.Message) => {
 	}
 
 	if (
-		typeof ticketFound === "undefined" &&
+		ticketFound &&
 		!message.content.startsWith("<<") &&
 		(message.member.roles.has(ticketManager) ||
 			message.member.permissions.has("ADMINISTRATOR"))

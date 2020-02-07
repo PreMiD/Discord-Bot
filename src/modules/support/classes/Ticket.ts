@@ -32,39 +32,51 @@ export class Ticket {
 
 		if (!ticket) return false;
 
-		this.id = ticket.ticketId;
-		this.status = ticket.status;
+		try {
+			this.id = ticket.ticketId;
+			this.status = ticket.status;
 
-		this.message = await (client.guilds
-			.first()
-			.channels.get(ticketChannel) as Discord.TextChannel).messages.fetch(
-			ticket.ticketMessage
-		);
-		this.user = await client.guilds.first().members.fetch(ticket.userId);
-
-		if (this.status === 1) {
-			this.channel = client.guilds
-				.first()
-				.channels.get(ticket.supportChannel) as Discord.TextChannel;
-			this.channelMessage = await this.channel.messages.fetch(
-				ticket.supportEmbed
-			);
-
-			this.supporters = await Promise.all(
-				ticket.supporters.map((s: string) =>
-					client.guilds.first().members.fetch(s)
-				)
-			);
-		}
-
-		this.embed = this.message.embeds[0];
-
-		if (ticket.attachmentMessage)
-			this.attachmentsMessage = await (client.guilds
+			this.message = await (client.guilds
 				.first()
 				.channels.get(ticketChannel) as Discord.TextChannel).messages.fetch(
-				ticket.attachmentMessage
+				ticket.ticketMessage
 			);
+			this.user = await client.guilds.first().members.fetch(ticket.userId);
+
+			if (this.status === 1) {
+				this.channel = client.guilds
+					.first()
+					.channels.get(ticket.supportChannel) as Discord.TextChannel;
+				this.channelMessage = await this.channel.messages.fetch(
+					ticket.supportEmbed
+				);
+
+				this.supporters = await Promise.all(
+					ticket.supporters.map((s: string) =>
+						client.guilds.first().members.fetch(s)
+					)
+				);
+			}
+
+			this.embed = this.message.embeds[0];
+
+			if (ticket.attachmentMessage)
+				this.attachmentsMessage = await (client.guilds
+					.first()
+					.channels.get(ticketChannel) as Discord.TextChannel).messages.fetch(
+					ticket.attachmentMessage
+				);
+
+			return true;
+		} catch (e) {
+			coll.findOneAndUpdate(
+				{ ticketId: this.id },
+				{
+					$set: { status: 2 },
+					$unset: { supportChannel: "", supporters: "", supportEmbed: "" }
+				}
+			);
+		}
 	}
 
 	async create(message: Discord.Message) {
@@ -233,7 +245,7 @@ export class Ticket {
 		);
 	}
 
-	async addSupporter(member: Discord.GuildMember) {
+	async addSupporter(member: Discord.GuildMember, sendMessage = true) {
 		if (this.supporters.find(s => s.id === member.id)) return;
 
 		this.supporters.push(member);
@@ -246,7 +258,7 @@ export class Ticket {
 		this.message.edit(this.embed);
 		this.channelMessage.edit(this.embed);
 
-		await this.channel.send(`**>** ${member}`);
+		if (sendMessage) await this.channel.send(`**>** ${member}`);
 
 		this.channel.updateOverwrite(member, {
 			VIEW_CHANNEL: true,
@@ -261,14 +273,13 @@ export class Ticket {
 			{
 				$set: {
 					supportChannel: this.channel.id,
-					supporters: this.supporters.map(s => s.id),
-					status: 1
+					supporters: this.supporters.map(s => s.id)
 				}
 			}
 		);
 	}
 
-	async removeSupporter(member: Discord.GuildMember) {
+	async removeSupporter(member: Discord.GuildMember, sendMessage = true) {
 		if (this.supporters.find(s => s.id === member.id)) {
 			this.supporters = this.supporters.filter(s => s.id !== member.id);
 
@@ -288,7 +299,7 @@ export class Ticket {
 				USE_EXTERNAL_EMOJIS: true
 			});
 
-			await this.channel.send(`**<** ${member}`);
+			if (sendMessage) await this.channel.send(`**<** ${member}`);
 
 			coll.findOneAndUpdate(
 				{ ticketId: this.id },
