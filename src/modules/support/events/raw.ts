@@ -9,10 +9,7 @@ module.exports = async packet => {
 	if (member.user.bot) return;
 
 	let ticket = new Ticket();
-	if (
-		typeof (await ticket.fetch("message", packet.d.message_id)) !== "undefined"
-	)
-		return;
+	if (!(await ticket.fetch("message", packet.d.message_id))) return;
 
 	if (
 		packet.d.emoji.id === "521018476870107156" &&
