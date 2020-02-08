@@ -1,20 +1,20 @@
 import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
 
-module.exports = async (
-  oldMember: Discord.GuildMember,
-  newMember: Discord.GuildMember
-) => {
-  let creditsCollection = MongoClient.db("PreMiD").collection("credits");
-  if (!newMember && !newMember.user) return;
-  if (!(await creditsCollection.findOne({ userId: newMember.user.id }))) return;
+const coll = MongoClient.db("PreMiD").collection("credits");
 
-  creditsCollection.updateOne(
-    { userId: newMember.user.id },
-    {
-      $set: {
-        status: newMember.user.presence.status
-      }
-    }
-  );
+module.exports = async (
+	_: Discord.GuildMember,
+	newMember: Discord.GuildMember
+) => {
+	if (!newMember?.user?.id) return;
+
+	coll.findOneAndUpdate(
+		{ userId: newMember.user.id },
+		{
+			$set: {
+				status: newMember.user.presence.status
+			}
+		}
+	);
 };

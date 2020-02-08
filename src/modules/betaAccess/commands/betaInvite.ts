@@ -1,54 +1,54 @@
 import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
+import roles from "../../../roles";
+import channels from "../../../channels";
 
-let coll = MongoClient.db("PreMiD").collection("betaAccess"),
-  { general } = require("../channels.json"),
-  { beta } = require("../../../roles.json");
+let coll = MongoClient.db("PreMiD").collection("betaAccess");
 
 module.exports.run = async (message: Discord.Message) => {
-  message.delete();
+	message.delete();
 
-  let betaUser = await coll.findOne({ userId: message.author.id });
+	let betaUser = await coll.findOne({ userId: message.author.id });
 
-  if (!betaUser || typeof betaUser.keysLeft === "undefined") {
-    message
-      .reply("You don't have any beta keys left.")
-      .then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }));
-    return;
-  }
+	if (!betaUser || typeof betaUser.keysLeft === "undefined") {
+		message
+			.reply("You don't have any beta keys left.")
+			.then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }));
+		return;
+	}
 
-  if (message.mentions.users.size == 0 || message.mentions.users.first().bot) {
-    message
-      .reply("Please mention the user you want to gift beta access to.")
-      .then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }));
-    return;
-  }
+	if (message.mentions.users.size == 0 || message.mentions.users.first().bot) {
+		message
+			.reply("Please mention the user you want to gift beta access to.")
+			.then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }));
+		return;
+	}
 
-  if (await coll.findOne({ userId: message.mentions.users.first().id })) {
-    message
-      .reply("This user already has beta access.")
-      .then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }));
-    return;
-  }
+	if (await coll.findOne({ userId: message.mentions.users.first().id })) {
+		message
+			.reply("This user already has beta access.")
+			.then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }));
+		return;
+	}
 
-  (await message.guild.members.fetch(
-    message.mentions.users.first().id
-  )).roles.add(beta);
-  (message.guild.channels.get(general) as Discord.TextChannel).send(
-    `:tada: <@${
-      message.mentions.users.first().id
-    }> just received beta access to **PreMiD** from ${message.author.tag}!`
-  );
+	(
+		await message.guild.members.fetch(message.mentions.users.first().id)
+	).roles.add(roles.beta);
+	(message.guild.channels.get(channels.general) as Discord.TextChannel).send(
+		`:tada: <@${
+			message.mentions.users.first().id
+		}> just received beta access to **PreMiD** from ${message.author.tag}!`
+	);
 
-  betaUser.keysLeft = betaUser.keysLeft--;
+	betaUser.keysLeft = betaUser.keysLeft--;
 
-  if (betaUser.keysLeft <= 0) delete betaUser.keysLeft;
+	if (betaUser.keysLeft <= 0) delete betaUser.keysLeft;
 
-  coll.findOneAndReplace({ userId: message.author.id }, betaUser);
-  coll.insertOne({ userId: message.mentions.users.first().id });
+	coll.findOneAndReplace({ userId: message.author.id }, betaUser);
+	coll.insertOne({ userId: message.mentions.users.first().id });
 };
 
 module.exports.config = {
-  name: "betainvite",
-  description: "Gift a user BETA access."
+	name: "betainvite",
+	description: "Gift a user BETA access."
 };

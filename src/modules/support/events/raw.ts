@@ -1,5 +1,6 @@
 import { client } from "../../..";
 import { Ticket } from "../classes/Ticket";
+
 module.exports = async packet => {
 	if (!["MESSAGE_REACTION_ADD"].includes(packet.t)) return;
 

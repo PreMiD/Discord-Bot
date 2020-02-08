@@ -1,64 +1,65 @@
 import { client } from "../../index";
 import { MongoClient } from "../../database/client";
+import { info } from "../../util/debug";
+import creditRoles from "./creditRoles";
 
-let creditRoles = require("./creditRoles.json");
+const coll = MongoClient.db("PreMiD").collection("credits");
 
 async function updateCredits() {
-  let users = await client.guilds
-    .get("493130730549805057")
-    .members.fetch({ limit: 0 });
+	info("Updating credits...");
 
-  users = users.filter(
-    m =>
-      containsAny(creditRoles.map(cr => cr.roleId), m.roles.keyArray()).length >
-      0
-  );
-  let creditUsers = users.map(m => {
-    let mCreditRoles = containsAny(
-        creditRoles.map(cr => cr.roleId),
-        m.roles.keyArray()
-      ),
-      highestRole = m.roles.get(mCreditRoles[0]);
+	const users = (
+			await client.guilds.get("493130730549805057").members.fetch({ limit: 0 })
+		).filter(
+			m =>
+				containsAny(Object.values(creditRoles), m.roles.keyArray()).length > 0
+		),
+		creditUsers = users.map(m => {
+			const mCreditRoles = containsAny(
+					Object.values(creditRoles),
+					m.roles.keyArray()
+				),
+				highestRole = m.roles.get(mCreditRoles[0]),
+				result = {
+					userId: m.id,
+					name: m.user.username,
+					tag: m.user.discriminator,
+					avatar: m.user.displayAvatarURL({ format: "png", dynamic: true }),
+					role: highestRole.name,
+					roles: m.roles.map(r => r.name),
+					roleColor: highestRole.hexColor,
+					rolePosition: highestRole.position,
+					status: m.user.presence.status
+				};
 
-    let result = {
-      userId: m.id,
-      name: m.user.username,
-      tag: m.user.discriminator,
-      avatar: m.user.displayAvatarURL(),
-      role: highestRole.name,
-      roles: m.roles.map(r => r.name),
-      roleColor: highestRole.hexColor,
-      rolePosition: highestRole.position,
-      status: m.user.presence.status
-    };
+			return result;
+		}),
+		mongoCredits = await coll.find().toArray(),
+		usersToRemove = mongoCredits
+			.map(mC => mC.userId)
+			.filter(mC => !creditUsers.map(cU => cU.userId).includes(mC));
 
-    return result;
-  });
+	usersToRemove.map(uTR => coll.findOneAndDelete({ userId: uTR }));
 
-  let coll = MongoClient.db("PreMiD").collection("credits"),
-    mongoCredits = await coll.find().toArray(),
-    usersToRemove = mongoCredits
-      .map(mC => mC.userId)
-      .filter(mC => !creditUsers.map(cU => cU.userId).includes(mC));
+	await Promise.all(
+		creditUsers.map(async cu => {
+			if (
+				!(await coll.findOneAndUpdate({ userId: cu.userId }, { $set: cu }))
+					.lastErrorObject.updatedExisting
+			)
+				coll.insertOne(cu);
+		})
+	);
 
-  usersToRemove.map(uTR => coll.findOneAndDelete({ userId: uTR }));
-
-  creditUsers.map(async cu => {
-    if (
-      !(await coll.findOneAndReplace({ userId: cu.userId }, cu)).lastErrorObject
-        .updatedExisting
-    ) {
-      coll.insertOne(cu);
-    }
-  });
+	info("Updated credits.");
 }
 
 updateCredits();
-setInterval(updateCredits, 5 * 1000 * 60);
+setInterval(updateCredits, 5 * 60 * 1000);
 
-function containsAny(source, target) {
-  let result = source.filter(function(item) {
-    return target.indexOf(item) > -1;
-  });
-  return result;
+function containsAny(source: Array<string>, target: Array<string>) {
+	let result = source.filter(function(item) {
+		return target.indexOf(item) > -1;
+	});
+	return result;
 }

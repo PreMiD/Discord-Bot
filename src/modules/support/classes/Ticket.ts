@@ -1,11 +1,11 @@
 import * as Discord from "discord.js";
 import { client } from "../../..";
 import { MongoClient } from "../../../database/client";
+import channels from "../../../channels";
 
 const coll = MongoClient.db("PreMiD").collection("tickets"),
 	circleFolder =
-		"https://raw.githubusercontent.com/PreMiD/Discord-Bot/master/.discord/",
-	{ ticketChannel, ticketCategory } = require("../channels.json");
+		"https://raw.githubusercontent.com/PreMiD/Discord-Bot/master/.discord/";
 
 export class Ticket {
 	id: string;
@@ -38,9 +38,9 @@ export class Ticket {
 
 			this.message = await (client.guilds
 				.first()
-				.channels.get(ticketChannel) as Discord.TextChannel).messages.fetch(
-				ticket.ticketMessage
-			);
+				.channels.get(
+					channels.ticketChannel
+				) as Discord.TextChannel).messages.fetch(ticket.ticketMessage);
 			this.user = await client.guilds.first().members.fetch(ticket.userId);
 
 			if (this.status === 1) {
@@ -63,9 +63,9 @@ export class Ticket {
 			if (ticket.attachmentMessage)
 				this.attachmentsMessage = await (client.guilds
 					.first()
-					.channels.get(ticketChannel) as Discord.TextChannel).messages.fetch(
-					ticket.attachmentMessage
-				);
+					.channels.get(
+						channels.ticketChannel
+					) as Discord.TextChannel).messages.fetch(ticket.attachmentMessage);
 
 			return true;
 		} catch (e) {
@@ -97,7 +97,7 @@ export class Ticket {
 
 		this.message = await (client.guilds
 			.first()
-			.channels.get(ticketChannel) as Discord.TextChannel).send({
+			.channels.get(channels.ticketChannel) as Discord.TextChannel).send({
 			embed: this.embed
 		});
 
@@ -110,7 +110,7 @@ export class Ticket {
 		if (message.attachments.size > 0)
 			this.attachmentsMessage = await (client.guilds
 				.first()
-				.channels.get(ticketChannel) as Discord.TextChannel).send(
+				.channels.get(channels.ticketChannel) as Discord.TextChannel).send(
 				message.attachments.first()
 			);
 
@@ -157,7 +157,7 @@ export class Ticket {
 		];
 
 		this.channel = (await client.guilds.first().channels.create(this.id, {
-			parent: ticketCategory,
+			parent: channels.ticketCategory,
 			type: "text",
 			//@ts-ignore
 			permissionOverwrites: [

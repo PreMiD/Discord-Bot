@@ -1,9 +1,8 @@
 import * as Discord from "discord.js";
 import { Ticket } from "../classes/Ticket";
-const { prefix } = require("../../../config.json");
-
-let { supportChannel } = require("../channels.json"),
-	{ ticketManager } = require("../../../roles.json");
+import channels from "../../../channels";
+import roles from "../../../roles";
+import config from "../../../config";
 
 module.exports = async (message: Discord.Message) => {
 	if (message.author.bot) return;
@@ -14,7 +13,7 @@ module.exports = async (message: Discord.Message) => {
 
 	if (
 		!ticketFound &&
-		message.channel.id === supportChannel &&
+		message.channel.id === channels.supportChannel &&
 		!message.author.bot
 	) {
 		if (message.cleanContent.length > 25) {
@@ -29,9 +28,9 @@ module.exports = async (message: Discord.Message) => {
 		return;
 	}
 
-	if (ticketFound && message.content.startsWith(`${prefix}close`)) {
+	if (ticketFound && message.content.startsWith(`${config.prefix}close`)) {
 		if (
-			message.member.roles.has(ticketManager) ||
+			message.member.roles.has(roles.ticketManager) ||
 			message.member.permissions.has("ADMINISTRATOR")
 		)
 			t.close(
@@ -47,7 +46,7 @@ module.exports = async (message: Discord.Message) => {
 	if (
 		ticketFound &&
 		message.content.startsWith("<<") &&
-		(message.member.roles.has(ticketManager) ||
+		(message.member.roles.has(roles.ticketManager) ||
 			message.member.permissions.has("ADMINISTRATOR"))
 	) {
 		t.removeSupporter(message.member);
@@ -58,7 +57,7 @@ module.exports = async (message: Discord.Message) => {
 	if (
 		ticketFound &&
 		message.content.startsWith(">>") &&
-		(message.member.roles.has(ticketManager) ||
+		(message.member.roles.has(roles.ticketManager) ||
 			message.member.permissions.has("ADMINISTRATOR"))
 	) {
 		const args = message.content
@@ -68,7 +67,7 @@ module.exports = async (message: Discord.Message) => {
 		const userToAdd = message.guild.members.find(
 			m =>
 				(m.id === args.join(" ") || m.displayName === args.join(" ")) &&
-				(message.member.roles.has(ticketManager) ||
+				(message.member.roles.has(roles.ticketManager) ||
 					message.member.permissions.has("ADMINISTRATOR"))
 		);
 		t.addSupporter(userToAdd);
@@ -79,7 +78,7 @@ module.exports = async (message: Discord.Message) => {
 	if (
 		ticketFound &&
 		!message.content.startsWith("<<") &&
-		(message.member.roles.has(ticketManager) ||
+		(message.member.roles.has(roles.ticketManager) ||
 			message.member.permissions.has("ADMINISTRATOR"))
 	) {
 		t.addSupporter(message.member);

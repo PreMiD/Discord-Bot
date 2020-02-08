@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import { MongoClient } from "../database/client";
 import { Ticket } from "../modules/support/classes/Ticket";
-const { ticketManager } = require("../roles.json");
+import roles from "../roles";
 
 const coll = MongoClient.db("PreMiD").collection("tickets");
 module.exports = async (
@@ -9,8 +9,8 @@ module.exports = async (
 	newMember: Discord.GuildMember
 ) => {
 	if (
-		oldMember.roles.has(ticketManager) &&
-		!newMember.roles.has(ticketManager)
+		oldMember.roles.has(roles.ticketManager) &&
+		!newMember.roles.has(roles.ticketManager)
 	) {
 		coll.findOneAndDelete({ userId: oldMember.id });
 

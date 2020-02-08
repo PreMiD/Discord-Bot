@@ -1,17 +1,17 @@
 import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
 import { Ticket } from "../classes/Ticket";
+import roles from "../../../roles";
 
 let coll = MongoClient.db("PreMiD").collection("userSettings"),
-	tcoll = MongoClient.db("PreMiD").collection("tickets"),
-	{ ticketManager } = require("../../../roles.json");
+	tcoll = MongoClient.db("PreMiD").collection("tickets");
 
 module.exports.run = async (
 	message: Discord.Message,
 	params: Array<string>
 ) => {
 	if (
-		!message.member.roles.has(ticketManager) &&
+		!message.member.roles.has(roles.ticketManager) &&
 		!message.member.permissions.has("ADMINISTRATOR")
 	)
 		return;

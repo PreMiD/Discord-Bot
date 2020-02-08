@@ -7,14 +7,7 @@ import * as Discord from "discord.js";
 import { error, success } from "./util/debug";
 import moduleLoader from "./util/moduleLoader";
 import { connect } from "./database/client";
-
-let {
-	ticketManager,
-	jrModerator,
-	moderator,
-	administrator,
-	developer
-} = require("./roles.json");
+import roles from "./roles";
 
 //* Create new client & set login presence
 export let client = new Discord.Client({
@@ -51,20 +44,20 @@ client.elevation = (userId: string) => {
 	if (!member) return 0;
 
 	//* Ticket Manager
-	if (member.roles.has(ticketManager)) permlvl = 1;
+	if (member.roles.has(roles.ticketManager)) permlvl = 1;
 	//* Jr Mod
-	if (member.roles.has(jrModerator)) permlvl = 2;
+	if (member.roles.has(roles.jrModerator)) permlvl = 2;
 	//* Mod
-	if (member.roles.has(moderator) && !member.roles.has(jrModerator))
+	if (member.roles.has(roles.moderator) && !member.roles.has(roles.jrModerator))
 		permlvl = 3;
 	//* Admin
 	if (
-		member.roles.has(administrator) ||
+		member.roles.has(roles.administrator) ||
 		member.permissions.has("ADMINISTRATOR")
 	)
 		permlvl = 4;
 	//* Dev
-	if (member.roles.has(developer)) permlvl = 5;
+	if (member.roles.has(roles.developer)) permlvl = 5;
 
 	//* Return permlvl
 	return permlvl;
