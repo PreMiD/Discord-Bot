@@ -4,8 +4,8 @@ import { Ticket } from "../classes/Ticket";
 module.exports = async packet => {
 	if (!["MESSAGE_REACTION_ADD"].includes(packet.t)) return;
 
-	let guild = client.guilds.get(packet.d.guild_id),
-		member = guild.members.get(packet.d.user_id);
+	let guild = client.guilds.cache.get(packet.d.guild_id),
+		member = guild.members.cache.get(packet.d.user_id);
 
 	if (member.user.bot) return;
 
@@ -24,9 +24,9 @@ module.exports = async packet => {
 		packet.d.emoji.name === "🚫" &&
 		ticket.status === 1 &&
 		(ticket.supporters.includes(packet.d.user_id) ||
-			client.guilds
+			client.guilds.cache
 				.get(packet.d.guild_id)
-				.members.get(packet.d.user_id)
+				.members.cache.get(packet.d.user_id)
 				.hasPermission("ADMINISTRATOR"))
 	) {
 		ticket.close();
@@ -53,7 +53,9 @@ module.exports = async packet => {
 							ticket.message
 								.react("🚫")
 								.then(() =>
-									ticket.message.react(guild.emojis.get("521018476870107156"))
+									ticket.message.react(
+										guild.emojis.cache.get("521018476870107156")
+									)
 								)
 						);
 				});

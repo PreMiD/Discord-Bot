@@ -34,7 +34,9 @@ module.exports.run = async (message: Discord.Message) => {
 	(
 		await message.guild.members.fetch(message.mentions.users.first().id)
 	).roles.add(roles.beta);
-	(message.guild.channels.get(channels.general) as Discord.TextChannel).send(
+	(message.guild.channels.cache.get(
+		channels.general
+	) as Discord.TextChannel).send(
 		`:tada: <@${
 			message.mentions.users.first().id
 		}> just received beta access to **PreMiD** from ${message.author.tag}!`

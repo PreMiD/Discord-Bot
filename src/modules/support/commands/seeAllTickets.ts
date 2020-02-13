@@ -11,7 +11,7 @@ module.exports.run = async (
 	params: Array<string>
 ) => {
 	if (
-		!message.member.roles.has(roles.ticketManager) &&
+		!message.member.roles.cache.has(roles.ticketManager) &&
 		!message.member.permissions.has("ADMINISTRATOR")
 	)
 		return;

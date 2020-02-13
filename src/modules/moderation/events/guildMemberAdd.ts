@@ -21,8 +21,8 @@ module.exports = async (member: Discord.GuildMember) => {
 			member.user.send(
 				"Oops, your account looks a bit robotic _beep boop_, use a nice avatar and username to make it less robotic to gain entrance to our server."
 			);
-			if (member.guild.channels.has(channels.logs))
-				(member.guild.channels.get(channels.logs) as Discord.TextChannel)
+			if (member.guild.channels.cache.has(channels.logs))
+				(member.guild.channels.cache.get(channels.logs) as Discord.TextChannel)
 					.send(embed)
 					.then(function() {
 						member.kick("Possible bot");
@@ -33,8 +33,8 @@ module.exports = async (member: Discord.GuildMember) => {
 			member.user.send(
 				"Oops, your account looks a bit robotic _beep boop_, contact one of our mods to gain write access our channels."
 			);
-			if (member.guild.channels.has(channels.moderators))
-				(member.guild.channels.get(
+			if (member.guild.channels.cache.has(channels.moderators))
+				(member.guild.channels.cache.get(
 					channels.moderators
 				) as Discord.TextChannel).send(embed);
 		}

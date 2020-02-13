@@ -39,25 +39,28 @@ client.elevation = (userId: string) => {
 	//* Permission level checker
 	let permlvl: Number = 0;
 
-	const member = client.guilds.first().members.get(userId);
+	const member = client.guilds.cache.first().members.cache.get(userId);
 
 	if (!member) return 0;
 
 	//* Ticket Manager
-	if (member.roles.has(roles.ticketManager)) permlvl = 1;
+	if (member.roles.cache.has(roles.ticketManager)) permlvl = 1;
 	//* Jr Mod
-	if (member.roles.has(roles.jrModerator)) permlvl = 2;
+	if (member.roles.cache.has(roles.jrModerator)) permlvl = 2;
 	//* Mod
-	if (member.roles.has(roles.moderator) && !member.roles.has(roles.jrModerator))
+	if (
+		member.roles.cache.has(roles.moderator) &&
+		!member.roles.cache.has(roles.jrModerator)
+	)
 		permlvl = 3;
 	//* Admin
 	if (
-		member.roles.has(roles.administrator) ||
+		member.roles.cache.has(roles.administrator) ||
 		member.permissions.has("ADMINISTRATOR")
 	)
 		permlvl = 4;
 	//* Dev
-	if (member.roles.has(roles.developer)) permlvl = 5;
+	if (member.roles.cache.has(roles.developer)) permlvl = 5;
 
 	//* Return permlvl
 	return permlvl;

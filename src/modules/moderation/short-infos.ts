@@ -12,7 +12,7 @@ export default {
 		color: "FF0000",
 		aliases: ["bd", "bdiscord"],
 		description:
-			"Using better Discord is an abuse of Discord ToS. If you want to keep using Discord, you have to follow them and make sure you're not breaking any of the rules Discord has decided to put. Even using BetterDiscord for themes, some customizations is not 'welcomed' in Discord. Your account could get banned just because of that and you can read Discord's official Tweet from [here](https://twitter.com/discordapp/status/908000828690182145).",
+			"Using better Discord is an abuse of Discord ToS. If you want to keep using Discord, you have to follow them and make sure you're not breaking any of the rules Discord has decided to put. Even using BetterDiscord for themes, some customizations is not 'welcomed' in Discord. Your account could .cache.get banned just because of that and you can read Discord's official Tweet from [here](https://twitter.com/discordapp/status/908000828690182145).",
 		footer: false
 	},
 	creatingpresence: {
@@ -60,7 +60,7 @@ export default {
 		color: "RANDOM",
 		aliases: ["maketimeraarich", "gaytim", "serverboost", "boost"],
 		description:
-			"If you want to support PreMiD's development, you can either donate $ or boost the server to get a special role just for that! If you want to $ support PreMiD and help the website, you can visit Timeraa's Patreon page from [here](https://www.patreon.com/Timeraa).",
+			"If you want to support PreMiD's development, you can either donate $ or boost the server to .cache.get a special role just for that! If you want to $ support PreMiD and help the website, you can visit Timeraa's Patreon page from [here](https://www.patreon.com/Timeraa).",
 		footer: false
 	},
 	ticket: {

@@ -59,7 +59,7 @@ module.exports.run = async (
 		});
 	} else {
 		message.reply(
-			"Your permission level is to low to get warnings of other people!"
+			"Your permission level is to low to .cache.get warnings of other people!"
 		);
 	}
 };

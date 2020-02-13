@@ -6,7 +6,10 @@ module.exports = async (
 	oldMember: Discord.GuildMember,
 	newMember: Discord.GuildMember
 ) => {
-	if (oldMember.roles.has(roles.muted) && !newMember.roles.has(roles.muted))
+	if (
+		oldMember.roles.cache.has(roles.muted) &&
+		!newMember.roles.cache.has(roles.muted)
+	)
 		MongoClient.db("PreMiD")
 			.collection("mutes")
 			.findOneAndDelete({ userId: newMember.id });

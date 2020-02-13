@@ -9,8 +9,8 @@ module.exports = async (
 	newMember: Discord.GuildMember
 ) => {
 	if (
-		oldMember.roles.has(roles.ticketManager) &&
-		!newMember.roles.has(roles.ticketManager)
+		oldMember.roles.cache.has(roles.ticketManager) &&
+		!newMember.roles.cache.has(roles.ticketManager)
 	) {
 		coll.findOneAndDelete({ userId: oldMember.id });
 

@@ -12,9 +12,9 @@ module.exports.run = async (message: Discord.Message) => {
 	}
 
 	if (
-		!message.guild.members
+		!message.guild.members.cache
 			.get(message.mentions.users.first().id)
-			.roles.has(roles.muted)
+			.roles.cache.has(roles.muted)
 	) {
 		message
 			.reply("This user is not muted.")
@@ -22,7 +22,7 @@ module.exports.run = async (message: Discord.Message) => {
 		return;
 	}
 
-	message.guild.members
+	message.guild.members.cache
 		.get(message.mentions.users.first().id)
 		.roles.remove(roles.muted)
 		.then(() => {

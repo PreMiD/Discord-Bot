@@ -46,8 +46,8 @@ module.exports.run = async (message: Discord.Message) => {
 			]
 		});
 
-		if (message.guild.channels.has(channels.moderators))
-			(message.guild.channels.get(
+		if (message.guild.channels.cache.has(channels.moderators))
+			(message.guild.channels.cache.get(
 				channels.moderators
 			) as Discord.TextChannel).send("Please check this mute!", {
 				embed: embed
@@ -62,7 +62,7 @@ module.exports.run = async (message: Discord.Message) => {
 module.exports.config = {};
 
 export async function checkInvite(string: string) {
-	let invites = (await client.guilds.first().fetchInvites()).map(
+	let invites = (await client.guilds.cache.first().fetchInvites()).map(
 			invite => invite.url
 		),
 		disallowedPatterns = [

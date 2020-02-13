@@ -9,11 +9,11 @@ import roles from "../../roles";
 
 	mutes.map(mute => {
 		//* If user doesn't have mute role, delete mute from db
-		client.guilds
+		client.guilds.cache
 			.first()
 			.members.fetch(mute.userId)
 			.then(m => {
-				if (!m.roles.has(roles.muted))
+				if (!m.roles.cache.has(roles.muted))
 					coll.findOneAndDelete({ userId: mute.userId });
 			})
 			.catch(() => {});

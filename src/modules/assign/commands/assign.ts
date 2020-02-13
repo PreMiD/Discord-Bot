@@ -8,8 +8,8 @@ module.exports.run = async (
 	message: Discord.Message,
 	params: Array<String>
 ) => {
-	let assignRoles: Discord.Role[] = assignRolesFile
-		.map(r => message.guild.roles.get(r))
+	let assignRoles: Discord.Role[] = Object.values(assignRolesFile)
+		.map(r => message.guild.roles.cache.get(r))
 		.filter(v => v != undefined);
 
 	if (params.length == 0) {
@@ -47,7 +47,7 @@ module.exports.run = async (
 
 	let asRole = assignRole[0];
 
-	if (message.member && message.member.roles.has(asRole.id)) {
+	if (message.member && message.member.roles.cache.has(asRole.id)) {
 		message.react("❌");
 		embed = new Discord.MessageEmbed({
 			title: "Assign",

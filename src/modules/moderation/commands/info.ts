@@ -65,6 +65,6 @@ module.exports.run = async (
 
 module.exports.config = {
 	name: "info",
-	description: "Shortcut to get things easier.",
+	description: "Shortcut to .cache.get things easier.",
 	permLevel: 1
 };

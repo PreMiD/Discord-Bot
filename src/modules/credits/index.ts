@@ -9,24 +9,27 @@ async function updateCredits() {
 	info("Updating credits...");
 
 	const users = (
-			await client.guilds.get("493130730549805057").members.fetch({ limit: 0 })
+			await client.guilds.cache
+				.get("493130730549805057")
+				.members.fetch({ limit: 0 })
 		).filter(
 			m =>
-				containsAny(Object.values(creditRoles), m.roles.keyArray()).length > 0
+				containsAny(Object.values(creditRoles), m.roles.cache.keyArray())
+					.length > 0
 		),
 		creditUsers = users.map(m => {
 			const mCreditRoles = containsAny(
 					Object.values(creditRoles),
-					m.roles.keyArray()
+					m.roles.cache.keyArray()
 				),
-				highestRole = m.roles.get(mCreditRoles[0]),
+				highestRole = m.roles.cache.get(mCreditRoles[0]),
 				result = {
 					userId: m.id,
 					name: m.user.username,
 					tag: m.user.discriminator,
 					avatar: m.user.displayAvatarURL({ format: "png", dynamic: true }),
 					role: highestRole.name,
-					roles: m.roles.map(r => r.name),
+					roles: m.roles.cache.map(r => r.name),
 					roleColor: highestRole.hexColor,
 					rolePosition: highestRole.position,
 					status: m.user.presence.status

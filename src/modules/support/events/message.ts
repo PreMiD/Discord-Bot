@@ -30,7 +30,7 @@ module.exports = async (message: Discord.Message) => {
 
 	if (ticketFound && message.content.startsWith(`${config.prefix}close`)) {
 		if (
-			message.member.roles.has(roles.ticketManager) ||
+			message.member.roles.cache.has(roles.ticketManager) ||
 			message.member.permissions.has("ADMINISTRATOR")
 		)
 			t.close(
@@ -46,7 +46,7 @@ module.exports = async (message: Discord.Message) => {
 	if (
 		ticketFound &&
 		message.content.startsWith("<<") &&
-		(message.member.roles.has(roles.ticketManager) ||
+		(message.member.roles.cache.has(roles.ticketManager) ||
 			message.member.permissions.has("ADMINISTRATOR"))
 	) {
 		t.removeSupporter(message.member);
@@ -57,17 +57,17 @@ module.exports = async (message: Discord.Message) => {
 	if (
 		ticketFound &&
 		message.content.startsWith(">>") &&
-		(message.member.roles.has(roles.ticketManager) ||
+		(message.member.roles.cache.has(roles.ticketManager) ||
 			message.member.permissions.has("ADMINISTRATOR"))
 	) {
 		const args = message.content
 			.split(" ")
 			.slice(1, message.content.split(" ").length);
 		if (args.length === 0) return;
-		const userToAdd = message.guild.members.find(
+		const userToAdd = message.guild.members.cache.find(
 			m =>
 				(m.id === args.join(" ") || m.displayName === args.join(" ")) &&
-				(message.member.roles.has(roles.ticketManager) ||
+				(message.member.roles.cache.has(roles.ticketManager) ||
 					message.member.permissions.has("ADMINISTRATOR"))
 		);
 		t.addSupporter(userToAdd);
@@ -78,7 +78,7 @@ module.exports = async (message: Discord.Message) => {
 	if (
 		ticketFound &&
 		!message.content.startsWith("<<") &&
-		(message.member.roles.has(roles.ticketManager) ||
+		(message.member.roles.cache.has(roles.ticketManager) ||
 			message.member.permissions.has("ADMINISTRATOR"))
 	) {
 		t.addSupporter(message.member);

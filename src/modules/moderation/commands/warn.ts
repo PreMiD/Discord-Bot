@@ -41,7 +41,9 @@ module.exports.run = async (
 	}
 
 	let coll = MongoClient.db("PreMiD").collection("warns"),
-		user = await coll.findOne({ userId: message.mentions.users.first().id }),
+		user = await coll.findOne({
+			userId: message.mentions.users.first().id
+		}),
 		warns = 1;
 
 	if (!user)
@@ -131,7 +133,7 @@ module.exports.run = async (
 			}** has been warned and muted for ${muteTime}.`
 		);
 	} else if (warns == 4) {
-		(message.guild.channels.get(
+		(message.guild.channels.cache.get(
 			channels.moderators
 		) as Discord.TextChannel).send(
 			`<@${
@@ -153,7 +155,7 @@ module.exports.run = async (
 };
 
 function muteTill(id: string, time: number = 0) {
-	client.guilds
+	client.guilds.cache
 		.first()
 		.members.fetch(id)
 		.then(async m => {
@@ -197,7 +199,7 @@ export async function unmute(id: string) {
 
 	if (mute.mutedUntil >= Date.now() || !roles.muted) return;
 
-	client.guilds
+	client.guilds.cache
 		.first()
 		.members.fetch(id)
 		.then(m => m.roles.remove(roles.muted, "Warn penalty over."))

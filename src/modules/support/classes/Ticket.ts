@@ -36,24 +36,26 @@ export class Ticket {
 			this.id = ticket.ticketId;
 			this.status = ticket.status;
 
-			this.message = await (client.guilds
+			this.message = await (client.guilds.cache
 				.first()
-				.channels.get(
+				.channels.cache.get(
 					channels.ticketChannel
 				) as Discord.TextChannel).messages.fetch(ticket.ticketMessage);
-			this.user = await client.guilds.first().members.fetch(ticket.userId);
+			this.user = await client.guilds.cache
+				.first()
+				.members.fetch(ticket.userId);
 
 			if (this.status === 1) {
-				this.channel = client.guilds
+				this.channel = client.guilds.cache
 					.first()
-					.channels.get(ticket.supportChannel) as Discord.TextChannel;
+					.channels.cache.get(ticket.supportChannel) as Discord.TextChannel;
 				this.channelMessage = await this.channel.messages.fetch(
 					ticket.supportEmbed
 				);
 
 				this.supporters = await Promise.all(
 					ticket.supporters.map((s: string) =>
-						client.guilds.first().members.fetch(s)
+						client.guilds.cache.first().members.fetch(s)
 					)
 				);
 			}
@@ -61,9 +63,9 @@ export class Ticket {
 			this.embed = this.message.embeds[0];
 
 			if (ticket.attachmentMessage)
-				this.attachmentsMessage = await (client.guilds
+				this.attachmentsMessage = await (client.guilds.cache
 					.first()
-					.channels.get(
+					.channels.cache.get(
 						channels.ticketChannel
 					) as Discord.TextChannel).messages.fetch(ticket.attachmentMessage);
 
@@ -95,24 +97,24 @@ export class Ticket {
 			color: "#77ff77"
 		};
 
-		this.message = await (client.guilds
+		this.message = await (client.guilds.cache
 			.first()
-			.channels.get(channels.ticketChannel) as Discord.TextChannel).send({
+			.channels.cache.get(channels.ticketChannel) as Discord.TextChannel).send({
 			embed: this.embed
 		});
 
 		this.message
 			.react("🚫")
 			.then(() =>
-				this.message.react(message.guild.emojis.get("521018476870107156"))
+				this.message.react(message.guild.emojis.cache.get("521018476870107156"))
 			);
 
 		if (message.attachments.size > 0)
-			this.attachmentsMessage = await (client.guilds
+			this.attachmentsMessage = await (client.guilds.cache
 				.first()
-				.channels.get(channels.ticketChannel) as Discord.TextChannel).send(
-				message.attachments.first()
-			);
+				.channels.cache.get(
+					channels.ticketChannel
+				) as Discord.TextChannel).send(message.attachments.first());
 
 		message.author.send(
 			`Your ticket  \`\`#${this.id}\`\` has been submitted and will be answered shortly. Please be patient. Thank you!`
@@ -156,13 +158,13 @@ export class Ticket {
 			"USE_EXTERNAL_EMOJIS"
 		];
 
-		this.channel = (await client.guilds.first().channels.create(this.id, {
+		this.channel = (await client.guilds.cache.first().channels.create(this.id, {
 			parent: channels.ticketCategory,
 			type: "text",
 			//@ts-ignore
 			permissionOverwrites: [
 				{
-					id: client.guilds.first().id,
+					id: client.guilds.cache.first().id,
 					deny: ["VIEW_CHANNEL"]
 				},
 				{

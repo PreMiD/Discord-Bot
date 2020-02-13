@@ -12,7 +12,7 @@
 	"dependencies": {
 		"@timeraa/devscript": "Timeraa/DevScript",
 		"axios": "0.19.2",
-		"discord.js": "github:discordjs/discord.js#fe7df708e44e0280dfaf0f8e457b154781bb5140",
+		"discord.js": "github:discordjs/discord.js",
 		"dotenv": "8.2.0",
 		"mongodb": "3.5.3"
 	},
