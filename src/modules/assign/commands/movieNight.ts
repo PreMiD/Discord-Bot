@@ -3,8 +3,7 @@ import * as Discord from "discord.js";
 let embed: Discord.MessageEmbed;
 
 module.exports.run = async (
-  message: Discord.Message,
-  params: Array<String>
+  message: Discord.Message
 ) => {
   const role = message.guild.roles.get("677306264988155904");
 
