@@ -1,24 +1,24 @@
 {
-  "name": "premid-bot",
-  "description": "Official PreMiD Discord Bot.",
-  "repository": "https://github.com/PreMiD/Discord-Bot",
-  "version": "2.2.1",
-  "scripts": {
-    "start": "node index",
-    "compile": "yarn --silent && tsc && devScript --copyOnly",
-    "dev": "devScript"
-  },
-  "license": "MPL-2.0",
-  "dependencies": {
-    "@timeraa/devscript": "Timeraa/DevScript",
-    "axios": "0.19.0",
-    "discord.js": "github:discordjs/discord.js",
-    "dotenv": "8.2.0",
-    "mongodb": "3.4.1"
-  },
-  "devDependencies": {
-    "@types/mongodb": "^3.3.13",
-    "@types/node": "^12.12.21",
-    "source-map-support": "^0.5.13"
-  }
+	"name": "premid-bot",
+	"description": "Official PreMiD Discord Bot.",
+	"repository": "https://github.com/PreMiD/Discord-Bot",
+	"version": "2.3.1",
+	"scripts": {
+		"start": "node index",
+		"compile": "yarn --silent && tsc && devScript --copyOnly",
+		"dev": "devScript"
+	},
+	"license": "MPL-2.0",
+	"dependencies": {
+		"@timeraa/devscript": "Timeraa/DevScript",
+		"axios": "0.19.2",
+		"discord.js": "github:discordjs/discord.js#fe7df708e44e0280dfaf0f8e457b154781bb5140",
+		"dotenv": "8.2.0",
+		"mongodb": "3.5.3"
+	},
+	"devDependencies": {
+		"@types/mongodb": "^3.3.16",
+		"@types/node": "^13.7.1",
+		"source-map-support": "^0.5.16"
+	}
 }

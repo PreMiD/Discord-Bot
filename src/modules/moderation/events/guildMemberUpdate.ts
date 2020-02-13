@@ -1,14 +1,13 @@
 import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
-
-let { muted } = require("../../../roles.json");
+import roles from "../../../roles";
 
 module.exports = async (
-  oldMember: Discord.GuildMember,
-  newMember: Discord.GuildMember
+	oldMember: Discord.GuildMember,
+	newMember: Discord.GuildMember
 ) => {
-  if (oldMember.roles.has(muted) && !newMember.roles.has(muted))
-    MongoClient.db("PreMiD")
-      .collection("mutes")
-      .findOneAndDelete({ userId: newMember.id });
+	if (oldMember.roles.has(roles.muted) && !newMember.roles.has(roles.muted))
+		MongoClient.db("PreMiD")
+			.collection("mutes")
+			.findOneAndDelete({ userId: newMember.id });
 };

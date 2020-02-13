@@ -1,118 +1,73 @@
 import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
+import { Ticket } from "../classes/Ticket";
+import roles from "../../../roles";
 
 let coll = MongoClient.db("PreMiD").collection("userSettings"),
-  { ticketManager } = require("../../../roles.json"),
-  { prefix } = require("../../../config.json");
+	tcoll = MongoClient.db("PreMiD").collection("tickets");
 
 module.exports.run = async (
-  message: Discord.Message,
-  params: Array<string>
+	message: Discord.Message,
+	params: Array<string>
 ) => {
-  if (!message.member.roles.has(ticketManager)) return;
-  message.delete();
+	if (
+		!message.member.roles.has(roles.ticketManager) &&
+		!message.member.permissions.has("ADMINISTRATOR")
+	)
+		return;
+	message.delete();
 
-  let userSettings = await coll.findOne({ userId: message.author.id });
-  if (!userSettings)
-    userSettings = await coll.insertOne({
-      userId: message.author.id,
-      seeAllTickets: false
-    });
+	let userSettings = await coll.findOne({ userId: message.author.id });
+	if (typeof userSettings === "undefined") {
+		userSettings = await coll.insertOne({
+			userId: message.author.id,
+			seeAllTickets: true
+		});
+	} else {
+		userSettings.seeAllTickets = !userSettings.seeAllTickets;
+		userSettings = await coll.findOneAndUpdate(
+			{ userId: message.author.id },
+			{ $set: { seeAllTickets: userSettings.seeAllTickets } }
+		);
+	}
 
-  if (params.length == 0) {
-    message
-      .reply(
-        `See all tickets: **\`\`${
-          userSettings.seeAllTickets ? "ON" : "OFF"
-        }\`\`**`
-      )
-      .then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }));
-    return;
-  }
+	message
+		.reply(
+			userSettings.value.seeAllTickets
+				? `You can now see all tickets.`
+				: `You can no longer see all tickets.`
+		)
+		.then(msg => msg.delete({ timeout: 10 * 1000 }));
 
-  switch (params[0].toLocaleLowerCase()) {
-    case "off":
-      userSettings.seeAllTickets = false;
-      message
-        .reply(`See all tickets: **\`\`OFF\`\`**`)
-        .then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }));
-      coll.findOneAndUpdate(
-        { userId: userSettings.userId },
-        { $set: { seeAllTickets: false } }
-      );
-      break;
-    case "on":
-      userSettings.seeAllTickets = true;
-      message
-        .reply(`See all tickets: **\`\`ON\`\`**`)
-        .then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }));
-      coll.findOneAndUpdate(
-        { userId: userSettings.userId },
-        { $set: { seeAllTickets: true } }
-      );
-      break;
-    default:
-      message
-        .reply(`Please use ${prefix}seealltickets <**OFF**|**ON**>`)
-        .then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }));
-      break;
-  }
+	if (userSettings.value.seeAllTickets) {
+		const tickets = await tcoll.find({ status: 1 }).toArray();
 
-  let ticketColl = MongoClient.db("PreMiD").collection("tickets"),
-    userToModify = await ticketColl.find({ status: 1 }).toArray();
+		tickets.map(async t => {
+			const ticket = new Ticket(),
+				ticketFound = await ticket.fetch("channel", t.supportChannel);
 
-  userToModify = userToModify.filter(
-    ticket => !ticket.supporters.includes(message.author.id)
-  );
+			if (!ticketFound) return;
 
-  userToModify.map(ticket => {
-    let ticketChannel = message.guild.channels.get(
-      ticket.supportChannel
-    ) as Discord.TextChannel;
+			ticket.addSupporter(message.member, false);
+		});
+	} else {
+		const tickets = await tcoll
+			.find({ supporters: message.member.id })
+			.toArray();
 
-    if (userSettings.seeAllTickets) ticket.supporters.push(message.author.id);
-    else
-      ticket.supporters = ticket.supporters.filter(
-        supp => supp != message.author.id
-      );
+		tickets.map(async t => {
+			const ticket = new Ticket(),
+				ticketFound = await ticket.fetch("channel", t.supportChannel);
 
-    ticketChannel.overwritePermissions({
-      //@ts-ignore
-      permissionOverwrites: [
-        {
-          id: message.guild.id,
-          deny: ["VIEW_CHANNEL"]
-        },
-        {
-          id: ticket.userId,
-          allow: [
-            "VIEW_CHANNEL",
-            "SEND_MESSAGES",
-            "EMBED_LINKS",
-            "ATTACH_FILES",
-            "USE_EXTERNAL_EMOJIS"
-          ]
-        }
-      ].concat(
-        ticket.supporters.map(supp => {
-          return {
-            id: supp,
-            allow: [
-              "VIEW_CHANNEL",
-              "SEND_MESSAGES",
-              "EMBED_LINKS",
-              "ATTACH_FILES",
-              "USE_EXTERNAL_EMOJIS"
-            ]
-          };
-        })
-      )
-    });
-  });
+			if (!ticketFound) return;
+
+			ticket.removeSupporter(message.member, false);
+		});
+	}
 };
 
 module.exports.config = {
-  name: "seealltickets",
-  description: "Enable/Disable this option to see all tickets.",
-  permLevel: 1
+	name: "seealltickets",
+	description: "Enable/Disable this option to see all tickets.",
+	permLevel: 1
 };
