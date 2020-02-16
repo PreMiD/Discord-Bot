@@ -57,7 +57,7 @@ async function updateCredits() {
 	info("Updated credits.");
 }
 
-//updateCredits();
+updateCredits();
 setInterval(updateCredits, 5 * 60 * 1000);
 
 function containsAny(source: Array<string>, target: Array<string>) {
