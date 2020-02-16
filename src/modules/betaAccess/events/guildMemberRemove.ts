@@ -8,10 +8,7 @@ module.exports = async (
 	member: Discord.GuildMember
 ) => {
 
-  let betaUser = await betaUsers.findOne({ userId: member.id });
-  let dbUser = await discordUsers.findOne({ userId: member.id });
-
-  if (betaUser) betaUsers.findOneAndDelete({ userId: member.id });
-  if (dbUser) discordUsers.findOneAndDelete({ userId: member.id });
+  betaUsers.findOneAndDelete({ userId: member.id });
+  discordUsers.findOneAndDelete({ userId: member.id });
 
 };
