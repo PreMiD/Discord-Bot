@@ -3,6 +3,7 @@ import { MongoClient } from "../../database/client";
 import roles from "../../roles";
 
 let coll = MongoClient.db("PreMiD").collection("betaAccess");
+let discordUsers = MongoClient.db("PreMiD").collection("discordUsers");
 
 async function updateBetaAccess() {
 	let betaUser = (
@@ -20,4 +21,14 @@ async function updateBetaAccess() {
 	});
 }
 
+async function updateDiscordUsers() {
+	let guildMembers = await client.guilds.cache.get("493130730549805057").members.fetch({ limit: 0 });
+
+	guildMembers.map(async user => {
+		let dbUser = await discordUsers.findOne({ userId: user.id });
+		if (!dbUser) discordUsers.insertOne({ userId: user.id });
+	});
+}
+
 updateBetaAccess();
+updateDiscordUsers();
