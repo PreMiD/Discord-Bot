@@ -10,6 +10,23 @@ module.exports = async (
 	newMember: Discord.GuildMember
 ) => {
 
+	//* Add beta access when the beta role is given.
+	if (!oldMember.roles.cache.has(roles.beta) && newMember.roles.cache.has(roles.beta)) {
+		let betaUser = await betaUsers.findOne({ userId: newMember.id });
+		if(!betaUser) betaUsers.insertOne({ userId: newMember.id });
+		return;
+	}
+
+	//* Remove beta access when the beta role is removed.
+	if (
+		oldMember.roles.cache.has(roles.beta) &&
+		!newMember.roles.cache.has(roles.beta)
+	) {
+		coll.findOneAndDelete({ userId: newMember.id });
+		betaUsers.findOneAndDelete({ userId: newMember.id });
+		return;
+	}
+
 	//* If user is patron and does not have either betaTester or beta role, give it to them.
 	if (
 		newMember.roles.cache.has(roles.patron) &&
@@ -59,23 +76,6 @@ module.exports = async (
 		coll.findOneAndDelete({ userId: newMember.id });
 		betaUsers.findOneAndDelete({ userId: newMember.id });
 
-		return;
-	}
-
-	//* Add beta access when the beta role is given.
-	if (!oldMember.roles.cache.has(roles.beta) && newMember.roles.cache.has(roles.beta)) {
-		let betaUser = await betaUsers.findOne({ userId: newMember.id });
-		if(!betaUser) betaUsers.insertOne({ userId: newMember.id });
-		return;
-	}
-
-	//* Remove beta access when the beta role is removed.
-	if (
-		oldMember.roles.cache.has(roles.beta) &&
-		!newMember.roles.cache.has(roles.beta)
-	) {
-		coll.findOneAndDelete({ userId: newMember.id });
-		betaUsers.findOneAndDelete({ userId: newMember.id });
 		return;
 	}
 
