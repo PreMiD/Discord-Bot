@@ -3,11 +3,13 @@ import { MongoClient } from "../../../database/client";
 import roles from "../../../roles";
 
 const coll = MongoClient.db("PreMiD").collection("betaAccess");
+const betaUsers = MongoClient.db("PreMiD").collection("betaUsers");
 
 module.exports = async (
 	oldMember: Discord.GuildMember,
 	newMember: Discord.GuildMember
 ) => {
+
 	//* If user is patron and does not have either betaTester or beta role, give it to them.
 	if (
 		newMember.roles.cache.has(roles.patron) &&
@@ -17,6 +19,9 @@ module.exports = async (
 
 		if (!(await coll.findOne({ userId: newMember.id })))
 			await coll.insertOne({ userId: newMember.id });
+
+		if (!(await betaUsers.findOne({ userId: newMember.id })))
+			await betaUsers.insertOne({ userId: newMember.id });
 
 		return;
 	}
@@ -29,6 +34,7 @@ module.exports = async (
 		newMember.roles.add(roles.beta);
 
 		coll.insertOne({ userId: newMember.id });
+		betaUsers.insertOne({ userId: newMember.id });
 
 		return;
 	}
@@ -51,7 +57,15 @@ module.exports = async (
 			newMember.roles.remove(roles.beta);
 
 		coll.findOneAndDelete({ userId: newMember.id });
+		betaUsers.findOneAndDelete({ userId: newMember.id });
 
+		return;
+	}
+
+	//* Add beta access when the beta role is given.
+	if (!oldMember.roles.cache.has(roles.beta) && newMember.roles.cache.has(roles.beta)) {
+		let betaUser = await betaUsers.findOne({ userId: newMember.id });
+		if(!betaUser) betaUsers.insertOne({ userId: newMember.id });
 		return;
 	}
 
@@ -61,6 +75,8 @@ module.exports = async (
 		!newMember.roles.cache.has(roles.beta)
 	) {
 		coll.findOneAndDelete({ userId: newMember.id });
+		betaUsers.findOneAndDelete({ userId: newMember.id });
 		return;
 	}
+
 };
