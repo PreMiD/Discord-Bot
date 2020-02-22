@@ -4,8 +4,28 @@ import channels from "../../../channels";
 import roles from "../../../roles";
 import config from "../../../config";
 
+var users: Array<string> = [];
+
 module.exports = async (message: Discord.Message) => {
 	if (message.author.bot) return;
+
+	if (
+		!message.content.startsWith(config.prefix) &&
+		(message.content.includes("help") || message.content.includes("not working"))
+	) {
+		if (!users.includes(message.author.id)) {
+			message.channel
+				.send(
+					`Need help? Feel free to create a ticket on <#${channels.supportChannel}>!`
+				)
+				.then(msg => msg.delete({ timeout: 15000 }));
+			users.push(message.author.id);
+			setTimeout(() => {
+				const uI = users.indexOf(message.author.id);
+				if (uI > -1) users.splice(uI, 1);
+			}, 15000);
+		} else return;
+	}
 
 	let t = new Ticket();
 
