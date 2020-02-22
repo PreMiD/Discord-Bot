@@ -10,8 +10,8 @@ module.exports = async (message: Discord.Message) => {
 	if (message.author.bot) return;
 
 	if (
-		(message.content.includes("help") && !message.content.startsWith("p!")) ||
-		message.content.includes("not working")
+		!message.content.startsWith(config.prefix) &&
+		(message.content.includes("help") || message.content.includes("not working"))
 	) {
 		if (!users.includes(message.author.id)) {
 			message.channel
