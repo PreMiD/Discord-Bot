@@ -26,7 +26,8 @@ module.exports = (message: Discord.Message) => {
 		message.channel.send({
 		      embed: {
 			description: "Whoopsies, it seems' like you do not have permission to run this command!",
-			color: "#36393F"
+			color: "#36393F",
+			footer: message.author.tag
 		      }
 		   });
 		message.react("❌");
