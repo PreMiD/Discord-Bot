@@ -25,7 +25,7 @@ module.exports = (message: Discord.Message) => {
 		function sendFancyMessage() {
 		message.channel.send({
 		      embed: {
-			description: "Whoopsies, seems like you do not have permission to run this command!",
+			description: "Whoopsies, it seems' like you do not have permission to run this command!",
 			color: "#36393F"
 		      }
 		   });
