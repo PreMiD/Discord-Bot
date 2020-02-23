@@ -22,12 +22,22 @@ module.exports = (message: Discord.Message) => {
 
 	//* Run command if found
 	if (cmd) {
-		//TODO Send fancy no permission message
+		function sendFancyMessage() {
+		message.channel.send({
+		      embed: {
+			description: "Whoopsies, seems like you do not have permission to run this command!",
+			color: "#36393F"
+		      }
+		   });
+		message.react("❌");
+		};
+		
+		//TODO Send fancy no permission message // tick that off the list xoxo
 		if (
 			typeof cmd.config.permLevel != "undefined" &&
 			perms < cmd.config.permLevel
 		)
-			return;
+			return sendFancyMessage();
 
 		//* Run the command
 		cmd.run(message, params, perms);
