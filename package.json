@@ -14,7 +14,8 @@
 		"axios": "0.19.2",
 		"discord.js": "github:discordjs/discord.js",
 		"dotenv": "8.2.0",
-		"mongodb": "3.5.3"
+		"mongodb": "3.5.3",
+		"node-fetch": "2.6.0"
 	},
 	"devDependencies": {
 		"@types/mongodb": "^3.3.16",
