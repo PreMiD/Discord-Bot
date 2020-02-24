@@ -46,24 +46,41 @@ module.exports.run = async (message: Discord.Message) => {
       color = "GREEN"
     break;
     }
-    embed = new Discord.MessageEmbed({
-        title: "Status • status.premid.app",
-        color: color,
-        description: `
-        **Status:** ${status}
-        *${data.status.description}*
-        
-        For more information visit [**status.premid.app**](https://status.premid.app)
-        `,
-        footer: `Requested By • ${message.author.tag}`
-      })
-     message.channel.send(embed).then(msg => {
-     	msg = msg as Discord.Message;
-      setTimeout(() => {
-        msg.delete();
-        message.delete();
-      }, 10000);
-     });
+    fetch("https://status.premid.app/api/v2/components.json")
+        .then(res => res.json())
+        .then(response => {
+            let size = response.components.length;
+            let count = 0;
+            let comp = new Array();
+            response.components.forEach(component => {
+                count++;
+                comp.push(`${component.name } - ${component.status.substring(0, 1).toUpperCase() + component.status.substring(1)}`)
+                if(count >= size) {
+                    embed = new Discord.MessageEmbed({
+                        title: "Status • status.premid.app",
+                        color: color,
+                        description: `
+                        **Status:** ${status}
+                        *${data.status.description}*
+                        
+                        **Component Status:**
+                        • ${comp.join("\n• ")}
+                        `,
+                        footer: `Requested By • ${message.author.tag}`
+                      })
+                     message.channel.send(embed).then(msg => {
+                         msg = msg as Discord.Message;
+                      setTimeout(() => {
+                        msg.delete();
+                        message.delete();
+                      }, 10000);
+                     });
+                }
+            })
+
+
+
+        })
     };
   });
 };
