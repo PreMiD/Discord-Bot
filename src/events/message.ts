@@ -32,12 +32,11 @@ module.exports = (message: Discord.Message) => {
 		   });
 		message.react("❌");
 		};
-		
-		//T-O-D-O Send fancy no permission message // tick that off the list xoxo
 		if (
 			typeof cmd.config.permLevel != "undefined" &&
 			perms < cmd.config.permLevel
 		)
+		//* Send Embed if user does not have permissions to run the command
 			return sendFancyMessage();
 
 		//* Run the command
