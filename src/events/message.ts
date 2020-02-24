@@ -33,7 +33,7 @@ module.exports = (message: Discord.Message) => {
 		message.react("❌");
 		};
 		
-		//TODO Send fancy no permission message // tick that off the list xoxo
+		//T-O-D-O Send fancy no permission message // tick that off the list xoxo
 		if (
 			typeof cmd.config.permLevel != "undefined" &&
 			perms < cmd.config.permLevel
