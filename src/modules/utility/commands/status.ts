@@ -55,7 +55,7 @@ module.exports.run = async (message: Discord.Message) => {
         
         For more information visit [**status.premid.app**](https://status.premid.app)
         `,
-        footer: (`Requested By • ${message.author.tag}`, message.author.avatarURL)
+        footer: `Requested By • ${message.author.tag}`
       })
      message.channel.send(embed).then(msg => {
      	msg = msg as Discord.Message;
