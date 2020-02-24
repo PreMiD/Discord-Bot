@@ -42,5 +42,5 @@ module.exports = (message: Discord.Message) => {
 
 		//* Run the command
 		cmd.run(message, params, perms);
-	}
+	}else {message.react("❌"), message.delete(10000)};
 };
