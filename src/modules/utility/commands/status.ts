@@ -15,7 +15,7 @@ module.exports.run = async (message: Discord.Message) => {
     if(data.status.description === "All Systems Operational") {
     embed = new Discord.MessageEmbed({
     title: "Status",
-    description("Our services are currently operation, if you are experiencing any difficulties, please let a member of staff know!"),
+    description:("Our services are currently operation, if you are experiencing any difficulties, please let a member of staff know!"),
     color: "GREEN"
      })
      message.channel.send(embed).then(msg => {
