@@ -82,7 +82,7 @@ export class Ticket {
 	}
 
 	async create(message: Discord.Message) {
-		this.id = ((await coll.countDocuments({})) + 1).toString().padStart(5, "0");
+		this.id = ((await coll.countDocuments()) + 1).toString().padStart(5, "0");
 
 		this.embed = {
 			author: {
