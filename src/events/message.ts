@@ -23,23 +23,25 @@ module.exports = (message: Discord.Message) => {
 	//* Run command if found
 	if (cmd) {
 		function sendFancyMessage() {
-		message.channel.send({
-		      embed: {
-			description: "Whoopsies, it seems' like you do not have permission to run this command!",
-			color: "#36393F",
-			footer: message.author.tag
-		      }
-		   });
-		message.react("❌");
-		};
+			message.channel.send({
+				embed: {
+					description:
+						"Whoopsies, it seems' like you do not have permission to run this command!",
+					color: "#36393F",
+					footer: message.author.tag
+				}
+			});
+			message.react("❌");
+		}
+
 		if (
 			typeof cmd.config.permLevel != "undefined" &&
 			perms < cmd.config.permLevel
 		)
-		//* Send Embed if user does not have permissions to run the command
+			//* Send Embed if user does not have permissions to run the command
 			return sendFancyMessage();
 
 		//* Run the command
 		cmd.run(message, params, perms);
-	}else {message.react("❌"), message.delete(10000)};
+	} else message.react("❌"), message.delete({ timeout: 5 * 1000 });
 };
