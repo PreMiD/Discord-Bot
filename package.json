@@ -14,11 +14,11 @@
 		"axios": "0.19.2",
 		"discord.js": "github:discordjs/discord.js",
 		"dotenv": "8.2.0",
-		"mongodb": "3.5.3"
+		"mongodb": "3.5.4"
 	},
 	"devDependencies": {
 		"@types/mongodb": "^3.3.16",
-		"@types/node": "^13.7.4",
+		"@types/node": "^13.7.6",
 		"source-map-support": "^0.5.16"
 	}
 }
