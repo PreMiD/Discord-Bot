@@ -3,57 +3,58 @@ import { MongoClient } from "../../database/client";
 import { info } from "../../util/debug";
 import creditRoles from "./creditRoles";
 
-const coll = MongoClient.db("PreMiD").collection("credits");
+const creditsColl = MongoClient.db("PreMiD").collection("credits");
 
 async function updateCredits() {
 	info("Updating credits...");
 
-	const users = (
-			await client.guilds.cache
-				.get("493130730549805057")
-				.members.fetch({ limit: 0 })
-		).filter(
-			m =>
-				containsAny(Object.values(creditRoles), m.roles.cache.keyArray())
-					.length > 0
-		),
-		creditUsers = users.map(m => {
-			const mCreditRoles = containsAny(
-					Object.values(creditRoles),
-					m.roles.cache.keyArray()
-				),
-				highestRole = m.roles.cache.get(mCreditRoles[0]),
-				result = {
-					userId: m.id,
-					name: m.user.username,
-					tag: m.user.discriminator,
-					avatar: m.user.displayAvatarURL({ format: "png", dynamic: true }),
-					role: highestRole.name,
-					roleId: highestRole.id,
-					roles: m.roles.cache.map(r => r.name),
-					roleColor: highestRole.hexColor,
-					rolePosition: highestRole.position,
-					status: m.user.presence.status
-				};
+	let creditUsers = [];
 
-			return result;
-		}),
-		mongoCredits = await coll.find().toArray(),
-		usersToRemove = mongoCredits
-			.map(mC => mC.userId)
-			.filter(mC => !creditUsers.map(cU => cU.userId).includes(mC));
+	client.guilds.cache
+		.first()
+		.roles.cache.filter(r => Object.values(creditRoles).includes(r.id))
+		.forEach(r => {
+			r.members.map(m => {
+				const highestRole = m.roles.cache.get(
+					containsAny(Object.values(creditRoles), m.roles.cache.keyArray())[0]
+				);
 
-	usersToRemove.map(uTR => coll.findOneAndDelete({ userId: uTR }));
+				if (!creditUsers.find(cU => cU.userId === m.id))
+					creditUsers.push({
+						userId: m.id,
+						name: m.user.username,
+						tag: m.user.discriminator,
+						avatar: m.user.displayAvatarURL({ format: "png", dynamic: true }),
+						role: highestRole.name,
+						roleId: highestRole.id,
+						roles: m.roles.cache.map(r => r.name),
+						roleColor: highestRole.hexColor,
+						rolePosition: highestRole.position,
+						status: m.user.presence.status
+					});
+			});
+		});
 
 	await Promise.all(
-		creditUsers.map(async cu => {
-			if (
-				!(await coll.findOneAndUpdate({ userId: cu.userId }, { $set: cu }))
-					.lastErrorObject.updatedExisting
-			)
-				coll.insertOne(cu);
-		})
+		creditUsers.map(cU =>
+			creditsColl.findOneAndUpdate({ userId: cU.userId }, { $set: cU })
+		)
 	);
+
+	//#region Filter old credits > delete them
+	const dbCredits = await creditsColl
+			.find({}, { projection: { _id: false, userId: true } })
+			.toArray(),
+		usersToRemove = dbCredits.filter(
+			mC => !creditUsers.map(cU => cU.userId).includes(mC.userId)
+		);
+	if (usersToRemove.length > 0)
+		await Promise.all(
+			usersToRemove.map(uTR =>
+				creditsColl.findOneAndDelete({ userId: uTR.userId })
+			)
+		);
+	//#endregion
 
 	info("Updated credits.");
 }
