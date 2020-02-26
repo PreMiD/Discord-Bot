@@ -29,6 +29,7 @@ async function updateCredits() {
 					tag: m.user.discriminator,
 					avatar: m.user.displayAvatarURL({ format: "png", dynamic: true }),
 					role: highestRole.name,
+					roleId: highestRole.id,
 					roles: m.roles.cache.map(r => r.name),
 					roleColor: highestRole.hexColor,
 					rolePosition: highestRole.position,
