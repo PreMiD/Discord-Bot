@@ -7,6 +7,8 @@ const coll = MongoClient.db("PreMiD").collection("tickets"),
 	circleFolder =
 		"https://raw.githubusercontent.com/PreMiD/Discord-Bot/master/.discord/";
 
+let ticketCount = 0;
+
 export class Ticket {
 	id: string;
 	status: number;
@@ -82,7 +84,11 @@ export class Ticket {
 	}
 
 	async create(message: Discord.Message) {
-		this.id = ((await coll.countDocuments()) + 1).toString().padStart(5, "0");
+		if (ticketCount === 0) ticketCount = await coll.countDocuments({});
+
+		ticketCount++;
+
+		this.id = ticketCount.toString().padStart(5, "0");
 
 		this.embed = {
 			author: {
