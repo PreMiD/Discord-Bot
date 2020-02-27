@@ -11,13 +11,15 @@ module.exports = async (member: Discord.GuildMember) => {
 	) {
 		let embed = new Discord.MessageEmbed()
 			.setAuthor(`${member.displayName}`, member.user.displayAvatarURL())
-			.addField("Account creation date", member.user.createdAt)
+			.addFields([
+				{ name: "Account creation date", value: member.user.createdAt }
+			])
 			.setColor("#fc3c3c")
 			.setFooter("POSSIBLE BOT")
 			.setTimestamp();
 
 		if (member.user.defaultAvatarURL === member.user.displayAvatarURL()) {
-			embed.addField("Action", "User Kicked");
+			embed.addFields([{ name: "Action", value: "User Kicked" }]);
 			member.user.send(
 				"Oops, your account looks a bit robotic _beep boop_, use a nice avatar and username to make it less robotic to gain entrance to our server."
 			);
@@ -29,7 +31,7 @@ module.exports = async (member: Discord.GuildMember) => {
 					});
 		} else {
 			member.roles.add(roles.muted, "Possible bot");
-			embed.addField("Action", "User muted");
+			embed.addFields([{ name: "Action", value: "User muted" }]);
 			member.user.send(
 				"Oops, your account looks a bit robotic _beep boop_, contact one of our mods to gain write access our channels."
 			);
