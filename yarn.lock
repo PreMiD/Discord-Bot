@@ -192,7 +192,7 @@ denque@^1.4.1:
   resolved "https://registry.yarnpkg.com/denque/-/denque-1.4.1.tgz#6744ff7641c148c3f8a69c307e51235c1f4a37cf"
   integrity sha512-OfzPuSZKGcgr96rf1oODnfjqBFmr1DVoc/TrItj3Ohe0Ah1C5WX5Baquw/9U9KovnQ88EqmJbD66rKYUQYN1tQ==
 
-discord.js@^12.0.0:
+discord.js@12.0.0:
   version "12.0.0"
   resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-12.0.0.tgz#6e5bfc0d7b9711122629ee97aa8f19cd0fec1bf9"
   integrity sha512-TyQtvy73545bh4LFC5yRvmeQZHkuD0Kk1K3xOkPN1ROL6A2iywz71mIJ/eKQPc4X/wU5LUK6KA5fuRySDIor6w==
@@ -473,7 +473,7 @@ setimmediate@^1.0.5:
   resolved "https://registry.yarnpkg.com/setimmediate/-/setimmediate-1.0.5.tgz#290cbb232e306942d7d7ea9b83732ab7856f8285"
   integrity sha1-KQy7Iy4waULX1+qbg3Mqt4VvgoU=
 
-source-map-support@^0.5.16:
+source-map-support@0.5.16:
   version "0.5.16"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.16.tgz#0ae069e7fe3ba7538c64c98515e35339eac5a042"
   integrity sha512-efyLRJDr68D9hBBNIPWFjhpFzURh+KJykQwvMyW5UiZzYwoF6l4YMMDIJJEyFWxWCqfyxLzz6tSfUFR+kXXsVQ==
