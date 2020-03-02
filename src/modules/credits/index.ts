@@ -46,14 +46,19 @@ async function updateCredits() {
 			.find({}, { projection: { _id: false, userId: true } })
 			.toArray(),
 		usersToRemove = dbCredits.filter(
-			mC => !creditUsers.map(cU => cU.userId).includes(mC.userId)
+			mC => !creditUsers.find(cU => cU.userId === mC.userId)
+		),
+		usersToAdd = creditUsers.filter(
+			mC => !dbCredits.find(cU => cU.userId === mC.userId)
 		);
-	if (usersToRemove.length > 0)
+	if (usersToRemove.length > 0) {
 		await Promise.all(
 			usersToRemove.map(uTR =>
 				creditsColl.findOneAndDelete({ userId: uTR.userId })
 			)
 		);
+	}
+	if (usersToAdd.length > 0) await creditsColl.insertMany(usersToAdd);
 	//#endregion
 
 	info("Updated credits.");
