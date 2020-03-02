@@ -2,6 +2,8 @@ export default {
 	supportChannel: "566738846650335232",
 	ticketChannel: "566738864606281743",
 	ticketCategory: "566853957054496778",
+	chatCategory: "518466575691546654",
+	offtopicCategory: "576833176362680330",
 	general: "527675240231206934",
 	moderators: "526736087377248257",
 	logs: "548596032355958784"
