@@ -3,6 +3,7 @@ import { Ticket } from "../classes/Ticket";
 import channels from "../../../channels";
 import roles from "../../../roles";
 import config from "../../../config";
+import ch from "../../../channels";
 
 var users: Array<string> = [];
 
@@ -10,21 +11,30 @@ module.exports = async (message: Discord.Message) => {
 	if (message.author.bot) return;
 
 	if (
-		!message.content.startsWith(config.prefix) &&
-		(message.content.includes("help") || message.content.includes("not working"))
+		(message.channel as Discord.TextChannel).parentID ===
+		(ch.chatCategory || ch.offtopicCategory)
 	) {
-		if (!users.includes(message.author.id)) {
-			message.channel
-				.send(
-					`Need help? Feel free to create a ticket on <#${channels.supportChannel}>!`
-				)
-				.then(msg => msg.delete({ timeout: 15000 }));
-			users.push(message.author.id);
-			setTimeout(() => {
-				const uI = users.indexOf(message.author.id);
-				if (uI > -1) users.splice(uI, 1);
-			}, 15000);
-		} else return;
+		if (message.channel.id === ch.supportChannel) return;
+		if (
+			!message.content.startsWith(config.prefix) &&
+			(message.content.includes("help") ||
+				message.content.includes("anyone here?") ||
+				message.content.includes("premid isnt working") ||
+				message.content.includes("premid isn't working"))
+		) {
+			if (!users.includes(message.author.id)) {
+				message.channel
+					.send(
+						`Need help? Feel free to create a ticket on <#${channels.supportChannel}>!`
+					)
+					.then(msg => msg.delete({ timeout: 15000 }));
+				users.push(message.author.id);
+				setTimeout(() => {
+					const uI = users.indexOf(message.author.id);
+					if (uI > -1) users.splice(uI, 1);
+				}, 15000);
+			} else return;
+		}
 	}
 
 	let t = new Ticket();
