@@ -122,9 +122,11 @@ export class Ticket {
 					channels.ticketChannel
 				) as Discord.TextChannel).send(message.attachments.first());
 
-		message.author.send(
-			`Your ticket  \`\`#${this.id}\`\` has been submitted and will be answered shortly. Please be patient. Thank you!`
-		);
+		message.author
+			.send(
+				`Your ticket  \`\`#${this.id}\`\` has been submitted and will be answered shortly. Please be patient. Thank you!`
+			)
+			.catch(() => {});
 
 		coll.insertOne({
 			ticketId: this.id,
