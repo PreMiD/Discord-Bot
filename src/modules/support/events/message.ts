@@ -4,6 +4,7 @@ import channels from "../../../channels";
 import roles from "../../../roles";
 import config from "../../../config";
 import ch from "../../../channels";
+import { client } from "../../..";
 
 var users: Array<string> = [];
 
@@ -11,16 +12,18 @@ module.exports = async (message: Discord.Message) => {
 	if (message.author.bot) return;
 
 	if (
-		(message.channel as Discord.TextChannel).parentID ===
-		(ch.chatCategory || ch.offtopicCategory)
+		message.channel.id !== ch.supportChannel &&
+		[ch.chatCategory, ch.offtopicCategory].includes(
+			(message.channel as Discord.TextChannel).parentID
+		)
 	) {
-		if (message.channel.id === ch.supportChannel) return;
 		if (
 			!message.content.startsWith(config.prefix) &&
-			(message.content.includes("help") ||
+			(message.content.includes("help me") ||
 				message.content.includes("anyone here?") ||
 				message.content.includes("premid isnt working") ||
-				message.content.includes("premid isn't working"))
+				message.content.includes("premid isn't working")) &&
+			client.elevation(message.author.id) === 0
 		) {
 			if (!users.includes(message.author.id)) {
 				message.channel
