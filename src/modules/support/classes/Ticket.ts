@@ -135,7 +135,8 @@ export class Ticket {
 			timestamp: Date.now(),
 			attachmentMessage: this.attachmentsMessage
 				? this.attachmentsMessage.id
-				: undefined
+				: undefined,
+			created: Date.now()
 		});
 
 		message.delete().catch(() => {});
@@ -215,18 +216,20 @@ export class Ticket {
 					supportChannel: this.channel.id,
 					status: 1,
 					supporters: [supporter.id],
-					supportEmbed: this.channelMessage.id
+					supportEmbed: this.channelMessage.id,
+					accepter: supporter.id
 				}
 			}
 		);
 	}
 
-	async close(reason?: string) {
-		if (reason) {
-			this.user.send(
-				`Your Ticket \`\`#${this.id}\`\` has been closed. Reason:\n\n*\`\`${reason}\`\`*`
-			);
-		}
+	async close(closer: Discord.GuildMember, reason?: string) {
+		if (reason)
+			this.user
+				.send(
+					`Your Ticket \`\`#${this.id}\`\` has been closed. Reason:\n\n*\`\`${reason}\`\`*`
+				)
+				.catch(() => {});
 
 		this.embed.author = {
 			name: `Ticket#${this.id} [CLOSED]`,
@@ -238,19 +241,21 @@ export class Ticket {
 		if (this.embed.thumbnail) delete this.embed.thumbnail;
 		delete this.embed.fields;
 
-		if (this.attachmentsMessage) this.attachmentsMessage.delete();
+		if (this.attachmentsMessage)
+			this.attachmentsMessage.delete().catch(() => {});
 
-		await Promise.all([
-			this.channel.delete(),
-			this.message.reactions.removeAll(),
-			this.message.edit(this.embed)
-		]);
+		this.channel.delete().catch(() => {});
+		this.message.reactions.removeAll().catch(() => {});
+		this.message.edit(this.embed).catch(() => {});
 
 		coll.findOneAndUpdate(
 			{ ticketId: this.id },
 			{
 				$unset: { supportChannel: "", supporters: "", supportEmbed: "" },
-				$set: { status: 2 }
+				$set: {
+					status: 2,
+					closer: closer.id
+				}
 			}
 		);
 	}

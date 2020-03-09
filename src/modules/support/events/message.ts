@@ -5,8 +5,11 @@ import roles from "../../../roles";
 import config from "../../../config";
 import ch from "../../../channels";
 import { client } from "../../..";
+import { MongoClient } from "../../../database/client";
 
-var users: Array<string> = [];
+const coll = MongoClient.db("PreMiD").collection("tickets");
+
+let users: Array<string> = [];
 
 module.exports = async (message: Discord.Message) => {
 	if (message.author.bot) return;
@@ -61,18 +64,25 @@ module.exports = async (message: Discord.Message) => {
 		return;
 	}
 
+	if (ticketFound && t.user.id === message.author.id)
+		coll.findOneAndUpdate(
+			{ ticketId: t.id },
+			{ $set: { lastUserMessage: Date.now() } }
+		);
+
 	if (ticketFound && message.content.startsWith(`${config.prefix}close`)) {
 		if (
 			message.member.roles.cache.has(roles.ticketManager) ||
 			message.member.permissions.has("ADMINISTRATOR")
 		)
 			t.close(
+				message.member,
 				message.content
 					.split(" ")
 					.slice(1, message.content.split(" ").length)
 					.join(" ")
 			);
-		else t.close();
+		else t.close(message.member);
 		return;
 	}
 
