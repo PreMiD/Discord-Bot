@@ -124,7 +124,7 @@ export class Ticket {
 
 		message.author
 			.send(
-				`Your ticket  \`\`#${this.id}\`\` has been submitted and will be answered shortly. Please be patient. Thank you!`
+				`Your ticket \`\`#${this.id}\`\` has been submitted and will be answered shortly. Please be patient. Thank you!`
 			)
 			.catch(() => {});
 
@@ -244,9 +244,12 @@ export class Ticket {
 		if (this.attachmentsMessage)
 			this.attachmentsMessage.delete().catch(() => {});
 
-		this.channel.delete().catch(() => {});
+		console.log(this.message.id);
+		return;
+
 		this.message.reactions.removeAll().catch(() => {});
 		this.message.edit(this.embed).catch(() => {});
+		this.channel.delete().catch(() => {});
 
 		coll.findOneAndUpdate(
 			{ ticketId: this.id },

@@ -14,7 +14,12 @@ let users: Array<string> = [];
 module.exports = async (message: Discord.Message) => {
 	if (message.author.bot) return;
 
+	let t = new Ticket();
+
+	const ticketFound = await t.fetch("channel", message.channel.id);
+
 	if (
+		!ticketFound &&
 		message.channel.id !== ch.supportChannel &&
 		[ch.chatCategory, ch.offtopicCategory].includes(
 			(message.channel as Discord.TextChannel).parentID
@@ -38,14 +43,10 @@ module.exports = async (message: Discord.Message) => {
 				setTimeout(() => {
 					const uI = users.indexOf(message.author.id);
 					if (uI > -1) users.splice(uI, 1);
-				}, 15000);
+				}, 60 * 1000);
 			} else return;
 		}
 	}
-
-	let t = new Ticket();
-
-	const ticketFound = await t.fetch("channel", message.channel.id);
 
 	if (
 		!ticketFound &&
@@ -64,27 +65,25 @@ module.exports = async (message: Discord.Message) => {
 		return;
 	}
 
+	if (ticketFound)
+		coll.findOneAndUpdate(
+			{ ticketId: t.id },
+			{
+				$push: {
+					messages: {
+						userId: message.author.id,
+						content: message.cleanContent,
+						sent: message.createdTimestamp
+					}
+				}
+			}
+		);
+
 	if (ticketFound && t.user.id === message.author.id)
 		coll.findOneAndUpdate(
 			{ ticketId: t.id },
 			{ $set: { lastUserMessage: Date.now() } }
 		);
-
-	if (ticketFound && message.content.startsWith(`${config.prefix}close`)) {
-		if (
-			message.member.roles.cache.has(roles.ticketManager) ||
-			message.member.permissions.has("ADMINISTRATOR")
-		)
-			t.close(
-				message.member,
-				message.content
-					.split(" ")
-					.slice(1, message.content.split(" ").length)
-					.join(" ")
-			);
-		else t.close(message.member);
-		return;
-	}
 
 	if (
 		ticketFound &&

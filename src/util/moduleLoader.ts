@@ -129,7 +129,7 @@ async function loadCommands(filePath: string, client: Discord.Client) {
 		client.commands.set(props.config.name, props);
 		//* Only add aliases if there are any
 		if (typeof props.config.aliases != "undefined")
-			props.config.aliases.forEach((alias: String) => {
+			props.config.aliases.forEach((alias: string) => {
 				client.aliases.set(alias, props.config.name);
 			});
 	});

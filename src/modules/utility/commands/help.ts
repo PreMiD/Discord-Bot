@@ -7,6 +7,8 @@ module.exports.run = async (message: Discord.Message) => {
 
 	let userElevation = client.elevation(message.author.id),
 		cmds = client.commands
+			// @ts-ignore
+			.filter(cmd => !cmd.config.hidden)
 			.map(cmd => [
 				// @ts-ignore
 				cmd.config.name,

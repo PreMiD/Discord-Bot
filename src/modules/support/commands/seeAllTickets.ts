@@ -18,28 +18,31 @@ module.exports.run = async (
 	message.delete();
 
 	let userSettings = await coll.findOne({ userId: message.author.id });
-	if (typeof userSettings === "undefined") {
-		userSettings = await coll.insertOne({
-			userId: message.author.id,
-			seeAllTickets: true
-		});
+	if (!userSettings) {
+		userSettings = (
+			await coll.insertOne({
+				userId: message.author.id,
+				seeAllTickets: true
+			})
+		).ops[0];
 	} else {
 		userSettings.seeAllTickets = !userSettings.seeAllTickets;
-		userSettings = await coll.findOneAndUpdate(
-			{ userId: message.author.id },
-			{ $set: { seeAllTickets: userSettings.seeAllTickets } }
-		);
+		userSettings = (
+			await coll.findOneAndUpdate(
+				{ userId: message.author.id },
+				{ $set: { seeAllTickets: userSettings.seeAllTickets } }
+			)
+		).value;
 	}
-
 	message
 		.reply(
-			userSettings.value.seeAllTickets
+			userSettings.seeAllTickets
 				? `You can now see all tickets.`
 				: `You can no longer see all tickets.`
 		)
 		.then(msg => msg.delete({ timeout: 10 * 1000 }));
 
-	if (userSettings.value.seeAllTickets) {
+	if (userSettings.seeAllTickets) {
 		const tickets = await tcoll.find({ status: 1 }).toArray();
 
 		tickets.map(async t => {
@@ -47,8 +50,13 @@ module.exports.run = async (
 				ticketFound = await ticket.fetch("channel", t.supportChannel);
 
 			if (!ticketFound) return;
-
-			ticket.addSupporter(message.member, false);
+			ticket.channel.updateOverwrite(message.member, {
+				VIEW_CHANNEL: true,
+				SEND_MESSAGES: true,
+				EMBED_LINKS: true,
+				ATTACH_FILES: true,
+				USE_EXTERNAL_EMOJIS: true
+			});
 		});
 	} else {
 		const tickets = await tcoll
@@ -60,8 +68,11 @@ module.exports.run = async (
 				ticketFound = await ticket.fetch("channel", t.supportChannel);
 
 			if (!ticketFound) return;
+			if (ticket.supporters.includes(message.member)) return;
 
-			ticket.removeSupporter(message.member, false);
+			ticket.channel.updateOverwrite(message.member, {
+				VIEW_CHANNEL: false
+			});
 		});
 	}
 };
