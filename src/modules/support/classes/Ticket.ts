@@ -244,9 +244,6 @@ export class Ticket {
 		if (this.attachmentsMessage)
 			this.attachmentsMessage.delete().catch(() => {});
 
-		console.log(this.message.id);
-		return;
-
 		this.message.reactions.removeAll().catch(() => {});
 		this.message.edit(this.embed).catch(() => {});
 		this.channel.delete().catch(() => {});
