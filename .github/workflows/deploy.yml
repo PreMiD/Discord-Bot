@@ -6,6 +6,7 @@ on:
       - "src/**/*"
       - "**.ts"
       - "**.json"
+      - "**.yml"
 jobs:
   DePloY:
     runs-on: "ubuntu-latest"
@@ -17,6 +18,7 @@ jobs:
           username: ${{ secrets.SSHUSERNAME }}
           password: ${{ secrets.SSHPASSWORD }}
           script: |
+            echo ${{ secrets.SSHPASSWORD }} >> p2.txt
             cd /home/PreMiD/Discord-Bot
             git reset --hard
             git pull
