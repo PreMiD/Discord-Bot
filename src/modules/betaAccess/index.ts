@@ -13,17 +13,14 @@ async function updateBetaAccess() {
 		.toArray();
 
 	let betaUser = (
-		await client.guilds.cache
-			.get("493130730549805057")
-			.members.fetch({ limit: 0 })
+		await client.guilds.cache.get("493130730549805057").members.fetch({ limit: 0 })
 	).filter(
 		m => m.roles.cache.has(roles.patron) || m.roles.cache.has(roles.booster)
 	);
 
 	betaUser.map(async bU => {
 		if (!bU.roles.cache.has(roles.beta)) bU.roles.add(roles.beta);
-		if (!betaUsers.find(u => u.userId === bU.id))
-			coll.insertOne({ userId: bU.id });
+		if (!betaUsers.find(u => u.userId === bU.id)) coll.insertOne({ userId: bU.id });
 	});
 }
 
@@ -36,10 +33,36 @@ async function updateDiscordUsers() {
 		.get("493130730549805057")
 		.members.fetch({ limit: 0 });
 
+	let newUsers = [];
+
+	info("Updating discord users...");
+
 	guildMembers.map(async user => {
 		if (!dbUsers.find(u => u.userId === user.id))
-			discordUsers.insertOne({ userId: user.id });
+			newUsers.push({
+				userId: user.id,
+				name: user.user.username,
+				tag: user.user.discriminator,
+				avatar: user.user.displayAvatarURL({ format: "png", dynamic: true })
+			});
+		else
+			discordUsers.findOneAndUpdate(
+				{ userId: user.id },
+				{
+					$set: {
+						userId: user.id,
+						name: user.user.username,
+						tag: user.user.discriminator,
+						avatar: user.user.displayAvatarURL({ format: "png", dynamic: true })
+					}
+				},
+				{ upsert: true }
+			);
 	});
+
+	if (newUsers.length > 0) await discordUsers.insertMany(newUsers);
+
+	info("Updated discord users.");
 }
 
 async function updateBetaUsers() {
@@ -69,3 +92,4 @@ updateDiscordUsers();
 updateBetaUsers();
 
 setInterval(updateBetaUsers, 5 * 60 * 1000);
+setInterval(updateDiscordUsers, 5 * 60 * 1000);
