@@ -533,10 +533,10 @@ depd@~1.1.2:
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
   integrity sha1-m81S4UwJd2PnSbJ0xDRu0uVgtak=
 
-discord.js@12.0.2:
-  version "12.0.2"
-  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-12.0.2.tgz#c4d68f1363d7fc05ed71a42dba6b930966ed8602"
-  integrity sha512-iZiEA4Y61gqq/EjFfLXnkRK9pLapnax/vTVDUhs/mAhyqozAy0GOlk/MZI9rSa1iIoKTWRq6P9CRKhLNT2wUnA==
+discord.js@12.1.0:
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-12.1.0.tgz#11ce6d348b7a3a30695efad8ab2834865768d5e9"
+  integrity sha512-p5JopWaQx0+HKQdhdydLmUq1aBLVv5BixJzNMVEOf9CfykLnNlN73mwbU0bagtrwMmP0xLJZlaPlUdbh5mi2TQ==
   dependencies:
     "@discordjs/collection" "^0.1.5"
     abort-controller "^3.0.0"
