@@ -58,9 +58,9 @@ export default {
 	donate: {
 		title: "Donate to PreMiD's Development",
 		color: "RANDOM",
-		aliases: ["maketimeraarich", "gaytim", "serverboost", "boost"],
+		aliases: ["maketimeraarich", "gaytim", "serverboost", "boost", "nitroboost"],
 		description:
-			"If you want to support PreMiD's development, you can either donate $ or boost the server to .cache.get a special role just for that! If you want to $ support PreMiD and help the website, you can visit Timeraa's Patreon page from [here](https://www.patreon.com/Timeraa).",
+			"Want to support PreMiD's Development? Great! You can do so by boosting our discord server, which will get you a special role, or you can support our [Patreon](https://patreon.com/Timeraa) or donate via [PayPal](https://www.paypal.com/paypalme2/TimeraaDEV)!",
 		footer: false
 	},
 	ticket: {
