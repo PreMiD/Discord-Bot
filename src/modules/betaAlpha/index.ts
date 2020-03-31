@@ -46,3 +46,5 @@ async function updateBetaUsers() {
 
 updateBetaUsers();
 updateDiscordUsers();
+
+setInterval(updateBetaUsers, 60 * 1000);
