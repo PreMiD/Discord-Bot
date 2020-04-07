@@ -80,16 +80,21 @@ module.exports = async (
 	//* If user is donator and does not have beta role, give it to them.
 	if (
 		newMember.roles.cache.has(roles.donator) &&
+		!newMember.roles.cache.has(roles.alpha) &&
 		!newMember.roles.cache.has(roles.beta)
 	) {
 		newMember.roles.add(roles.beta);
+		return;
+	}
 
-		betaUsers.findOneAndUpdate(
-			{ userId: newMember.id },
-			{ $set: { userId: newMember.id } },
-			{ upsert: true }
-		);
-
+	//* If user is donator and get's alpha role remove beta role
+	if (
+		newMember.roles.cache.has(roles.donator) &&
+		newMember.roles.cache.has(roles.alpha) &&
+		newMember.roles.cache.has(roles.beta)
+	) {
+		console.log("REMOVE BETA");
+		newMember.roles.remove(roles.beta);
 		return;
 	}
 
@@ -99,8 +104,6 @@ module.exports = async (
 		!newMember.roles.cache.has(roles.beta)
 	) {
 		newMember.roles.add(roles.beta);
-
-		betaUsers.insertOne({ userId: newMember.id });
 
 		return;
 	}
@@ -119,11 +122,6 @@ module.exports = async (
 		!newMember.roles.cache.has(roles.donator)
 	) {
 		newMember.roles.remove(roles.beta);
-		if (!oldMember.roles.cache.has(roles.patron))
-			newMember.roles.remove(roles.beta);
-
-		betaUsers.findOneAndDelete({ userId: newMember.id });
-
 		return;
 	}
 };
