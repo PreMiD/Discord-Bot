@@ -19,8 +19,8 @@ module.exports = async (
 			{ $set: { userId: newMember.id } },
 			{ upsert: true }
 		);
-		return;
 	}
+
 	if (
 		!oldMember.roles.cache.has(roles.alpha) &&
 		newMember.roles.cache.has(roles.alpha)
@@ -30,7 +30,6 @@ module.exports = async (
 			{ $set: { userId: newMember.id } },
 			{ upsert: true }
 		);
-		return;
 	}
 
 	//* Remove beta access when the beta role is removed.
@@ -39,7 +38,6 @@ module.exports = async (
 		!newMember.roles.cache.has(roles.beta)
 	) {
 		betaUsers.findOneAndDelete({ userId: newMember.id });
-		return;
 	}
 
 	//* Remove alpha access when the alpha role is removed.
@@ -48,7 +46,6 @@ module.exports = async (
 		!newMember.roles.cache.has(roles.alpha)
 	) {
 		alphaUsers.findOneAndDelete({ userId: newMember.id });
-		return;
 	}
 
 	//* Give old patron beta if he stops supporting
@@ -65,7 +62,6 @@ module.exports = async (
 
 		await newMember.roles.remove(roles.alpha);
 		newMember.roles.add([roles.beta, roles.donator]);
-		return;
 	}
 
 	//* If user is patron and does not have alpha role, give it to them.
@@ -74,7 +70,6 @@ module.exports = async (
 		!newMember.roles.cache.has(roles.alpha)
 	) {
 		newMember.roles.add(roles.alpha);
-		return;
 	}
 
 	//* If user is donator and does not have beta role, give it to them.
@@ -84,7 +79,6 @@ module.exports = async (
 		!newMember.roles.cache.has(roles.beta)
 	) {
 		newMember.roles.add(roles.beta);
-		return;
 	}
 
 	//* If user is donator and get's alpha role remove beta role
@@ -93,9 +87,7 @@ module.exports = async (
 		newMember.roles.cache.has(roles.alpha) &&
 		newMember.roles.cache.has(roles.beta)
 	) {
-		console.log("REMOVE BETA");
 		newMember.roles.remove(roles.beta);
-		return;
 	}
 
 	//* If user boosts and doesn't have beta role, give it to them.
@@ -104,8 +96,6 @@ module.exports = async (
 		!newMember.roles.cache.has(roles.beta)
 	) {
 		newMember.roles.add(roles.beta);
-
-		return;
 	}
 
 	//* Remove beta access when boost expires.
