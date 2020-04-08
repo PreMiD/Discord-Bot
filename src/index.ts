@@ -17,16 +17,16 @@ export let client = new Discord.Client({
 					status: "dnd",
 					activity: {
 						name: "devs code",
-						type: "WATCHING"
-					}
+						type: "WATCHING",
+					},
 			  }
 			: {
 					status: "online",
 					activity: {
-						name: "p!help",
-						type: "LISTENING"
-					}
-			  }
+						name: "to p!help",
+						type: "LISTENING",
+					},
+			  },
 });
 
 //* Commands, Command aliases, Command permission levels
@@ -72,7 +72,7 @@ run();
 async function run() {
 	//* Connect to Mongo DB
 	await connect()
-		.then(_ => success("Connected to the database"))
+		.then((_) => success("Connected to the database"))
 		.catch((err: Error) => {
 			error(`Could not connect to database: ${err.name}`);
 			process.exit();

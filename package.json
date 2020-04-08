@@ -5,7 +5,7 @@
 	"version": "2.3.2",
 	"scripts": {
 		"start": "node index",
-		"compile": "yarn --silent && tsc && devScript --copyOnly",
+		"compile": "rimraf dist && yarn --silent && tsc && devScript --copyOnly",
 		"dev": "devScript"
 	},
 	"license": "MPL-2.0",
@@ -20,6 +20,7 @@
 	},
 	"devDependencies": {
 		"@types/mongodb": "^3.5.5",
-		"@types/node": "^13.11.0"
+		"@types/node": "^13.11.0",
+		"rimraf": "^3.0.2"
 	}
 }
