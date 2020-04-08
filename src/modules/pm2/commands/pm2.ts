@@ -14,29 +14,29 @@ module.exports.run = async (
 				new MessageEmbed({
 					title: "pm2",
 					description: `
-      **9** API
-      **10** Discord-Bot
-      **13** Docs
-      **12** Website-master
-      **11** Website-stable
+      **0** API
+      **1** Discord-Bot
+      **4** Docs
+      **3** Website-master
+      **2** Website-stable
       `,
 					footer: {
-						text: "Enter the ID to restart it."
-					}
+						text: "Enter the ID to restart it.",
+					},
 				})
 			)
 		).delete({ timeout: 15 * 1000 });
 		return;
 	}
 
-	if (!["9", "10", "13", "12", "11"].includes(params[0].toLowerCase())) {
+	if (!["9", "1", "2", "3", "4"].includes(params[0].toLowerCase())) {
 		(await message.reply("Invalid process ID")).delete({
-			timeout: 10 * 1000
+			timeout: 10 * 1000,
 		});
 		return;
 	}
 
-	pm2.connect(async function(err) {
+	pm2.connect(async function (err) {
 		if (err) {
 			message.reply(`Error connecting to pm2: \`\`\`${err.message}\`\`\``);
 			return;
@@ -53,5 +53,5 @@ module.exports.run = async (
 module.exports.config = {
 	name: "pm2",
 	description: "Execute pm2 commands.",
-	permLevel: 4
+	permLevel: 4,
 };

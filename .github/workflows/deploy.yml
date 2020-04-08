@@ -22,4 +22,4 @@ jobs:
             git reset --hard
             git pull
             yarn run compile
-            pm2 restart 10
+            pm2 restart 1
