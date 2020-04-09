@@ -147,7 +147,7 @@ async function loadEvents(filePath: string, client: Discord.Client) {
 	files = files.filter(file => !file.endsWith(".ts") && !file.endsWith(".map"));
 	files = files.map(file => file.split(".")[0]);
 
-	files.map(event => {
+	files.map((event: any) => {
 		eventFile = require(`${filePath}/${event}.js`);
 		if (typeof eventFile == "function") client.on(event, eventFile);
 		else {

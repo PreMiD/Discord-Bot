@@ -84,62 +84,77 @@ export class Ticket {
 	}
 
 	async create(message: Discord.Message) {
-		if (ticketCount === 0) ticketCount = await coll.countDocuments({});
+		try {
+			if (ticketCount === 0) ticketCount = await coll.countDocuments({});
 
-		ticketCount++;
+			ticketCount++;
 
-		this.id = ticketCount.toString().padStart(5, "0");
+			this.id = ticketCount.toString().padStart(5, "0");
 
-		this.embed = {
-			author: {
-				name: `Ticket#${this.id} [OPEN]`,
-				iconURL: `${circleFolder}green_circle.png`
-			},
-			description: message.cleanContent,
-			footer: {
-				text: message.author.tag,
-				iconURL: message.author.displayAvatarURL({ size: 128 })
-			},
-			color: "#77ff77"
-		};
+			this.embed = {
+				author: {
+					name: `Ticket#${this.id} [OPEN]`,
+					iconURL: `${circleFolder}green_circle.png`
+				},
+				description: message.cleanContent,
+				footer: {
+					text: message.author.tag,
+					iconURL: message.author.displayAvatarURL({ size: 128 })
+				},
+				color: "#77ff77"
+			};
 
-		this.message = await (client.guilds.cache
-			.first()
-			.channels.cache.get(channels.ticketChannel) as Discord.TextChannel).send({
-			embed: this.embed
-		});
-
-		this.message
-			.react("🚫")
-			.then(() =>
-				this.message.react(message.guild.emojis.cache.get("521018476870107156"))
-			);
-
-		if (message.attachments.size > 0)
-			this.attachmentsMessage = await (client.guilds.cache
+			this.message = await (client.guilds.cache
 				.first()
 				.channels.cache.get(
 					channels.ticketChannel
-				) as Discord.TextChannel).send(message.attachments.first());
+				) as Discord.TextChannel).send({
+				embed: this.embed
+			});
 
-		message.author
-			.send(
-				`Your ticket \`\`#${this.id}\`\` has been submitted and will be answered shortly. Please be patient. Thank you!`
-			)
-			.catch(() => {});
+			this.message
+				.react("🚫")
+				.then(() =>
+					this.message.react(
+						message.guild.emojis.cache.get("521018476870107156")
+					)
+				);
 
-		coll.insertOne({
-			ticketId: this.id,
-			userId: message.author.id,
-			ticketMessage: this.message.id,
-			timestamp: Date.now(),
-			attachmentMessage: this.attachmentsMessage
-				? this.attachmentsMessage.id
-				: undefined,
-			created: Date.now()
-		});
+			if (message.attachments.size > 0)
+				this.attachmentsMessage = await (client.guilds.cache
+					.first()
+					.channels.cache.get(
+						channels.ticketChannel
+					) as Discord.TextChannel).send(message.attachments.first());
 
-		message.delete().catch(() => {});
+			message.author
+				.send(
+					`Your ticket \`\`#${this.id}\`\` has been submitted and will be answered shortly. Please be patient. Thank you!`
+				)
+				.catch(() => {});
+
+			coll.insertOne({
+				ticketId: this.id,
+				userId: message.author.id,
+				ticketMessage: this.message.id,
+				timestamp: Date.now(),
+				attachmentMessage: this.attachmentsMessage
+					? this.attachmentsMessage.id
+					: undefined,
+				created: Date.now()
+			});
+
+			message.delete().catch(() => {});
+		} catch (err) {
+			(message.guild.channels.cache.get(
+				channels.dev
+			) as Discord.TextChannel).send(
+				new Discord.MessageEmbed({
+					title: "Error: " + err.name,
+					description: err.message
+				})
+			);
+		}
 	}
 
 	async accept(supporter: Discord.GuildMember) {
