@@ -6,7 +6,7 @@ config();
 import * as Discord from "discord.js";
 import { error, success } from "./util/debug";
 import moduleLoader from "./util/moduleLoader";
-import { connect } from "./database/client";
+import { connect, MongoClient } from "./database/client";
 import roles from "./roles";
 
 //* Create new client & set login presence
@@ -17,16 +17,16 @@ export let client = new Discord.Client({
 					status: "dnd",
 					activity: {
 						name: "devs code",
-						type: "WATCHING",
-					},
+						type: "WATCHING"
+					}
 			  }
 			: {
 					status: "online",
 					activity: {
 						name: "to p!help",
-						type: "LISTENING",
-					},
-			  },
+						type: "LISTENING"
+					}
+			  }
 });
 
 //* Commands, Command aliases, Command permission levels
@@ -72,7 +72,7 @@ run();
 async function run() {
 	//* Connect to Mongo DB
 	await connect()
-		.then((_) => success("Connected to the database"))
+		.then(_ => success("Connected to the database"))
 		.catch((err: Error) => {
 			error(`Could not connect to database: ${err.name}`);
 			process.exit();
@@ -80,3 +80,9 @@ async function run() {
 
 	client.login(process.env.TOKEN).then(async () => moduleLoader(client));
 }
+
+//* PM2 shutdown signal
+process.on("SIGINT", async () => {
+	await Promise.all([MongoClient.close(), client.destroy()]);
+	process.exit();
+});
