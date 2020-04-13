@@ -7,18 +7,25 @@ let betaUserColl = pmdDB.collection("betaUsers");
 let discordUsers = pmdDB.collection("discordUsers");
 
 async function updateDiscordUsers() {
-	const dbUsers = await discordUsers
-		.find({}, { projection: { _id: false, userId: true } })
-		.toArray();
-
 	let guildMembers = await client.guilds.cache
 		.get("493130730549805057")
 		.members.fetch({ limit: 0 });
 
-	guildMembers.map(async (user) => {
-		if (!dbUsers.find((u) => u.userId === user.id))
-			discordUsers.insertOne({ userId: user.id });
-	});
+	guildMembers.map(async user =>
+		discordUsers.findOneAndUpdate(
+			{ userId: user.id },
+			{
+				$set: {
+					userId: user.id,
+					created: user.user.createdTimestamp,
+					username: user.user.username,
+					discriminator: user.user.discriminator,
+					avatar: user.user.displayAvatarURL()
+				}
+			},
+			{ upsert: true }
+		)
+	);
 }
 
 async function updateBetaUsers() {
@@ -31,9 +38,9 @@ async function updateBetaUsers() {
 			.get("493130730549805057")
 			.members.fetch({ limit: 0 })
 	).filter(
-		(m) =>
+		m =>
 			(m.roles.cache.has(roles.booster) ||
-				betaUsers.find((b) => b.userId === m.user.id)) &&
+				betaUsers.find(b => b.userId === m.user.id)) &&
 			!m.roles.cache.has(roles.alpha) &&
 			!m.roles.cache.has(roles.beta)
 	);
