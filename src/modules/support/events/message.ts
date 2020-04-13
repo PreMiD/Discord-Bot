@@ -12,7 +12,13 @@ const coll = MongoClient.db("PreMiD").collection("tickets");
 let users: Array<string> = [];
 
 module.exports = async (message: Discord.Message) => {
-	if (message.author.bot) return;
+	if (
+		message.author.bot ||
+		(message.channel.id !== channels.supportChannel &&
+			(message.channel as Discord.TextChannel).parent.id !==
+				channels.ticketCategory)
+	)
+		return;
 
 	let t = new Ticket();
 

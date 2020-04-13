@@ -27,60 +27,55 @@ export class Ticket {
 
 	constructor() {}
 
-	async fetch(type: "message" | "channel", arg: string) {
-		const ticket = await coll.findOne(
-			type === "message" ? { ticketMessage: arg } : { supportChannel: arg }
-		);
+	async fetch(type: "ticket" | "message" | "channel", arg: any) {
+		const ticket =
+			type === "ticket"
+				? arg
+				: await coll.findOne(
+						type === "message"
+							? { ticketMessage: arg }
+							: { supportChannel: arg }
+				  );
 
 		if (!ticket) return false;
 
-		try {
-			this.id = ticket.ticketId;
-			this.status = ticket.status;
+		this.id = ticket.ticketId;
+		this.status = ticket.status;
 
-			this.message = await (client.guilds.cache
+		this.message = await (client.guilds.cache
+			.first()
+			.channels.cache.get(
+				channels.ticketChannel
+			) as Discord.TextChannel).messages.fetch(ticket.ticketMessage);
+		this.embed = this.message.embeds[0];
+
+		if (this.status === 1) {
+			this.channel = client.guilds.cache
+				.first()
+				.channels.cache.get(ticket.supportChannel) as Discord.TextChannel;
+			this.channelMessage = await this.channel.messages.fetch(
+				ticket.supportEmbed
+			);
+			this.supporters = await Promise.all(
+				ticket.supporters.map((s: string) =>
+					client.guilds.cache.first().members.fetch(s)
+				)
+			);
+		}
+
+		if (ticket.attachmentMessage)
+			this.attachmentsMessage = await (client.guilds.cache
 				.first()
 				.channels.cache.get(
 					channels.ticketChannel
-				) as Discord.TextChannel).messages.fetch(ticket.ticketMessage);
+				) as Discord.TextChannel).messages.fetch(ticket.attachmentMessage);
+
+		try {
 			this.user = await client.guilds.cache
 				.first()
 				.members.fetch(ticket.userId);
-
-			if (this.status === 1) {
-				this.channel = client.guilds.cache
-					.first()
-					.channels.cache.get(ticket.supportChannel) as Discord.TextChannel;
-				this.channelMessage = await this.channel.messages.fetch(
-					ticket.supportEmbed
-				);
-
-				this.supporters = await Promise.all(
-					ticket.supporters.map((s: string) =>
-						client.guilds.cache.first().members.fetch(s)
-					)
-				);
-			}
-
-			this.embed = this.message.embeds[0];
-
-			if (ticket.attachmentMessage)
-				this.attachmentsMessage = await (client.guilds.cache
-					.first()
-					.channels.cache.get(
-						channels.ticketChannel
-					) as Discord.TextChannel).messages.fetch(ticket.attachmentMessage);
-
-			return true;
-		} catch (e) {
-			coll.findOneAndUpdate(
-				{ ticketId: this.id },
-				{
-					$set: { status: 2 },
-					$unset: { supportChannel: "", supporters: "", supportEmbed: "" }
-				}
-			);
-		}
+		} catch (_) {}
+		return true;
 	}
 
 	async create(message: Discord.Message) {
@@ -104,11 +99,9 @@ export class Ticket {
 				color: "#77ff77"
 			};
 
-			this.message = await (client.guilds.cache
-				.first()
-				.channels.cache.get(
-					channels.ticketChannel
-				) as Discord.TextChannel).send({
+			this.message = await (message.guild.channels.cache.get(
+				channels.ticketChannel
+			) as Discord.TextChannel).send({
 				embed: this.embed
 			});
 
@@ -238,41 +231,45 @@ export class Ticket {
 		);
 	}
 
-	async close(closer: Discord.GuildMember, reason?: string) {
-		if (reason)
-			this.user
-				.send(
-					`Your Ticket \`\`#${this.id}\`\` has been closed. Reason:\n\n*\`\`${reason}\`\`*`
-				)
-				.catch(() => {});
+	async close(closer?: Discord.GuildMember, reason?: string) {
+		try {
+			if (reason)
+				this.user
+					.send(
+						`Your Ticket \`\`#${this.id}\`\` has been closed. Reason:\n\n*\`\`${reason}\`\`*`
+					)
+					.catch(() => {});
 
-		this.embed.author = {
-			name: `Ticket#${this.id} [CLOSED]`,
-			iconURL:
-				"https://raw.githubusercontent.com/PreMiD/Discord-Bot/master/.discord/red_circle.png"
-		};
-		this.embed.color = "#dd2e44";
+			this.embed.author = {
+				name: `Ticket#${this.id} [CLOSED]`,
+				iconURL:
+					"https://raw.githubusercontent.com/PreMiD/Discord-Bot/master/.discord/red_circle.png"
+			};
+			this.embed.color = "#dd2e44";
 
-		if (this.embed.thumbnail) delete this.embed.thumbnail;
-		delete this.embed.fields;
+			if (this.embed.thumbnail) delete this.embed.thumbnail;
+			delete this.embed.fields;
 
-		if (this.attachmentsMessage)
-			this.attachmentsMessage.delete().catch(() => {});
+			if (this.attachmentsMessage)
+				this.attachmentsMessage.delete().catch(() => {});
 
-		this.message.reactions.removeAll().catch(() => {});
-		this.message.edit(this.embed).catch(() => {});
-		this.channel.delete().catch(() => {});
+			this.message.reactions.removeAll().catch(() => {});
+			this.message.edit(this.embed).catch(() => {});
+			this.channel.delete().catch(() => {});
 
-		coll.findOneAndUpdate(
-			{ ticketId: this.id },
-			{
-				$unset: { supportChannel: "", supporters: "", supportEmbed: "" },
-				$set: {
-					status: 2,
-					closer: closer.id
+			coll.findOneAndUpdate(
+				{ ticketId: this.id },
+				{
+					$unset: { supportChannel: "", supporters: "", supportEmbed: "" },
+					$set: {
+						status: 2,
+						closer: closer?.id || undefined
+					}
 				}
-			}
-		);
+			);
+		} catch (e) {
+			console.log(e);
+		}
 	}
 
 	async addSupporter(member: Discord.GuildMember, sendMessage = true) {

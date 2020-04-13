@@ -27,7 +27,12 @@ async function updateCredits() {
 						avatar: m.user.displayAvatarURL({ format: "png", dynamic: true }),
 						role: highestRole.name,
 						roleId: highestRole.id,
-						roles: m.roles.cache.map(r => r.name),
+						roles: m.roles.cache
+							.filter(r => r.name !== "@everyone")
+							.map(r => r.name),
+						roleIds: m.roles.cache
+							.filter(r => r.name !== "@everyone")
+							.map(r => r.id),
 						roleColor: highestRole.hexColor,
 						rolePosition: highestRole.position,
 						status: m.user.presence.status
@@ -68,7 +73,7 @@ updateCredits();
 setInterval(updateCredits, 5 * 60 * 1000);
 
 function containsAny(source: Array<string>, target: Array<string>) {
-	let result = source.filter(function(item) {
+	let result = source.filter(function (item) {
 		return target.indexOf(item) > -1;
 	});
 	return result;

@@ -1,6 +1,7 @@
 import * as Discord from "discord.js";
 import { MongoClient } from "../../../database/client";
 import channels from "../../../channels";
+import { Ticket } from "../classes/Ticket";
 
 let coll = MongoClient.db("PreMiD").collection("tickets");
 
@@ -9,22 +10,16 @@ module.exports = async (user: Discord.GuildMember) => {
 
 	tickets.map(async ticket => {
 		if (typeof ticket.status === "undefined") {
-			(
-				await (user.guild.channels.cache.get(
-					channels.ticketChannel
-				) as Discord.TextChannel).messages.fetch(ticket.ticketMessage)
-			).delete();
+			try {
+				(
+					await (user.guild.channels.cache.get(
+						channels.ticketChannel
+					) as Discord.TextChannel).messages.fetch(ticket.ticketMessage)
+				).delete();
+			} catch (_) {}
 		} else if (ticket.status === 1) {
-			(
-				await (user.guild.channels.cache.get(
-					channels.ticketChannel
-				) as Discord.TextChannel).messages.fetch(ticket.ticketMessage)
-			).delete();
-			(user.guild.channels.cache.get(
-				ticket.supportChannel
-			) as Discord.TextChannel).delete();
+			const t = new Ticket();
+			if (await t.fetch("ticket", ticket)) t.close();
 		}
-
-		coll.findOneAndDelete({ ticketId: ticket.ticketId });
 	});
 };
