@@ -28,6 +28,17 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
+"@opencensus/core@0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@opencensus/core/-/core-0.0.9.tgz#b16f775435ee309433e4126af194d37313fc93b3"
+  integrity sha512-31Q4VWtbzXpVUd2m9JS6HEaPjlKvNMOiF7lWKNmXF84yUcgfAFL5re7/hjDmdyQbOp32oGc+RFV78jXIldVz6Q==
+  dependencies:
+    continuation-local-storage "^3.2.1"
+    log-driver "^1.2.7"
+    semver "^5.5.0"
+    shimmer "^1.2.0"
+    uuid "^3.2.1"
+
 "@opencensus/core@^0.0.8":
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/@opencensus/core/-/core-0.0.8.tgz#df01f200c2d2fbfe14dae129a1a86fb87286db92"
@@ -39,18 +50,7 @@
     shimmer "^1.2.0"
     uuid "^3.2.1"
 
-"@opencensus/core@^0.0.9":
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/@opencensus/core/-/core-0.0.9.tgz#b16f775435ee309433e4126af194d37313fc93b3"
-  integrity sha512-31Q4VWtbzXpVUd2m9JS6HEaPjlKvNMOiF7lWKNmXF84yUcgfAFL5re7/hjDmdyQbOp32oGc+RFV78jXIldVz6Q==
-  dependencies:
-    continuation-local-storage "^3.2.1"
-    log-driver "^1.2.7"
-    semver "^5.5.0"
-    shimmer "^1.2.0"
-    uuid "^3.2.1"
-
-"@opencensus/propagation-b3@^0.0.8":
+"@opencensus/propagation-b3@0.0.8":
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/@opencensus/propagation-b3/-/propagation-b3-0.0.8.tgz#0751e6fd75f09400d9d3c419001e9e15a0df68e9"
   integrity sha512-PffXX2AL8Sh0VHQ52jJC4u3T0H6wDK6N/4bg7xh4ngMYOIi13aR1kzVvX1sVDBgfGwDOkMbl4c54Xm3tlPx/+A==
@@ -86,28 +86,28 @@
     ws "^5.1.0"
 
 "@pm2/io@^4.3.2":
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/@pm2/io/-/io-4.3.3.tgz#3a719da5b0897718173d51ab313d25d7e1471c9b"
-  integrity sha512-ENGsdSVpnwbYMGdeB0/Xy2eZYo7oltzApoCsMD4ssqWNXDg9C4uQZy5J09iPsb0IHFwSDjU5oylXdwKDSoqODw==
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/@pm2/io/-/io-4.3.4.tgz#d6ca720fe39b3a763fec06098085cd247765b5db"
+  integrity sha512-xaPa/aiGNknex4UQq9eQVRW75H3dPuAcZ0/RvGWrC4ICUBqxn0xV7dC6Db9C5aArGKSXXQ7PVtIlOzUIELauRg==
   dependencies:
-    "@opencensus/core" "^0.0.9"
-    "@opencensus/propagation-b3" "^0.0.8"
+    "@opencensus/core" "0.0.9"
+    "@opencensus/propagation-b3" "0.0.8"
     "@pm2/agent-node" "^1.1.10"
     async "~2.6.1"
-    debug "3.1.0"
-    eventemitter2 "~5.0.1"
+    debug "4.1.1"
+    eventemitter2 "^6.3.1"
     require-in-the-middle "^5.0.0"
-    semver "5.5.0"
-    shimmer "~1.2.0"
-    signal-exit "3.0.2"
+    semver "6.3.0"
+    shimmer "^1.2.0"
+    signal-exit "^3.0.3"
     tslib "1.9.3"
 
 "@pm2/js-api@^0.5.60":
-  version "0.5.60"
-  resolved "https://registry.yarnpkg.com/@pm2/js-api/-/js-api-0.5.60.tgz#ae05324da8edc83f8f3172dadc5f9d5f16c99e54"
-  integrity sha512-CvAbpIB7ObOuwvqhDBB/E4Z4ANRx2dBk08zYpGPNg+1fDj14FJg2e7DWA8bblSGNC8QarIXPaqPDJBL1e8cRQw==
+  version "0.5.63"
+  resolved "https://registry.yarnpkg.com/@pm2/js-api/-/js-api-0.5.63.tgz#e66fe2e1f8ff5008985f3f05c14f492d0795c8e5"
+  integrity sha512-V0e5fVFEY5jxF6sH2ona3WVVbMlYc5U+F8v6g1UQXg9E8Ao2X7Q1XBmgmhtf1k8hnPvW7ufDhGe6dUok1LPHmA==
   dependencies:
-    async "^2.4.1"
+    async "^2.6.3"
     axios "^0.19.0"
     debug "^2.6.8"
     eventemitter2 "^4.1.0"
@@ -258,7 +258,7 @@ async@2.6.1:
   dependencies:
     lodash "^4.17.10"
 
-async@^2.4.1, async@^2.6, async@^2.6.0, async@~2.6.1:
+async@^2.6, async@^2.6.0, async@^2.6.3, async@~2.6.1:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/async/-/async-2.6.3.tgz#d72625e2344a3656e3a3ad4fa749fa83299d82ff"
   integrity sha512-zflvls11DCy+dQWzTW2dzuilv8Z5X/pjfmZOWba6TNIVDm+2UDaJmXSOXlasHKfNBs8oo3M0aT50fDEWfKZjXg==
@@ -630,7 +630,7 @@ event-target-shim@^5.0.0:
   resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-5.0.1.tgz#5d4d3ebdf9583d63a5333ce2deb7480ab2b05789"
   integrity sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==
 
-eventemitter2@5.0.1, eventemitter2@^5.0.1, eventemitter2@~5.0.1:
+eventemitter2@5.0.1, eventemitter2@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-5.0.1.tgz#6197a095d5fb6b57e8942f6fd7eaad63a09c9452"
   integrity sha1-YZegldX7a1folC9v1+qtY6CclFI=
@@ -639,6 +639,11 @@ eventemitter2@^4.1.0:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-4.1.2.tgz#0e1a8477af821a6ef3995b311bf74c23a5247f15"
   integrity sha1-DhqEd6+CGm7zmVsxG/dMI6UkfxU=
+
+eventemitter2@^6.3.1:
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-6.3.1.tgz#14ec7db8c659aa9b36ad2ce4bfcaba95ad525536"
+  integrity sha512-cxfu3g0IBn/JEhAPV33NZTi8llQQ5j62D0Yf4ir1U9uQ1DlRZLL3Hh2E/+TWDprSy4BETWvrGBZMUexuC2b6Lw==
 
 eventemitter2@~0.4.14:
   version "0.4.14"
@@ -1411,10 +1416,10 @@ sax@^1.2.4:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
 
-semver@5.5.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
-  integrity sha512-4SJ3dm0WAwWy/NVeioZh5AntkdJoWKxHxcmyP622fOkgHa4z3R0TdBJICINyaSDE6uNwVc8gZr+ZinwZAH4xIA==
+semver@6.3.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
+  integrity sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
 
 semver@^5.1.0, semver@^5.3.0, semver@^5.5, semver@^5.5.0:
   version "5.7.1"
@@ -1440,15 +1445,15 @@ shelljs@0.8.3:
     interpret "^1.0.0"
     rechoir "^0.6.2"
 
-shimmer@^1.1.0, shimmer@^1.2.0, shimmer@~1.2.0:
+shimmer@^1.1.0, shimmer@^1.2.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/shimmer/-/shimmer-1.2.1.tgz#610859f7de327b587efebf501fb43117f9aff337"
   integrity sha512-sQTKC1Re/rM6XyFM6fIAGHRPVGvyXfgzIDvzoq608vM+jeyVD0Tu1E6Np0Kc2zAIFWIj963V2800iF/9LPieQw==
 
-signal-exit@3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
-  integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
+signal-exit@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.3.tgz#a1410c2edd8f077b08b4e253c8eacfcaf057461c"
+  integrity sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA==
 
 smart-buffer@^4.1.0:
   version "4.1.0"

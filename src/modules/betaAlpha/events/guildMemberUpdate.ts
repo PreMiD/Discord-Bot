@@ -53,15 +53,9 @@ module.exports = async (
 		oldMember.roles.cache.has(roles.patron) &&
 		!newMember.roles.cache.has(roles.patron)
 	) {
-		alphaUsers.findOneAndDelete({ userId: newMember.id });
-		betaUsers.findOneAndUpdate(
-			{ userId: newMember.id },
-			{ $set: { userId: newMember.id } },
-			{ upsert: true }
-		);
-
 		await newMember.roles.remove(roles.alpha);
 		newMember.roles.add([roles.beta, roles.donator]);
+		return;
 	}
 
 	//* If user is patron and does not have alpha role, give it to them.
@@ -69,7 +63,12 @@ module.exports = async (
 		newMember.roles.cache.has(roles.patron) &&
 		!newMember.roles.cache.has(roles.alpha)
 	) {
+		if (newMember.roles.cache.has(roles.donator)) {
+			newMember.roles.remove([roles.donator, roles.beta]);
+		}
+
 		newMember.roles.add(roles.alpha);
+		return;
 	}
 
 	//* If user is donator and does not have beta role, give it to them.
