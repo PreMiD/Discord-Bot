@@ -12,15 +12,15 @@
 	"dependencies": {
 		"@timeraa/devscript": "Timeraa/DevScript",
 		"axios": "0.19.2",
-		"discord.js": "12.1.1",
+		"discord.js": "12.2.0",
 		"dotenv": "8.2.0",
 		"mongodb": "3.5.6",
-		"pm2": "4.2.3",
+		"pm2": "4.3.0",
 		"source-map-support": "0.5.16"
 	},
 	"devDependencies": {
 		"@types/mongodb": "^3.5.8",
-		"@types/node": "^13.11.1",
+		"@types/node": "^13.13.0",
 		"rimraf": "^3.0.2"
 	}
 }

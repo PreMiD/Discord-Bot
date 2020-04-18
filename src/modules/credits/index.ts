@@ -14,7 +14,10 @@ async function updateCredits() {
 		.first()
 		.roles.cache.filter(r => Object.values(creditRoles).includes(r.id))
 		.forEach(r => {
-			r.members.map(m => {
+			r.members.forEach(async m => {
+				// @ts-ignore
+				const userFlags = (await m.user.fetchFlags()).toArray();
+
 				const highestRole = m.roles.cache.get(
 					containsAny(Object.values(creditRoles), m.roles.cache.keyArray())[0]
 				);
@@ -35,6 +38,7 @@ async function updateCredits() {
 							.map(r => r.id),
 						roleColor: highestRole.hexColor,
 						rolePosition: highestRole.position,
+						flags: userFlags.length > 0 ? userFlags : undefined,
 						status: m.user.presence.status
 					});
 			});
