@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
-import { MongoClient } from "../../../database/client";
 import config from "../../../config";
+import { pmdDB } from "../../../database/client";
 
 module.exports.run = async (
 	message: Discord.Message,
@@ -22,7 +22,7 @@ module.exports.run = async (
 		return;
 	}
 
-	let coll = MongoClient.db("PreMiD").collection("warns"),
+	let coll = pmdDB.collection("warns"),
 		user = await coll.findOneAndDelete({
 			userId: message.mentions.users.first().id
 		});

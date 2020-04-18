@@ -1,9 +1,9 @@
 import * as Discord from "discord.js";
-import { MongoClient } from "../../../database/client";
 import channels from "../../../channels";
 import { Ticket } from "../classes/Ticket";
+import { pmdDB } from "../../../database/client";
 
-let coll = MongoClient.db("PreMiD").collection("tickets");
+let coll = pmdDB.collection("tickets");
 
 module.exports = async (user: Discord.GuildMember) => {
 	let tickets = await coll.find({ userId: user.id }).toArray();

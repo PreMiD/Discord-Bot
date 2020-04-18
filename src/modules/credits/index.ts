@@ -1,9 +1,9 @@
 import { client } from "../../index";
-import { MongoClient } from "../../database/client";
 import { info } from "../../util/debug";
 import creditRoles from "./creditRoles";
+import { pmdDB } from "../../database/client";
 
-const creditsColl = MongoClient.db("PreMiD").collection("credits");
+const creditsColl = pmdDB.collection("credits");
 
 async function updateCredits() {
 	info("Updating credits...");
@@ -13,35 +13,43 @@ async function updateCredits() {
 	client.guilds.cache
 		.first()
 		.roles.cache.filter(r => Object.values(creditRoles).includes(r.id))
-		.forEach(r => {
-			r.members.forEach(async m => {
-				// @ts-ignore
-				const userFlags = (await m.user.fetchFlags()).toArray();
+		.forEach(async r => {
+			for (let i = 0; i < r.members.size; i++) {
+				const member = r.members.array()[i];
 
-				const highestRole = m.roles.cache.get(
-					containsAny(Object.values(creditRoles), m.roles.cache.keyArray())[0]
+				// @ts-ignore
+				const userFlags = (await member.user.fetchFlags()).toArray();
+
+				const highestRole = member.roles.cache.get(
+					containsAny(
+						Object.values(creditRoles),
+						member.roles.cache.keyArray()
+					)[0]
 				);
 
-				if (!creditUsers.find(cU => cU.userId === m.id))
+				if (!creditUsers.find(cU => cU.userId === member.id))
 					creditUsers.push({
-						userId: m.id,
-						name: m.user.username,
-						tag: m.user.discriminator,
-						avatar: m.user.displayAvatarURL({ format: "png", dynamic: true }),
+						userId: member.id,
+						name: member.user.username,
+						tag: member.user.discriminator,
+						avatar: member.user.displayAvatarURL({
+							format: "png",
+							dynamic: true
+						}),
 						role: highestRole.name,
 						roleId: highestRole.id,
-						roles: m.roles.cache
+						roles: member.roles.cache
 							.filter(r => r.name !== "@everyone")
 							.map(r => r.name),
-						roleIds: m.roles.cache
+						roleIds: member.roles.cache
 							.filter(r => r.name !== "@everyone")
 							.map(r => r.id),
 						roleColor: highestRole.hexColor,
 						rolePosition: highestRole.position,
 						flags: userFlags.length > 0 ? userFlags : undefined,
-						status: m.user.presence.status
+						status: member.user.presence.status
 					});
-			});
+			}
 		});
 
 	await Promise.all(

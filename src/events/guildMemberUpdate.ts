@@ -1,9 +1,10 @@
 import * as Discord from "discord.js";
-import { MongoClient } from "../database/client";
 import { Ticket } from "../modules/support/classes/Ticket";
 import roles from "../roles";
+import { pmdDB } from "../database/client";
 
-const coll = MongoClient.db("PreMiD").collection("tickets");
+const coll = pmdDB.collection("tickets");
+
 module.exports = async (
 	oldMember: Discord.GuildMember,
 	newMember: Discord.GuildMember
@@ -12,8 +13,6 @@ module.exports = async (
 		oldMember.roles.cache.has(roles.ticketManager) &&
 		!newMember.roles.cache.has(roles.ticketManager)
 	) {
-		coll.findOneAndDelete({ userId: oldMember.id });
-
 		const tickets = await coll.find({ supporters: oldMember.id }).toArray();
 
 		tickets.map(async t => {

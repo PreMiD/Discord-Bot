@@ -1,7 +1,7 @@
 import { info, error } from "../util/debug";
-import * as fs from "fs";
-import * as path from "path";
-import * as Discord from "discord.js";
+import fs from "fs";
+import path from "path";
+import Discord from "discord.js";
 import shortInfos from "../modules/moderation/short-infos";
 
 let moduleFolder: fs.PathLike = path.resolve("./modules");
@@ -23,7 +23,7 @@ async function loadModules(client: Discord.Client) {
 		if (
 			fs.existsSync(`${moduleFolder}/${module}/config.json`) &&
 			typeof require(`${moduleFolder}/${module}/config.json`).enabled !=
-				undefined
+				"undefined"
 		)
 			return require(`${moduleFolder}/${module}/config.json`).enabled;
 		else return true;
@@ -94,7 +94,7 @@ async function loadModules(client: Discord.Client) {
 
 /**
  * Load all commands in the given folder
- * @param {String} filePath Path to folder with command files
+ * @param {string} filePath Path to folder with command files
  * @param {client} client Client which will be used to save the command
  */
 async function loadCommands(filePath: string, client: Discord.Client) {
@@ -137,7 +137,7 @@ async function loadCommands(filePath: string, client: Discord.Client) {
 
 /**
  * Load all events in the given folder
- * @param {String} filePath Path to folder with event files
+ * @param {string} filePath Path to folder with event files
  * @param {client} client Client which will be used to bind the event
  */
 async function loadEvents(filePath: string, client: Discord.Client) {

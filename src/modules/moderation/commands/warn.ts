@@ -1,9 +1,9 @@
 import * as Discord from "discord.js";
-import { MongoClient } from "../../../database/client";
 import { client } from "../../..";
 import roles from "../../../roles";
 import config from "../../../config";
 import channels from "../../../channels";
+import { pmdDB } from "../../../database/client";
 
 module.exports.run = async (
 	message: Discord.Message,
@@ -40,7 +40,7 @@ module.exports.run = async (
 		return;
 	}
 
-	let coll = MongoClient.db("PreMiD").collection("warns"),
+	let coll = pmdDB.collection("warns"),
 		user = await coll.findOne({
 			userId: message.mentions.users.first().id
 		}),
@@ -52,10 +52,7 @@ module.exports.run = async (
 			warns: [
 				{
 					userId: message.author.id,
-					reason: params
-						.slice(1, params.length)
-						.join(" ")
-						.trim(),
+					reason: params.slice(1, params.length).join(" ").trim(),
 					timestamp: Date.now()
 				}
 			]
@@ -63,10 +60,7 @@ module.exports.run = async (
 	else {
 		user.warns.push({
 			userId: message.mentions.users.first().id,
-			reason: params
-				.slice(1, params.length)
-				.join(" ")
-				.trim(),
+			reason: params.slice(1, params.length).join(" ").trim(),
 			timestamp: Date.now()
 		});
 		coll.findOneAndReplace({ userId: user.userId }, user);
@@ -111,10 +105,7 @@ module.exports.run = async (
 			},
 			{
 				name: "Reason",
-				value: params
-					.slice(1, params.length)
-					.join(" ")
-					.trim(),
+				value: params.slice(1, params.length).join(" ").trim(),
 				inline: true
 			}
 		],
@@ -168,34 +159,23 @@ function muteTill(id: string, time: number = 0) {
 
 			if (time == 0) delete data.mutedUntil;
 
-			if (
-				await MongoClient.db("PreMiD")
-					.collection("mutes")
-					.findOne({ userId: id })
-			)
-				MongoClient.db("PreMiD")
+			if (await pmdDB.collection("mutes").findOne({ userId: id }))
+				pmdDB
 					.collection("mutes")
 					.findOneAndUpdate(
 						{ userId: m.id },
 						{ $set: { mutedUntil: Date.now() + time } }
 					);
-			else
-				MongoClient.db("PreMiD")
-					.collection("mutes")
-					.insertOne(data);
+			else pmdDB.collection("mutes").insertOne(data);
 
 			if (time == 0) {
-				MongoClient.db("PreMiD")
-					.collection("mutes")
-					.findOneAndDelete({ userId: id });
+				pmdDB.collection("mutes").findOneAndDelete({ userId: id });
 			} else setTimeout(() => unmute(m.id), time);
 		});
 }
 
 export async function unmute(id: string) {
-	let mute = await MongoClient.db("PreMiD")
-		.collection("mutes")
-		.findOne({ userId: id });
+	let mute = await pmdDB.collection("mutes").findOne({ userId: id });
 
 	if (mute.mutedUntil >= Date.now() || !roles.muted) return;
 
@@ -205,9 +185,7 @@ export async function unmute(id: string) {
 		.then(m => m.roles.remove(roles.muted, "Warn penalty over."))
 		.catch(() => {});
 
-	MongoClient.db("PreMiD")
-		.collection("mutes")
-		.findOneAndDelete({ userId: id });
+	pmdDB.collection("mutes").findOneAndDelete({ userId: id });
 }
 
 module.exports.config = {

@@ -1,7 +1,8 @@
 import * as Discord from "discord.js";
-import { MongoClient } from "../database/client";
+import { pmdDB } from "../database/client";
 
-const coll = MongoClient.db("PreMiD").collection("userSettings");
+const coll = pmdDB.collection("userSettings");
+
 module.exports = (member: Discord.GuildMember) => {
 	coll.findOneAndDelete({ userId: member.id });
 };

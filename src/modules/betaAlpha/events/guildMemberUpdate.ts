@@ -1,9 +1,9 @@
 import * as Discord from "discord.js";
-import { MongoClient } from "../../../database/client";
 import roles from "../../../roles";
+import { pmdDB } from "../../../database/client";
 
-const betaUsers = MongoClient.db("PreMiD").collection("betaUsers");
-const alphaUsers = MongoClient.db("PreMiD").collection("alphaUsers");
+const betaUsers = pmdDB.collection("betaUsers"),
+	alphaUsers = pmdDB.collection("alphaUsers");
 
 module.exports = async (
 	oldMember: Discord.GuildMember,

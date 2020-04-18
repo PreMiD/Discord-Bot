@@ -3,8 +3,8 @@ import { pmdDB } from "../../database/client";
 import { info } from "../../util/debug";
 import roles from "../../roles";
 
-let betaUserColl = pmdDB.collection("betaUsers");
-let discordUsers = pmdDB.collection("discordUsers");
+const betaUserColl = pmdDB.collection("betaUsers"),
+	discordUsers = pmdDB.collection("discordUsers");
 
 async function updateDiscordUsers() {
 	let guildMembers = await client.guilds.cache

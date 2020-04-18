@@ -34,26 +34,26 @@ module.exports = async packet => {
 	}
 
 	if (packet.d.emoji.name === "🚫" && typeof ticket.status === "undefined") {
-		ticket.message.reactions.removeAll().then(() => {
-			ticket.message.react("💔");
-			ticket.message
+		ticket.ticketMessage.reactions.removeAll().then(() => {
+			ticket.ticketMessage.react("💔");
+			ticket.ticketMessage
 				.awaitReactions(
 					(r, u) => r.emoji.name === "💔" && u.id === packet.d.user_id,
 					{ max: 1, time: 5 * 1000, errors: ["time"] }
 				)
 				.then(() => {
-					ticket.message.delete();
+					ticket.ticketMessage.delete();
 					if (typeof ticket.attachmentsMessage !== "undefined")
 						ticket.attachmentsMessage.delete();
 				})
 				.catch(() => {
-					ticket.message.reactions
+					ticket.ticketMessage.reactions
 						.removeAll()
 						.then(() =>
-							ticket.message
+							ticket.ticketMessage
 								.react("🚫")
 								.then(() =>
-									ticket.message.react(
+									ticket.ticketMessage.react(
 										guild.emojis.cache.get("521018476870107156")
 									)
 								)

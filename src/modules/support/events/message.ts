@@ -5,9 +5,9 @@ import roles from "../../../roles";
 import config from "../../../config";
 import ch from "../../../channels";
 import { client } from "../../..";
-import { MongoClient } from "../../../database/client";
+import { pmdDB } from "../../../database/client";
 
-const coll = MongoClient.db("PreMiD").collection("tickets");
+const coll = pmdDB.collection("tickets");
 
 let users: Array<string> = [];
 

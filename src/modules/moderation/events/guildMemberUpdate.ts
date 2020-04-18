@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
-import { MongoClient } from "../../../database/client";
 import roles from "../../../roles";
+import { pmdDB } from "../../../database/client";
 
 module.exports = async (
 	oldMember: Discord.GuildMember,
@@ -10,7 +10,5 @@ module.exports = async (
 		oldMember.roles.cache.has(roles.muted) &&
 		!newMember.roles.cache.has(roles.muted)
 	)
-		MongoClient.db("PreMiD")
-			.collection("mutes")
-			.findOneAndDelete({ userId: newMember.id });
+		pmdDB.collection("mutes").findOneAndDelete({ userId: newMember.id });
 };

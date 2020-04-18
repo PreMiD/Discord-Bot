@@ -1,10 +1,10 @@
 import * as Discord from "discord.js";
-import { MongoClient } from "../../../database/client";
 import { Ticket } from "../classes/Ticket";
 import roles from "../../../roles";
+import { pmdDB } from "../../../database/client";
 
-let coll = MongoClient.db("PreMiD").collection("userSettings"),
-	tcoll = MongoClient.db("PreMiD").collection("tickets");
+let coll = pmdDB.collection("userSettings"),
+	tcoll = pmdDB.collection("tickets");
 
 module.exports.run = async (
 	message: Discord.Message,

@@ -71,14 +71,15 @@ run();
 //! Make sure that database is connected first then proceed
 async function run() {
 	//* Connect to Mongo DB
-	await connect()
-		.then(_ => success("Connected to the database"))
+	connect()
+		.then(_ => {
+			success("Connected to the database");
+			client.login(process.env.TOKEN).then(async () => moduleLoader(client));
+		})
 		.catch((err: Error) => {
 			error(`Could not connect to database: ${err.name}`);
 			process.exit();
 		});
-
-	client.login(process.env.TOKEN).then(async () => moduleLoader(client));
 }
 
 //* PM2 shutdown signal

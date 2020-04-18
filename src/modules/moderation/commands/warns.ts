@@ -1,5 +1,6 @@
 import * as Discord from "discord.js";
-import { MongoClient } from "../../../database/client";
+import { pmdDB } from "../../../database/client";
+
 module.exports.run = async (
 	message: Discord.Message,
 	params: Array<string>,
@@ -7,7 +8,7 @@ module.exports.run = async (
 ) => {
 	message.delete();
 
-	let coll = MongoClient.db("PreMiD").collection("warns");
+	let coll = pmdDB.collection("warns");
 
 	if (params.length == 0 && message.mentions.users.size == 0) {
 		let user = await coll.findOne({ userId: message.author.id });

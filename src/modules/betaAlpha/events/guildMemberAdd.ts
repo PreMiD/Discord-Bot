@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
-import { MongoClient } from "../../../database/client";
+import { pmdDB } from "../../../database/client";
 
-let discordUsers = MongoClient.db("PreMiD").collection("discordUsers");
+const discordUsers = pmdDB.collection("discordUsers");
 
 module.exports = async (member: Discord.GuildMember) => {
 	discordUsers.findOneAndUpdate(

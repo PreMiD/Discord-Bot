@@ -1,9 +1,9 @@
 import * as Discord from "discord.js";
 import { client } from "../../..";
-import { MongoClient } from "../../../database/client";
+import { pmdDB } from "../../../database/client";
 import channels from "../../../channels";
 
-const coll = MongoClient.db("PreMiD").collection("tickets"),
+const coll = pmdDB.collection("tickets"),
 	circleFolder =
 		"https://raw.githubusercontent.com/PreMiD/Discord-Bot/master/.discord/";
 
@@ -13,7 +13,7 @@ export class Ticket {
 	id: string;
 	status: number;
 
-	message: Discord.Message;
+	ticketMessage: Discord.Message;
 	user: Discord.GuildMember;
 
 	channel: Discord.TextChannel;
@@ -42,12 +42,16 @@ export class Ticket {
 		this.id = ticket.ticketId;
 		this.status = ticket.status;
 
-		this.message = await (client.guilds.cache
-			.first()
-			.channels.cache.get(
-				channels.ticketChannel
-			) as Discord.TextChannel).messages.fetch(ticket.ticketMessage);
-		this.embed = this.message.embeds[0];
+		try {
+			this.ticketMessage = await (client.guilds.cache
+				.first()
+				.channels.cache.get(
+					channels.ticketChannel
+				) as Discord.TextChannel).messages.fetch(ticket.ticketMessage);
+			this.embed = this.ticketMessage.embeds[0];
+		} catch (e) {
+			console.log(e);
+		}
 
 		if (this.status === 1) {
 			this.channel = client.guilds.cache
@@ -99,16 +103,16 @@ export class Ticket {
 				color: "#77ff77"
 			};
 
-			this.message = await (message.guild.channels.cache.get(
+			this.ticketMessage = await (message.guild.channels.cache.get(
 				channels.ticketChannel
 			) as Discord.TextChannel).send({
 				embed: this.embed
 			});
 
-			this.message
+			this.ticketMessage
 				.react("🚫")
 				.then(() =>
-					this.message.react(
+					this.ticketMessage.react(
 						message.guild.emojis.cache.get("521018476870107156")
 					)
 				);
@@ -129,7 +133,7 @@ export class Ticket {
 			coll.insertOne({
 				ticketId: this.id,
 				userId: message.author.id,
-				ticketMessage: this.message.id,
+				ticketMessage: this.ticketMessage.id,
 				timestamp: Date.now(),
 				attachmentMessage: this.attachmentsMessage
 					? this.attachmentsMessage.id
@@ -157,15 +161,10 @@ export class Ticket {
 				"https://raw.githubusercontent.com/PreMiD/Discord-Bot/master/.discord/yellow_circle.png"
 		};
 		this.embed.color = "#f4dd1a";
-		this.embed.fields = [
-			{
-				name: "Supporter",
-				value: supporter.toString()
-			}
-		];
 
-		this.message.reactions.removeAll().then(() => this.message.react("🚫"));
-		this.message.edit(this.embed);
+		this.ticketMessage.reactions
+			.removeAll()
+			.then(() => this.ticketMessage.react("🚫"));
 
 		const channelPerms = [
 			"VIEW_CHANNEL",
@@ -194,7 +193,7 @@ export class Ticket {
 				}
 			].concat(
 				(
-					await MongoClient.db("PreMiD")
+					await pmdDB
 						.collection("userSettings")
 						.find({ seeAllTickets: true })
 						.toArray()
@@ -207,9 +206,23 @@ export class Ticket {
 			)
 		})) as Discord.TextChannel;
 
+		this.embed.fields = [
+			{
+				name: "Supporter",
+				value: supporter.toString(),
+				inline: true
+			},
+			{
+				name: "Channel",
+				value: this.channel.toString(),
+				inline: true
+			}
+		];
+		this.ticketMessage.edit(this.embed);
+
+		this.embed.fields.pop();
 		this.embed.footer = {
-			text: "p!close - Closes this ticket.",
-			iconURL: null
+			text: "p!close - Closes this ticket."
 		};
 		this.channelMessage = await this.channel.send({ embed: this.embed });
 
@@ -218,7 +231,7 @@ export class Ticket {
 		);
 
 		coll.findOneAndUpdate(
-			{ ticketId: this.id },
+			{ ticketMessage: this.ticketMessage.id },
 			{
 				$set: {
 					supportChannel: this.channel.id,
@@ -253,12 +266,12 @@ export class Ticket {
 			if (this.attachmentsMessage)
 				this.attachmentsMessage.delete().catch(() => {});
 
-			this.message.reactions.removeAll().catch(() => {});
-			this.message.edit(this.embed).catch(() => {});
+			this.ticketMessage.reactions.removeAll().catch(() => {});
+			this.ticketMessage.edit(this.embed).catch(() => {});
 			this.channel.delete().catch(() => {});
 
 			coll.findOneAndUpdate(
-				{ ticketId: this.id },
+				{ supportChannel: this.channel.id },
 				{
 					$unset: { supportChannel: "", supporters: "", supportEmbed: "" },
 					$set: {
@@ -282,8 +295,14 @@ export class Ticket {
 			value: this.supporters.toString()
 		};
 
-		this.message.edit(this.embed);
-		this.channelMessage.edit(this.embed);
+		this.ticketMessage.edit(this.embed);
+
+		let supportEmbed = Object.assign({}, this.embed);
+		supportEmbed.fields.pop();
+		supportEmbed.footer = {
+			text: "p!close - Closes this ticket."
+		};
+		this.channelMessage.edit(supportEmbed);
 
 		if (sendMessage) await this.channel.send(`**>** ${member}`);
 
@@ -296,7 +315,7 @@ export class Ticket {
 		});
 
 		coll.findOneAndUpdate(
-			{ ticketId: this.id },
+			{ supportChannel: this.channel.id },
 			{
 				$set: {
 					supportChannel: this.channel.id,
@@ -315,8 +334,14 @@ export class Ticket {
 				value: this.supporters.toString()
 			};
 
-			this.message.edit(this.embed);
-			this.channelMessage.edit(this.embed);
+			this.ticketMessage.edit(this.embed);
+			let supportEmbed = Object.assign({}, this.embed);
+			supportEmbed.fields.pop();
+			supportEmbed.footer = {
+				text: "p!close - Closes this ticket."
+			};
+			this.channelMessage.edit(supportEmbed);
+			console.log(supportEmbed);
 
 			this.channel.updateOverwrite(member, {
 				VIEW_CHANNEL: true,
@@ -329,7 +354,7 @@ export class Ticket {
 			if (sendMessage) await this.channel.send(`**<** ${member}`);
 
 			coll.findOneAndUpdate(
-				{ ticketId: this.id },
+				{ supportChannel: this.channel.id },
 				{ $set: { supporters: this.supporters.map(s => s.id) } }
 			);
 		}
