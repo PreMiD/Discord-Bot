@@ -253,6 +253,11 @@ async-listener@^0.6.0:
     semver "^5.3.0"
     shimmer "^1.1.0"
 
+async@1.5:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
+  integrity sha1-7GphrlZIDAw8skHJVhjiCJL5Zyo=
+
 async@^2.6.3, async@~2.6.0, async@~2.6.1:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/async/-/async-2.6.3.tgz#d72625e2344a3656e3a3ad4fa749fa83299d82ff"
@@ -304,11 +309,6 @@ blessed@0.1.81:
   version "0.1.81"
   resolved "https://registry.yarnpkg.com/blessed/-/blessed-0.1.81.tgz#f962d687ec2c369570ae71af843256e6d0ca1129"
   integrity sha1-+WLWh+wsNpVwrnGvhDJW5tDKESk=
-
-bodec@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/bodec/-/bodec-0.1.0.tgz#bc851555430f23c9f7650a75ef64c6a94c3418cc"
-  integrity sha1-vIUVVUMPI8n3ZQp172TGqUw0GMw=
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -447,11 +447,6 @@ cron@1.8.2:
   integrity sha512-Gk2c4y6xKEO8FSAUTklqtfSr7oTq0CiPQeLBG5Fl0qoXpZyMcj1SG59YL+hqq04bu6/IuEA7lMkYDAplQNKkyg==
   dependencies:
     moment-timezone "^0.5.x"
-
-culvert@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/culvert/-/culvert-0.1.2.tgz#9502f5f0154a2d5a22a023e79f71cc936fa6ef6f"
-  integrity sha1-lQL18BVKLVoioCPnn3HMk2+m728=
 
 data-uri-to-buffer@1:
   version "1.2.0"
@@ -725,16 +720,6 @@ get-uri@^2.0.0:
     ftp "~0.3.10"
     readable-stream "2"
 
-git-node-fs@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/git-node-fs/-/git-node-fs-1.0.0.tgz#49b215e242ebe43aa4c7561bbba499521752080f"
-  integrity sha1-SbIV4kLr5Dqkx1Ybu6SZUhdSCA8=
-
-git-sha1@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/git-sha1/-/git-sha1-0.1.2.tgz#599ac192b71875825e13a445f3a6e05118c2f745"
-  integrity sha1-WZrBkrcYdYJeE6RF86bgURjC90U=
-
 glob-parent@^5.1.0, glob-parent@~5.1.0:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.1.tgz#b6c1ef417c4e5663ea498f1c45afac6916bbc229"
@@ -818,11 +803,6 @@ inherits@2, inherits@2.0.4, inherits@~2.0.1, inherits@~2.0.3:
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.4.tgz#0fa2c64f932917c3433a0ded55363aae37416b7c"
   integrity sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==
 
-ini@^1.3.5:
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
-  integrity sha512-RZY5huIKCMRWDUqZlEi72f/lmXKMvuszcMBduliQ3nnWbx9X/ZBQO7DijMEYS9EhHBb2qacRUMtC7svLwe0lcw==
-
 interpret@^1.0.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.2.0.tgz#d5061a6224be58e8083985f5014d844359576296"
@@ -866,16 +846,6 @@ isarray@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
   integrity sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE=
-
-js-git@^0.7.8:
-  version "0.7.8"
-  resolved "https://registry.yarnpkg.com/js-git/-/js-git-0.7.8.tgz#52fa655ab61877d6f1079efc6534b554f31e5444"
-  integrity sha1-UvplWrYYd9bxB578ZTS1VPMeVEQ=
-  dependencies:
-    bodec "^0.1.0"
-    culvert "^0.1.2"
-    git-sha1 "^0.1.2"
-    pako "^0.2.5"
 
 jsonfile@^6.0.1:
   version "6.0.1"
@@ -1079,11 +1049,6 @@ pac-resolver@^3.0.0:
     netmask "^1.0.6"
     thunkify "^2.1.2"
 
-pako@^0.2.5:
-  version "0.2.9"
-  resolved "https://registry.yarnpkg.com/pako/-/pako-0.2.9.tgz#f3f7522f4ef782348da8161bad9ecfd51bf83a75"
-  integrity sha1-8/dSL073gjSNqBYbrZ7P1Rv4OnU=
-
 path-is-absolute@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/path-is-absolute/-/path-is-absolute-1.0.1.tgz#174b9268735534ffbc7ace6bf53a5a9e1b5c5f5f"
@@ -1138,10 +1103,10 @@ pm2-multimeter@^0.1.2:
   dependencies:
     charm "~0.1.1"
 
-pm2@4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/pm2/-/pm2-4.3.0.tgz#fdcc8533c8ec71cda24d7127dee6f813ae5f0472"
-  integrity sha512-bQ3zyGu+KnEtQ7FdDQ/ExwPGm2EkKOqUFXFqqYsuymySsOvu5ClpYIMh0fgjMKzn21RfSg9yL4SeeoGOjg+/dQ==
+pm2@4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/pm2/-/pm2-4.3.1.tgz#1f9bb1ad7daea878f6b283933bd85ddd60c436f5"
+  integrity sha512-EW/SRb5DTpvLjAy4b8lMvBgTZSgXOgu6SHC+BX5NKjq+QRYXRBK/H5gwiksGZpOuhNJ16vZEUmNYBNpXkZgiqQ==
   dependencies:
     "@pm2/agent" "~1.0.0"
     "@pm2/io" "~4.3.4"
@@ -1172,7 +1137,7 @@ pm2@4.3.0:
     shelljs "0.8.3"
     source-map-support "0.5.16"
     sprintf-js "1.1.2"
-    vizion "~2.2.0"
+    vizion "0.2.13"
     yamljs "0.3.0"
   optionalDependencies:
     systeminformation "^4.23.3"
@@ -1573,15 +1538,12 @@ uuid@^3.2.1:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
-vizion@~2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/vizion/-/vizion-2.2.0.tgz#d1fa9954c8ad4ed1cfe3c999b4bb2caef6872817"
-  integrity sha512-y9Xr35EjExYgnZYkajmlL8b+9dWowQI0AhWJdbeVRgJfylIlXnUI1V9z3H2j9w6srJypqDzu4t3VZg1xQjf+Kg==
+vizion@0.2.13:
+  version "0.2.13"
+  resolved "https://registry.yarnpkg.com/vizion/-/vizion-0.2.13.tgz#1314cdee2b34116f9f5b1248536f95dbfcd6ef5f"
+  integrity sha1-ExTN7is0EW+fWxJIU2+V2/zW718=
   dependencies:
-    async "^2.6.3"
-    git-node-fs "^1.0.0"
-    ini "^1.3.5"
-    js-git "^0.7.8"
+    async "1.5"
 
 word-wrap@~1.2.3:
   version "1.2.3"
