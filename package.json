@@ -19,7 +19,7 @@
 		"source-map-support": "0.5.17"
 	},
 	"devDependencies": {
-		"@types/mongodb": "^3.5.9",
+		"@types/mongodb": "^3.5.10",
 		"@types/node": "^13.13.2",
 		"rimraf": "^3.0.2"
 	}
