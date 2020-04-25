@@ -36,6 +36,7 @@ async function updateCredits() {
 							format: "png",
 							dynamic: true
 						}),
+						premium_since: member.premiumSinceTimestamp,
 						role: highestRole.name,
 						roleId: highestRole.id,
 						roles: member.roles.cache
