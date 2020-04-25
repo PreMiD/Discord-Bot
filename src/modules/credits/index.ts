@@ -10,52 +10,60 @@ async function updateCredits() {
 
 	let creditUsers = [];
 
-	client.guilds.cache
-		.first()
-		.roles.cache.filter(r => Object.values(creditRoles).includes(r.id))
-		.forEach(async r => {
-			for (let i = 0; i < r.members.size; i++) {
-				const member = r.members.array()[i];
+	await Promise.all(
+		client.guilds.cache
+			.first()
+			.roles.cache.filter(r => Object.values(creditRoles).includes(r.id))
+			.map(async r => {
+				for (let i = 0; i < r.members.size; i++) {
+					const member = r.members.array()[i];
 
-				// @ts-ignore
-				const userFlags = (await member.user.fetchFlags()).toArray();
+					// @ts-ignore
+					const userFlags = (await member.user.fetchFlags()).toArray();
 
-				const highestRole = member.roles.cache.get(
-					containsAny(
-						Object.values(creditRoles),
-						member.roles.cache.keyArray()
-					)[0]
-				);
+					const highestRole = member.roles.cache.get(
+						containsAny(
+							Object.values(creditRoles),
+							member.roles.cache.keyArray()
+						)[0]
+					);
 
-				if (!creditUsers.find(cU => cU.userId === member.id))
-					creditUsers.push({
-						userId: member.id,
-						name: member.user.username,
-						tag: member.user.discriminator,
-						avatar: member.user.displayAvatarURL({
-							format: "png",
-							dynamic: true
-						}),
-						premium_since: member.premiumSinceTimestamp,
-						role: highestRole.name,
-						roleId: highestRole.id,
-						roles: member.roles.cache
-							.filter(r => r.name !== "@everyone")
-							.map(r => r.name),
-						roleIds: member.roles.cache
-							.filter(r => r.name !== "@everyone")
-							.map(r => r.id),
-						roleColor: highestRole.hexColor,
-						rolePosition: highestRole.position,
-						flags: userFlags.length > 0 ? userFlags : undefined,
-						status: member.user.presence.status
-					});
-			}
-		});
+					if (!creditUsers.find(cU => cU.userId === member.id))
+						creditUsers.push({
+							userId: member.id,
+							name: member.user.username,
+							tag: member.user.discriminator,
+							avatar: member.user.displayAvatarURL({
+								format: "png",
+								dynamic: true
+							}),
+							premium_since: member.premiumSince
+								? member.premiumSinceTimestamp
+								: undefined,
+							role: highestRole.name,
+							roleId: highestRole.id,
+							roles: member.roles.cache
+								.filter(r => r.name !== "@everyone")
+								.map(r => r.name),
+							roleIds: member.roles.cache
+								.filter(r => r.name !== "@everyone")
+								.map(r => r.id),
+							roleColor: highestRole.hexColor,
+							rolePosition: highestRole.position,
+							flags: userFlags.length > 0 ? userFlags : undefined,
+							status: member.user.presence.status
+						});
+				}
+			})
+	);
 
 	await Promise.all(
 		creditUsers.map(cU =>
-			creditsColl.findOneAndUpdate({ userId: cU.userId }, { $set: cU })
+			creditsColl.findOneAndUpdate(
+				{ userId: cU.userId },
+				{ $set: cU },
+				{ upsert: true }
+			)
 		)
 	);
 
@@ -65,9 +73,6 @@ async function updateCredits() {
 			.toArray(),
 		usersToRemove = dbCredits.filter(
 			mC => !creditUsers.find(cU => cU.userId === mC.userId)
-		),
-		usersToAdd = creditUsers.filter(
-			mC => !dbCredits.find(cU => cU.userId === mC.userId)
 		);
 	if (usersToRemove.length > 0) {
 		await Promise.all(
@@ -76,7 +81,6 @@ async function updateCredits() {
 			)
 		);
 	}
-	if (usersToAdd.length > 0) await creditsColl.insertMany(usersToAdd);
 	//#endregion
 
 	info("Updated credits.");
