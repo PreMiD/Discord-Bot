@@ -21,5 +21,6 @@ jobs:
             cd /home/PreMiD/Discord-Bot
             git reset --hard
             git pull
+            yarn
             yarn run compile
             pm2 reload /home/PreMiD/ecosystem.config.js --only Discord-Bot
