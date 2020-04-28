@@ -3,6 +3,8 @@ import { info } from "../../util/debug";
 import creditRoles from "./creditRoles";
 import { pmdDB } from "../../database/client";
 
+import cron from 'node-cron';
+
 const creditsColl = pmdDB.collection("credits");
 
 async function updateCredits() {
@@ -86,8 +88,9 @@ async function updateCredits() {
 	info("Updated credits.");
 }
 
-updateCredits();
-setInterval(updateCredits, 5 * 60 * 1000);
+//* create the task for every 3rd hour and immediately execute it
+//* https://crontab.guru/#0_*/3_*_*_*
+cron.schedule('0 */3 * * *', updateCredits).start();
 
 function containsAny(source: Array<string>, target: Array<string>) {
 	let result = source.filter(function (item) {
