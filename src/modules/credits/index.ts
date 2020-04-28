@@ -12,48 +12,48 @@ async function updateCredits() {
 
 	let creditUsers = [];
 
-	await Promise.all(
-		client.guilds.cache
-			.first()
-			.roles.cache.filter(r => Object.values(creditRoles).includes(r.id))
-			.map(async r => {
-				for (let i = 0; i < r.members.size; i++) {
-					const member = r.members.array()[i];
+	client.guilds.cache
+		.first()
+		.roles.cache.filter(r => Object.values(creditRoles).includes(r.id))
+		.map(r => {
+			for (let i = 0; i < r.members.size; i++) {
+				const member = r.members.array()[i];
 
-					const highestRole = member.roles.cache.get(
-						containsAny(
-							Object.values(creditRoles),
-							member.roles.cache.keyArray()
-						)[0]
-					);
+				const highestRole = member.roles.cache.get(
+					containsAny(
+						Object.values(creditRoles),
+						member.roles.cache.keyArray()
+					)[0]
+				);
 
-					if (!creditUsers.find(cU => cU.userId === member.id))
-						creditUsers.push({
-							userId: member.id,
-							name: member.user.username,
-							tag: member.user.discriminator,
-							avatar: member.user.displayAvatarURL({
-								format: "png",
-								dynamic: true
-							}),
-							premium_since: member.premiumSince
-								? member.premiumSinceTimestamp
-								: undefined,
-							role: highestRole.name,
-							roleId: highestRole.id,
-							roles: member.roles.cache
-								.filter(r => r.name !== "@everyone")
-								.map(r => r.name),
-							roleIds: member.roles.cache
-								.filter(r => r.name !== "@everyone")
-								.map(r => r.id),
-							roleColor: highestRole.hexColor,
-							rolePosition: highestRole.position,
-							status: member.user.presence.status
-						});
-				}
-			})
-	);
+				if (!creditUsers.find(cU => cU.userId === member.id))
+					creditUsers.push({
+						userId: member.id,
+						name: member.user.username,
+						tag: member.user.discriminator,
+						avatar: member.user.displayAvatarURL({
+							format: "png",
+							dynamic: true
+						}),
+						premium_since: member.premiumSince
+							? member.premiumSinceTimestamp
+							: undefined,
+						role: highestRole.name,
+						roleId: highestRole.id,
+						roles: member.roles.cache
+							.filter(r => r.name !== "@everyone")
+							.map(r => r.name),
+						roleIds: member.roles.cache
+							.filter(r => r.name !== "@everyone")
+							.map(r => r.id),
+						roleColor: highestRole.hexColor,
+						rolePosition: highestRole.position,
+						status: member.user.presence.status
+					});
+			}
+		});
+
+	info("Pushing credits changes to database...");
 
 	await Promise.all(
 		creditUsers.map(cU =>
@@ -109,6 +109,8 @@ async function updateFlags() {
 				}
 			})
 	);
+
+	info("Pushing flag changes to database...");
 
 	await Promise.all(
 		flagUsers.map(cU =>
