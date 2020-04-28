@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
+import channels from "../../../channels";
 import { client } from "../../..";
 import { pmdDB } from "../../../database/client";
-import channels from "../../../channels";
 
 const coll = pmdDB.collection("tickets"),
 	circleFolder =
@@ -253,22 +253,14 @@ export class Ticket {
 					)
 					.catch(() => {});
 
-			this.embed.author = {
-				name: `Ticket#${this.id} [CLOSED]`,
-				iconURL:
-					"https://raw.githubusercontent.com/PreMiD/Discord-Bot/master/.discord/red_circle.png"
-			};
-			this.embed.color = "#dd2e44";
-
 			if (this.embed.thumbnail) delete this.embed.thumbnail;
 			delete this.embed.fields;
 
-			if (this.attachmentsMessage)
-				this.attachmentsMessage.delete().catch(() => {});
+			if (this.attachmentsMessage && this.attachmentsMessage.deletable)
+				this.attachmentsMessage.delete();
 
-			this.ticketMessage.reactions.removeAll().catch(() => {});
-			this.ticketMessage.edit(this.embed).catch(() => {});
-			this.channel.delete().catch(() => {});
+			if (this.ticketMessage.deletable) this.ticketMessage.delete();
+			if (this.channel.deletable) this.channel.delete();
 
 			coll.findOneAndUpdate(
 				{ supportChannel: this.channel.id },
