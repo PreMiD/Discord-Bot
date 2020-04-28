@@ -3,7 +3,7 @@ import { info } from "../../util/debug";
 import creditRoles from "./creditRoles";
 import { pmdDB } from "../../database/client";
 
-import cron from 'node-cron';
+import schedule from 'node-schedule';
 
 const creditsColl = pmdDB.collection("credits");
 
@@ -125,10 +125,10 @@ async function updateFlags() {
 
 //* create the task for every 6th hour and immediately execute it
 //* https://crontab.guru/#0_*/6_*_*_*
-cron.schedule('0 */6 * * *', updateFlags).start();
+schedule.scheduleJob('flag updater', '0 */6 * * *', updateFlags).invoke();
 //* create the task for every 15th minute and immediately execute it
 //* https://crontab.guru/#*/15_*_*_*_*
-cron.schedule('*/15 * * * *', updateCredits).start();
+schedule.scheduleJob('credits updater', '*/15 * * * *', updateCredits).invoke();
 
 function containsAny(source: Array<string>, target: Array<string>) {
 	let result = source.filter(function (item) {
