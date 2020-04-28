@@ -20,9 +20,6 @@ async function updateCredits() {
 				for (let i = 0; i < r.members.size; i++) {
 					const member = r.members.array()[i];
 
-					// @ts-ignore
-					const userFlags = (await member.user.fetchFlags()).toArray();
-
 					const highestRole = member.roles.cache.get(
 						containsAny(
 							Object.values(creditRoles),
@@ -52,7 +49,6 @@ async function updateCredits() {
 								.map(r => r.id),
 							roleColor: highestRole.hexColor,
 							rolePosition: highestRole.position,
-							flags: userFlags.length > 0 ? userFlags : undefined,
 							status: member.user.presence.status
 						});
 				}
@@ -88,9 +84,51 @@ async function updateCredits() {
 	info("Updated credits.");
 }
 
-//* create the task for every 3rd hour and immediately execute it
-//* https://crontab.guru/#0_*/3_*_*_*
-cron.schedule('0 */3 * * *', updateCredits).start();
+async function updateFlags() {
+	info("Updating flags...");
+
+	let flagUsers = [];
+
+	await Promise.all(
+		client.guilds.cache
+			.first()
+			.roles.cache.filter(r => Object.values(creditRoles).includes(r.id))
+			.map(async r => {
+				const memberArray = r.members.array();
+				for (let i = 0; i < r.members.size; i++) {
+					const member = memberArray[i];
+
+					// @ts-ignore
+					const userFlags = (await member.user.fetchFlags()).toArray();
+
+					if (!flagUsers.find(cU => cU.userId === member.id))
+						flagUsers.push({
+							userId: member.id,
+							flags: userFlags.length > 0 ? userFlags : undefined
+						});
+				}
+			})
+	);
+
+	await Promise.all(
+		flagUsers.map(cU =>
+			creditsColl.findOneAndUpdate(
+				{ userId: cU.userId },
+				{ $set: cU },
+				{ upsert: true }
+			)
+		)
+	);
+
+	info("Updated flags.");
+}
+
+//* create the task for every 6th hour and immediately execute it
+//* https://crontab.guru/#0_*/6_*_*_*
+cron.schedule('0 */6 * * *', updateFlags).start();
+//* create the task for every 15th minute and immediately execute it
+//* https://crontab.guru/#*/15_*_*_*_*
+cron.schedule('*/15 * * * *', updateCredits).start();
 
 function containsAny(source: Array<string>, target: Array<string>) {
 	let result = source.filter(function (item) {
