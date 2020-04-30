@@ -2,6 +2,7 @@ import * as Discord from "discord.js";
 import channels from "../../../channels";
 import { client } from "../../..";
 import { pmdDB } from "../../../database/client";
+import { sortTickets } from "..";
 
 const coll = pmdDB.collection("tickets"),
 	circleFolder =
@@ -242,6 +243,8 @@ export class Ticket {
 				}
 			}
 		);
+
+		sortTickets();
 	}
 
 	async close(closer?: Discord.GuildMember, reason?: string) {
@@ -333,7 +336,6 @@ export class Ticket {
 				text: "p!close - Closes this ticket."
 			};
 			this.channelMessage.edit(supportEmbed);
-			console.log(supportEmbed);
 
 			this.channel.updateOverwrite(member, {
 				VIEW_CHANNEL: true,
