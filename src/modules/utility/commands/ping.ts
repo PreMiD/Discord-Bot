@@ -27,7 +27,8 @@ module.exports.run = async (message: Discord.Message) => {
 
 		msg.edit(embed).then(msg => msg.delete({ timeout: 15 * 1000 }));
 	});
-	message.delete();
+
+	if (!message.deleted) message.delete();
 };
 
 module.exports.config = {

@@ -1,8 +1,8 @@
-import { info, error } from "../util/debug";
+import Discord from "discord.js";
 import fs from "fs";
 import path from "path";
-import Discord from "discord.js";
 import shortInfos from "../modules/moderation/short-infos";
+import { error, info } from "../util/debug";
 
 let moduleFolder: fs.PathLike = path.resolve("./modules");
 

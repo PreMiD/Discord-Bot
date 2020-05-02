@@ -1,13 +1,13 @@
+import * as Discord from "discord.js";
+import moduleLoader from "./util/moduleLoader";
+import roles from "./roles";
+import { connect, MongoClient } from "./database/client";
+import { error, success } from "./util/debug";
+import { config } from "dotenv";
 import "source-map-support/register";
 
 //* Load .env file
-import { config } from "dotenv";
 config();
-import * as Discord from "discord.js";
-import { error, success } from "./util/debug";
-import moduleLoader from "./util/moduleLoader";
-import { connect, MongoClient } from "./database/client";
-import roles from "./roles";
 
 //* Create new client & set login presence
 export let client = new Discord.Client({
