@@ -1,7 +1,7 @@
-import { client } from "../..";
-import { pmdDB } from "../../database/client";
-import { info } from "../../util/debug";
 import roles from "../../roles";
+import { client } from "../..";
+import { info } from "../../util/debug";
+import { pmdDB } from "../../database/client";
 
 const betaUserColl = pmdDB.collection("betaUsers"),
 	discordUsers = pmdDB.collection("discordUsers");
@@ -11,20 +11,24 @@ async function updateDiscordUsers() {
 		.get("493130730549805057")
 		.members.fetch({ limit: 0 });
 
-	guildMembers.map(async user =>
-		discordUsers.findOneAndUpdate(
-			{ userId: user.id },
-			{
-				$set: {
-					userId: user.id,
-					created: user.user.createdTimestamp,
-					username: user.user.username,
-					discriminator: user.user.discriminator,
-					avatar: user.user.displayAvatarURL()
+	discordUsers.bulkWrite(
+		guildMembers.map(user => {
+			return {
+				updateOne: {
+					filter: { userId: user.id },
+					update: {
+						$set: {
+							userId: user.id,
+							created: user.user.createdTimestamp,
+							username: user.user.username,
+							discriminator: user.user.discriminator,
+							avatar: user.user.displayAvatarURL()
+						}
+					},
+					upsert: true
 				}
-			},
-			{ upsert: true }
-		)
+			};
+		})
 	);
 }
 

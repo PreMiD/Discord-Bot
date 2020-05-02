@@ -4,16 +4,17 @@ import { pmdDB } from "../../../database/client";
 const coll = pmdDB.collection("credits");
 
 module.exports = async (
-	_: Discord.GuildMember,
-	newMember: Discord.GuildMember
+	oldPresence: Discord.Presence,
+	newPresence: Discord.Presence
 ) => {
-	if (!newMember?.user?.id) return;
+	if (!oldPresence) return;
+	if (newPresence.status === oldPresence.status) return;
 
 	coll.findOneAndUpdate(
-		{ userId: newMember.user.id },
+		{ userId: newPresence.userID },
 		{
 			$set: {
-				status: newMember.user.presence.status
+				status: newPresence.status
 			}
 		}
 	);
