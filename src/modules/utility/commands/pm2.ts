@@ -20,19 +20,18 @@ module.exports.run = async (
 				return;
 			}
 
-			processes = processes.filter(p =>
-				p.pm2_env.pm_exec_path.includes("PreMiD")
-			);
+			processes = processes.filter(p => p.pm2_env.pm_cwd.includes("PreMiD"));
 			if (params.length === 0) {
 				message.channel.send(
 					new Discord.MessageEmbed({
 						title: "pm2 - Processes",
+						color: "#7289DA",
 						fields: processes.map(p => {
 							return {
 								name: `${p.name} - ${p.pm2_env.status}`,
-								value: `${p.monit.cpu}% | ${Math.floor(
+								value: `**CPU:** \`${p.monit.cpu}%\` | **RAM:** \`${Math.floor(
 									p.monit.memory / 1024 / 1024
-								)}mb`
+								)}mb\``
 							};
 						})
 					})
