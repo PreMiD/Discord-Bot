@@ -1,11 +1,11 @@
 import * as Discord from "discord.js";
-import { Ticket } from "../classes/Ticket";
-import channels from "../../../channels";
-import roles from "../../../roles";
-import config from "../../../config";
 import ch from "../../../channels";
+import channels from "../../../channels";
+import config from "../../../config";
+import roles from "../../../roles";
 import { client } from "../../..";
 import { pmdDB } from "../../../database/client";
+import { Ticket } from "../classes/Ticket";
 
 const coll = pmdDB.collection("tickets");
 
@@ -73,7 +73,7 @@ module.exports = async (message: Discord.Message) => {
 
 	if (ticketFound)
 		coll.findOneAndUpdate(
-			{ ticketId: t.id },
+			{ supportChannel: t.channel.id },
 			{
 				$push: {
 					messages: {
@@ -81,11 +81,14 @@ module.exports = async (message: Discord.Message) => {
 						content: message.cleanContent,
 						sent: message.createdTimestamp
 					}
+				},
+				$unset: {
+					ticketCloseWarning: true
 				}
 			}
 		);
 
-	if (ticketFound && t.user.id === message.author.id)
+	if (ticketFound && !message.author.bot)
 		coll.findOneAndUpdate(
 			{ ticketId: t.id },
 			{ $set: { lastUserMessage: Date.now() } }

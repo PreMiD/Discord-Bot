@@ -353,4 +353,18 @@ export class Ticket {
 			);
 		}
 	}
+
+	async sendCloseWarning() {
+		this.channel.send(
+			`${this.user.toString()}, ${this.supporters
+				.map(s => s.toString())
+				.join(
+					", "
+				)}, This ticket will be closed automatically due to inactivity in **2 days**. To prevent this simply send a message in this channel.`
+		);
+		coll.findOneAndUpdate(
+			{ supportChannel: this.channel.id },
+			{ $set: { ticketCloseWarning: Date.now() } }
+		);
+	}
 }
