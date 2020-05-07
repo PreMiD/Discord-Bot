@@ -22,26 +22,29 @@ module.exports.run = async (
 
 			processes = processes.filter(p => p.pm2_env.pm_cwd.includes("PreMiD"));
 			if (params.length === 0) {
+				//TODO If there are multiple processes with the same name only show one in embed but add the ram/cpu to one
 				(
 					await message.channel.send(
 						new Discord.MessageEmbed({
 							title: "pm2 - Processes",
 							color: "#7289DA",
-							fields: processes
-								.filter((p, i) => processes.indexOf(p) === i)
-								.map(p => {
-									return {
-										name: `${p.name} - ${
-											p.pm2_env.status.slice(0, 1).toUpperCase() +
-											p.pm2_env.status.slice(1, p.pm2_env.status.length)
-										}`,
-										value: `**CPU:** \`${
-											p.monit.cpu
-										}%\` | **RAM:** \`${Math.floor(
-											p.monit.memory / 1024 / 1024
-										)}mb\``
-									};
-								})
+							fields: processes.map(p => {
+								return {
+									name: `${p.name} • ${
+										p.pm2_env.status.slice(0, 1).toUpperCase() +
+										p.pm2_env.status.slice(1, p.pm2_env.status.length)
+									}`,
+									value: `**CPU:** \`${
+										p.monit.cpu
+									}%\` | **RAM:** \`${Math.floor(
+										p.monit.memory / 1024 / 1024
+									)}mb\`${
+										typeof (p.pm2_env as any).version === "string"
+											? " | **v**" + (p.pm2_env as any).version
+											: ""
+									}`
+								};
+							})
 						})
 					)
 				).delete({ timeout: 15 * 1000 });
