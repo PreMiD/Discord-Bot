@@ -117,7 +117,8 @@ module.exports = async (message: Discord.Message) => {
 		if (args.length === 0) return;
 		const userToAdd = message.guild.members.cache.find(
 			m =>
-				(m.id === args.join(" ") || m.displayName === args.join(" ")) &&
+				(m.id === args.join(" ") ||
+					m.displayName.toLowerCase() === args.join(" ").toLowerCase()) &&
 				(message.member.roles.cache.has(roles.ticketManager) ||
 					message.member.permissions.has("ADMINISTRATOR"))
 		);
