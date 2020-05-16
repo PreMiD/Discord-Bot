@@ -156,6 +156,27 @@ export class Ticket {
 	}
 
 	async accept(supporter: Discord.GuildMember) {
+		if (
+			(client.guilds.cache
+				.first()
+				.channels.resolve(channels.ticketCategory) as Discord.CategoryChannel)
+				.children.size >= 50
+		) {
+			(
+				await (client.guilds.cache
+					.first()
+					.channels.resolve(
+						channels.ticketChannel
+					) as Discord.TextChannel).send(
+					`${supporter.toString()}, Can't accept ticket, the category limit has been reached.`
+				)
+			).delete({ timeout: 15 * 1000 });
+			this.ticketMessage.reactions.cache
+				.get("521018476870107156")
+				.users.remove(supporter);
+			return;
+		}
+
 		this.embed.author = {
 			name: `Ticket#${this.id} [PENDING]`,
 			iconURL:
