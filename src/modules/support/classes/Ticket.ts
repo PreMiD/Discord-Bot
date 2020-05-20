@@ -269,36 +269,32 @@ export class Ticket {
 	}
 
 	async close(closer?: Discord.GuildMember, reason?: string) {
-		try {
-			if (reason)
-				this.user
-					.send(
-						`Your Ticket \`\`#${this.id}\`\` has been closed. Reason:\n\n*\`\`${reason}\`\`*`
-					)
-					.catch(() => {});
+		if (reason)
+			this.user
+				.send(
+					`Your Ticket \`\`#${this.id}\`\` has been closed. Reason:\n\n*\`\`${reason}\`\`*`
+				)
+				.catch(() => {});
 
-			if (this.embed.thumbnail) delete this.embed.thumbnail;
-			delete this.embed.fields;
+		if (this.embed.thumbnail) delete this.embed.thumbnail;
+		delete this.embed.fields;
 
-			if (this.attachmentsMessage && this.attachmentsMessage.deletable)
-				this.attachmentsMessage.delete();
+		if (this.attachmentsMessage && this.attachmentsMessage.deletable)
+			this.attachmentsMessage.delete();
 
-			if (this.ticketMessage.deletable) this.ticketMessage.delete();
-			if (this.channel.deletable) this.channel.delete();
+		if (this.ticketMessage.deletable) this.ticketMessage.delete();
+		if (this.channel.deletable) this.channel.delete();
 
-			coll.findOneAndUpdate(
-				{ supportChannel: this.channel.id },
-				{
-					$unset: { supportChannel: "", supporters: "", supportEmbed: "" },
-					$set: {
-						status: 2,
-						closer: closer?.id || undefined
-					}
+		coll.findOneAndUpdate(
+			{ supportChannel: this.channel.id },
+			{
+				$unset: { supportChannel: "", supporters: "", supportEmbed: "" },
+				$set: {
+					status: 2,
+					closer: closer?.id || undefined
 				}
-			);
-		} catch (e) {
-			console.log(e);
-		}
+			}
+		);
 	}
 
 	async addSupporter(member: Discord.GuildMember, sendMessage = true) {
