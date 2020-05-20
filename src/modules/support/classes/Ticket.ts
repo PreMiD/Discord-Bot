@@ -308,7 +308,7 @@ export class Ticket {
 
 		this.embed.fields[0] = {
 			name: "Supporter",
-			value: this.supporters.toString()
+			value: this.supporters.join(", ")
 		};
 
 		this.ticketMessage.edit(this.embed);
