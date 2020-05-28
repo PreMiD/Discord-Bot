@@ -288,7 +288,7 @@ export class Ticket {
 		coll.findOneAndUpdate(
 			{ supportChannel: this.channel.id },
 			{
-				$unset: { supportChannel: "", supporters: "", supportEmbed: "" },
+				$unset: { supportChannel: "", supportEmbed: "" },
 				$set: {
 					status: 2,
 					closer: closer?.id || undefined
