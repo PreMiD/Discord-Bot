@@ -17,6 +17,7 @@ module.exports.run = async (client: Discord.Client) => {
 				await member.roles.add(roles.presence);
 			}
 		}
+		oldPresences = newPresences;
 	}, 60000 * 15);
 };
 
