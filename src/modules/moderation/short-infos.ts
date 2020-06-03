@@ -12,7 +12,7 @@ export default {
 		color: "FF0000",
 		aliases: ["bd", "bdiscord"],
 		description:
-			"Using better Discord is an abuse of Discord ToS. If you want to keep using Discord, you have to follow them and make sure you're not breaking any of the rules Discord has decided to put. Even using BetterDiscord for themes, some customizations is not 'welcomed' in Discord. Your account could .cache.get banned just because of that and you can read Discord's official Tweet from [here](https://twitter.com/discordapp/status/908000828690182145).",
+			"Using better Discord is an abuse of Discord ToS. If you want to keep using Discord, you have to follow them and make sure you're not breaking any of the rules Discord has decided to put. Even using BetterDiscord for themes, some customizations is not 'welcomed' in Discord. Your account could get banned just because of that and you can read Discord's official Tweet from [here](https://twitter.com/discordapp/status/908000828690182145).",
 		footer: false
 	},
 	creatingpresence: {
