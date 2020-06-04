@@ -1,13 +1,11 @@
-import {pmdDB} from "../database/client";
 import * as Discord from "discord.js";
 import roles from "../roles";
+import { pmdDB } from "../database/client";
 const col = pmdDB.collection("presences");
 
-module.exports.run = async (member: Discord.GuildMember) => {
-    const doc = await col.findOne({ "metadata.author.id": member.id });
-    if (doc) {
-        if (!member.roles.cache.has(roles.presence)) {
-            await member.roles.add(roles.presence);
-        }
-    }
-}
+module.exports = async (member: Discord.GuildMember) => {
+	const doc = await col.findOne({ "metadata.author.id": member.id });
+
+	if (doc && !member.roles.cache.has(roles.presence))
+		member.roles.add(roles.presence);
+};
