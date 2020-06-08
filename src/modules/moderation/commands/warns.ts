@@ -40,7 +40,7 @@ module.exports.run = async (
 		});
 		if (!user) {
 			((await message.reply(
-				"You don't have any warnings."
+				`${message.mentions.users.first().username} doesn't have any warnings.`
 			)) as Discord.Message).delete({ timeout: 10 * 1000 });
 			return;
 		}
