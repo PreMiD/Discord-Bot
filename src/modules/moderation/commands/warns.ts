@@ -34,7 +34,7 @@ module.exports.run = async (
 				.join("\n"),
 			color: "#FF7000"
 		});
-		message.author.send(embed);
+		message.channel.send(embed);
 	} else if (perms > 1) {
 		let user = await coll.findOne({
 			userId: message.mentions.users.first().id
