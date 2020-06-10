@@ -54,7 +54,7 @@ export class Ticket {
 			console.log(e);
 		}
 
-		if (this.status === 1) {
+		if (this.status) {
 			this.channel = client.guilds.cache
 				.first()
 				.channels.cache.get(ticket.supportChannel) as Discord.TextChannel;
@@ -85,7 +85,7 @@ export class Ticket {
 
 	async create(message: Discord.Message) {
 		try {
-			if (ticketCount === 0) ticketCount = await coll.countDocuments({});
+			if (!ticketCount) ticketCount = await coll.countDocuments({});
 
 			ticketCount++;
 
