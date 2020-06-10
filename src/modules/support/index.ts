@@ -27,7 +27,7 @@ export async function sortTickets() {
 }
 
 client.once("ready", () => {
-	sortTickets;
+	sortTickets();
 	checkOldTickets();
 	setInterval(checkOldTickets, 15 * 60 * 1000);
 });
