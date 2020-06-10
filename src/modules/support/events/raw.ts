@@ -2,10 +2,12 @@ import { client } from "../../..";
 import { Ticket } from "../classes/Ticket";
 
 module.exports = async packet => {
-	if (!["MESSAGE_REACTION_ADD"].includes(packet.t) || member.user.bot) return;
+	if (!["MESSAGE_REACTION_ADD"].includes(packet.t)) return;
 
 	let guild = client.guilds.cache.get(packet.d.guild_id),
 		member = guild.members.cache.get(packet.d.user_id);
+	
+	if(member.user.bot) return;
 
 	let ticket = new Ticket();
 	if (!(await ticket.fetch("message", packet.d.message_id))) return;
