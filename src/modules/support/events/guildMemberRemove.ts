@@ -17,7 +17,7 @@ module.exports = async (user: Discord.GuildMember) => {
 					) as Discord.TextChannel).messages.fetch(ticket.ticketMessage)
 				).delete();
 			} catch (_) {}
-		} else if (ticket.status === 1) {
+		} else if (ticket.status) {
 			const t = new Ticket();
 			if (await t.fetch("ticket", ticket)) t.close();
 		}
