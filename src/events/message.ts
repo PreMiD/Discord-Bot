@@ -13,7 +13,7 @@ module.exports = (message: Discord.Message) => {
 		perms = message.client.elevation(message.author.id),
 		cmd: any;
 
-	//* .cache.get current command from commands/aliases
+	//* Get current command from commands/aliases
 	if (message.client.commands.has(command))
 		cmd = message.client.commands.get(command);
 	else if (message.client.aliases.has(command)) {
