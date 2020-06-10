@@ -67,8 +67,7 @@ module.exports.run = async (
 			const ticket = new Ticket(),
 				ticketFound = await ticket.fetch("channel", t.supportChannel);
 
-			if (!ticketFound) return;
-			if (ticket.supporters.includes(message.member)) return;
+			if (!ticketFound || ticket.supporters.includes(message.member)) return;
 
 			ticket.channel.updateOverwrite(message.member, {
 				VIEW_CHANNEL: false
