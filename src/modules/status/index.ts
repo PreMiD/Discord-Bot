@@ -127,7 +127,7 @@ export async function checkStatus() {
                     const incidentUpdate = incident.incident_updates[0];
 
                     //* Make sure this isn't the same incident
-                    if (cache.lastIncident && (cache.lastIncident.id === incidentUpdate.id)) return { send: false, type: null };
+                    if (cache.lastIncident.id === incidentUpdate.id) return { send: false, type: null };
 
                     cache.lastUpdate = {
                         id: incidentUpdate.id,
