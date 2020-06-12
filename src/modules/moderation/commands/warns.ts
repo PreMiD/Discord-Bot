@@ -18,7 +18,6 @@ module.exports.run = async (
 			)) as Discord.Message).delete({ timeout: 10 * 1000 });
 			return;
 		}
-
 		let embed = new Discord.MessageEmbed({
 			title: "Your Warnings",
 			author: {
@@ -39,7 +38,12 @@ module.exports.run = async (
 		let user = await coll.findOne({
 			userId: message.mentions.users.first().id
 		});
-
+		if (!user) {
+			((await message.reply(
+				`${message.mentions.users.first().username} doesn't have any warnings.`
+			)) as Discord.Message).delete({ timeout: 10 * 1000 });
+			return;
+		}
 		let embed = new Discord.MessageEmbed({
 			title: `${message.mentions.users.first().username}'s Warnings`,
 			author: {
@@ -60,7 +64,7 @@ module.exports.run = async (
 		});
 	} else {
 		message.reply(
-			"Your permission level is to low to .cache.get warnings of other people!"
+			"Your permission level is to low to see other people's warnings!"
 		);
 	}
 };
