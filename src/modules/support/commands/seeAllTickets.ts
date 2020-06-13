@@ -8,8 +8,7 @@ let coll = pmdDB.collection("userSettings"),
 
 module.exports.run = async (
 	message: Discord.Message,
-	params: Array<string>,
-	showall: Boolean
+	params: Array<string>
 ) => {
 	if (
 		!message.member.roles.cache.has(roles.ticketManager) &&
@@ -37,7 +36,7 @@ module.exports.run = async (
 	}
 		message
 		.reply(
-			userSettings.seeAllTickets ? `You can now see all tickets.` : showall ? `Attempting to add you to open tickets.` : `You can no longer see all tickets.`
+			userSettings.seeAllTickets ? `You can now see all tickets.` : `You can no longer see all tickets.`
 		)
 		.then(msg => msg.delete({ timeout: 10 * 1000 }));
 
