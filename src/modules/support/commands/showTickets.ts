@@ -29,5 +29,5 @@ module.exports.run = async (
 module.exports.config = {
 	name: "showtickets",
 	description: "Let's you view all open tickets.",
-  permLevel: 1
+  	permLevel: 1
 };
