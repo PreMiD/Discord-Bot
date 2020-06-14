@@ -1,5 +1,8 @@
 import * as Discord from "discord.js";
 import { Ticket } from "../classes/Ticket";
+import { pmdDB } from "../../../database/client";
+
+let tcoll = pmdDB.collection("tickets");
 
 module.exports.run = async (
 	message: Discord.Message,
