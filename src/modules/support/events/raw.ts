@@ -6,8 +6,8 @@ module.exports = async packet => {
 
 	let guild = client.guilds.cache.get(packet.d.guild_id),
 		member = guild.members.cache.get(packet.d.user_id);
-
-	if (member.user.bot) return;
+	
+	if(member.user.bot) return;
 
 	let ticket = new Ticket();
 	if (!(await ticket.fetch("message", packet.d.message_id))) return;
