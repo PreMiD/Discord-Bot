@@ -26,9 +26,8 @@ export async function sortTickets() {
 	success("Sorted ticket channels.");
 }
 
-client.once("ready", sortTickets);
-
 client.once("ready", () => {
+	sortTickets();
 	checkOldTickets();
 	setInterval(checkOldTickets, 15 * 60 * 1000);
 });

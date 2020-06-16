@@ -85,7 +85,7 @@ export class Ticket {
 
 	async create(message: Discord.Message) {
 		try {
-			if (ticketCount === 0) ticketCount = await coll.countDocuments({});
+			if (!ticketCount) ticketCount = await coll.countDocuments({});
 
 			ticketCount++;
 
