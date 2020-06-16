@@ -59,7 +59,6 @@ module.exports = async (message: Discord.Message) => {
 		else 
 			message.delete() &&
 			(await message.reply("Please write at least 25 characters.")).delete({timeout: 10 * 1000});
-		}
 
 		return;
 	}
