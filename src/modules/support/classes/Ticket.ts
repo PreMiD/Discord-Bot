@@ -54,7 +54,7 @@ export class Ticket {
 			console.log(e);
 		}
 
-		if (this.status) {
+		if (this.status === 1) {
 			this.channel = client.guilds.cache
 				.first()
 				.channels.cache.get(ticket.supportChannel) as Discord.TextChannel;
