@@ -63,7 +63,7 @@ module.exports = async (message: Discord.Message) => {
 		return;
 	}
 
-	if (ticketFound && !!message.content.toLowerCase() == "p!close")
+	if (ticketFound && message.content.toLowerCase().includes("p!close"))
 		coll.findOneAndUpdate(
 			{ supportChannel: t.channel.id },
 			{
