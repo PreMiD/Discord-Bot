@@ -70,5 +70,13 @@ export default {
 		description:
 			"We have a <#566738846650335232> channel where you can create a ticket and let ticket managers/moderators help you, but sometimes people just abuse it by typing nonse stuff in there. Please make sure you've tried everything on our [troubleshooting](https://docs.premid.app/en/troubleshooting) page before creating a ticket.\n\nIncluding screenshots in tickets, such as console output, any error you got on the extension will speed up processing your ticket.",
 		footer: false
+	},
+	suggest: {
+		title: "Suggesting a presence",
+		color: "RANDOM",
+		aliases: ["suggestpresence"],
+		description:
+			"If you would like to suggest a presence, you can head over to our github repository and create a new issue with the [Presence Request](https://github.com/PreMiD/Presences/issues/new?template=service_request.md) template! If you would like to make a presence yourself, you can find more information on [Development Docs](https://docs.premid.app/dev/presence)",
+		footer: false
 	}
 };
