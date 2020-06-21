@@ -33,15 +33,25 @@ module.exports.run = async (
 				.join("\n"),
 			color: "#FF7000"
 		});
-		message.author.send(embed);
+		message.author.send(embed).catch(err => {
+			if (err) {
+				message.channel.send(embed);
+			}
+		});
 	} else if (perms > 1) {
 		let user = await coll.findOne({
 			userId: message.mentions.users.first().id
 		});
 		if (!user) {
-			((await message.reply(
+			((await message.author.send(
 				`${message.mentions.users.first().username} doesn't have any warnings.`
-			)) as Discord.Message).delete({ timeout: 10 * 1000 });
+			)) as Discord.Message).delete({ timeout: 10 * 1000 }).catch(async err => {
+				if (err) {
+					((await message.channel.send(
+						`${message.mentions.users.first().username} doesn't have any warnings.`
+					)) as Discord.Message).delete({ timeout: 10 * 1000 })
+				}
+			})
 			return;
 		}
 		let embed = new Discord.MessageEmbed({
@@ -59,8 +69,14 @@ module.exports.run = async (
 				.join("\n"),
 			color: "#FF7000"
 		});
-		((await message.channel.send(embed)) as Discord.Message).delete({
+		((await message.author.send(embed)) as Discord.Message).delete({
 			timeout: 15 * 1000
+		}).catch(async err => {
+			if (err) {
+				((await message.channel.send(embed)) as Discord.Message).delete({
+					timeout: 15 * 1000
+				})
+			}
 		});
 	} else {
 		message.reply(
@@ -71,5 +87,5 @@ module.exports.run = async (
 
 module.exports.config = {
 	name: "warns",
-	description: "Shows your/a users warnings."
+	description: "Shows your or a users warning's."
 };
