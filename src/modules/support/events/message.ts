@@ -27,9 +27,7 @@ module.exports = async (message: Discord.Message) => {
 	if (
 		!ticketFound &&
 		message.channel.id !== ch.supportChannel &&
-		[ch.chatCategory, ch.offtopicCategory].includes(
-			(message.channel as Discord.TextChannel).parentID
-		)
+		[ch.chatCategory, ch.offtopicCategory].includes((message.channel as Discord.TextChannel).parentID)
 	) {
 		if (
 			!message.content.startsWith(config.prefix) &&
@@ -41,9 +39,7 @@ module.exports = async (message: Discord.Message) => {
 		) {
 			if (!users.includes(message.author.id)) {
 				message.channel
-					.send(
-						`Need help? Feel free to create a ticket on <#${channels.supportChannel}>!`
-					)
+					.send(`Need help? Feel free to create a ticket on <#${channels.supportChannel}>!`)
 					.then(msg => msg.delete({ timeout: 15000 }));
 				users.push(message.author.id);
 				setTimeout(() => {
@@ -56,22 +52,18 @@ module.exports = async (message: Discord.Message) => {
 
 	if (
 		!ticketFound &&
-		message.channel.id === channels.supportChannel &&
-		!message.author.bot
+		message.channel.id === channels.supportChannel
 	) {
-		if (message.cleanContent.length > 25) {
+		if (message.cleanContent.length > 25) 
 			t.create(message);
-		} else {
-			message.delete();
-			(await message.reply("Please write at least 25 characters.")).delete({
-				timeout: 10 * 1000
-			});
-		}
+		else 
+			message.delete() &&
+			(await message.reply("Please write at least 25 characters.")).delete({timeout: 10 * 1000});
 
 		return;
 	}
 
-	if (ticketFound)
+	if (ticketFound && message.content.toLowerCase().includes("p!close"))
 		coll.findOneAndUpdate(
 			{ supportChannel: t.channel.id },
 			{
@@ -130,8 +122,8 @@ module.exports = async (message: Discord.Message) => {
 	if (
 		ticketFound &&
 		!message.content.startsWith("<<") &&
-		(message.member.roles.cache.has(roles.ticketManager) ||
-			message.member.permissions.has("ADMINISTRATOR"))
+		(message.member.roles.cache.has(roles.ticketManager) 
+		 	|| message.member.permissions.has("ADMINISTRATOR"))
 	) {
 		t.addSupporter(message.member);
 		return;
