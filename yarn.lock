@@ -141,10 +141,10 @@
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
   integrity sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
 
-"@types/mongodb@^3.5.22":
-  version "3.5.22"
-  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.5.22.tgz#860d97e92933f790b65842db06340672a06cecb1"
-  integrity sha512-5rfIExCN1hfyey8OEgpeRSwQyjLcMegtmO54Ag3KQLbRT41ydob3BYhb6uEIsTm7NbZqYPb2k+21Nw9sjON18w==
+"@types/mongodb@^3.5.23":
+  version "3.5.23"
+  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.5.23.tgz#e360ca025348bcc11328ce9a22099734401a2330"
+  integrity sha512-v4Ay/0av+oDUsj3P6TT6UIGDlLKnpnokO5e3TFR53FSOngc7QX+BBZ0KgnIk4Vtna6ODoL6Jcy/uQobvmCnn8g==
   dependencies:
     "@types/bson" "*"
     "@types/node" "*"
