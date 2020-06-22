@@ -3,7 +3,7 @@ export default {
 	projectManager: "493135149274365975",
 	operationsSupervisor: "691382096878370837",
 	globalCommunityRepresentative: "673681900476432387",
-	storeManager: "691382096878370837",
+	storeManager: "724371078113132654",
 	systemAdministrator: "673682511288598575",
 	webDeveloper: "616646805907832833",
 	linuxMaintainer: "691393583189721088",
