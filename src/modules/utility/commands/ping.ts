@@ -13,9 +13,9 @@ module.exports.run = async (message: Discord.Message) => {
 
 		ping = msg.createdTimestamp - message.createdTimestamp;
 		let color = 
-			ping < 250 ? "#ff0000" : 
+			ping < 250 ? "#00ff00" : 
 			ping > 250 && ping < 500 ? 
-		    	"#ffff00" : "#00ff00";
+		    	"#ffaa00" : "#ff0000";
 
 		embed.setDescription(
 			`**You** > **Discord** (\`\`${Math.floor(ping)}ms\`\`)
