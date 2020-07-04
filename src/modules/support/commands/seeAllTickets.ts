@@ -50,7 +50,7 @@ module.exports.run = async (
 				ticketFound = await ticket.fetch("channel", t.supportChannel);
 
 			if (!ticketFound) return;
-			ticket.channel.updateOverwrite(message.member, {
+			ticket.channel?.updateOverwrite(message.member, {
 				VIEW_CHANNEL: true,
 				SEND_MESSAGES: true,
 				EMBED_LINKS: true,
@@ -67,9 +67,9 @@ module.exports.run = async (
 			const ticket = new Ticket(),
 				ticketFound = await ticket.fetch("channel", t.supportChannel);
 
-			if (!ticketFound || ticket.supporters.includes(message.member)) return;
+			if (!ticketFound || ticket.supporters?.includes(message.member)) return;
 
-			ticket.channel.updateOverwrite(message.member, {
+			ticket.channel?.updateOverwrite(message.member, {
 				VIEW_CHANNEL: false
 			});
 		});

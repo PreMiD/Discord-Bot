@@ -58,7 +58,7 @@ export class Ticket {
 			this.channel = client.guilds.cache
 				.first()
 				.channels.cache.get(ticket.supportChannel) as Discord.TextChannel;
-			this.channelMessage = await this.channel.messages.fetch(
+			this.channelMessage = await this.channel?.messages.fetch(
 				ticket.supportEmbed
 			);
 			this.supporters = await Promise.all(
