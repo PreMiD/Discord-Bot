@@ -7,7 +7,7 @@ module.exports.run = async (message: Discord.Message, args: Array<string>) => {
     const query = args.join(" ")
 
     if (query.length < 1) {
-        usageOf = "PreMid";
+        usageOf = "PreMiD";
     } else {
         usageOf = `a Preasance called ${query}`;
     }
