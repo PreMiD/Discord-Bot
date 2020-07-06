@@ -34,18 +34,20 @@ module.exports.run = async (message: Discord.Message, args: Array<string>) => {
 	const presencesColl = pmdDB.collection("presences");
 	const results = await presencesColl
 		.find(
-			{
-				$text: {
-					$search: query,
-					$caseSensitive: false
+			{ $and: [
+				{
+					name: { $regex: query, '$options': 'i' }
+				},
+				{
+					"metadata.service": { $regex: query, '$options': 'i' }
 				}
-			},
-			{ projection: { metadata: true, name: true } }
-		)
+			]
+		})
 		.limit(5)
 		.toArray();
 
-	console.log(results);
+		/* */
+	//console.log(results);
 
 	clearTimeout(sadCatTimeout);
 
