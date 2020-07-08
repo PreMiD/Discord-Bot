@@ -34,19 +34,29 @@ module.exports.run = async (message: Discord.Message, args: Array<string>) => {
 	const presencesColl = pmdDB.collection("presences");
 	const results = await presencesColl
 		.find(
-			{
-				$text: {
-					$search: query,
-					$caseSensitive: false
+			{ $or: [
+				{
+					name: { $regex: query, '$options': 'i' }
+				},
+				{
+					"metadata.service": { $regex: query, '$options': 'i' }
+				},
+				{
+					"metadata.url": { $regex: query, '$options': 'i' }
+				},
+				{
+					"metadata.tags": { $regex: query, '$options': 'i' }
+				},
+				{
+					"metadata.altnames": { $regex: query, '$options': 'i' }
+				},
+				{
+					"metadata.category": { $regex: query, '$options': 'i' }
 				}
-			},
-			{ projection: { metadata: true, name: true } }
-		)
+			]
+		})
 		.limit(5)
 		.toArray();
-
-	console.log(results);
-
 	clearTimeout(sadCatTimeout);
 
 	if (results.length < 1) {
