@@ -46,6 +46,12 @@ module.exports.run = async (message: Discord.Message, args: Array<string>) => {
 				},
 				{
 					"metadata.tags": { $regex: query, '$options': 'i' }
+				},
+				{
+					"metadata.altnames": { $regex: query, '$options': 'i' }
+				},
+				{
+					"metadata.category": { $regex: query, '$options': 'i' }
 				}
 			]
 		})
