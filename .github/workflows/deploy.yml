@@ -14,7 +14,7 @@ jobs:
       - name: Deploying...
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSHHOST }}
+          host: 1.premid.app
           username: ${{ secrets.SSHUSERNAME }}
           password: ${{ secrets.SSHPASSWORD }}
           script: |
