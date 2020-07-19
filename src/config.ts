@@ -1,5 +1,5 @@
 export default {
-	prefix: "pDEV!",
+	prefix: "p!",
 	logs: "548596032355958784",
 	botChannel: "527692294942490635",
 	supportCategory: "566853957054496778",
