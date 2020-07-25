@@ -9,30 +9,37 @@ module.exports.run = async (
 	message: Discord.Message,
 	params: Array<String>
 ) => {
-	let roleCheck: { movieNight: string; minecraft?: string;
-	linuxTest?: string; vacation?: string; } = assignRolesFile.everyone;
-	
-	if (message.member.hasPermission("ADMINISTRATOR")) {
-		roleCheck.minecraft = assignRolesFile.betaAndAlpha.minecraft;
-		roleCheck.vacation = assignRolesFile.staff.vacation;
-		roleCheck.linuxTest = assignRolesFile.linuxMaintainer.linuxTest;
-	} else {
-		if (message.member.roles.cache.has(assignee.alphaRole)
-		 || message.member.roles.cache.has(assignee.betaRole))
-		{
-		   roleCheck.minecraft = assignRolesFile.betaAndAlpha.minecraft;
-		}
+	let roleCheck: { movieNight?: string; minecraft?: string;
+		linuxTest?: string; vacation?: string; } = {};
 		
-		if (message.member.roles.cache.has(assignee.staff))
-		{
+		roleCheck.movieNight = assignRolesFile.everyone.movieNight;
+		
+		if (message.member.hasPermission("ADMINISTRATOR")) {
+			roleCheck.minecraft = assignRolesFile.betaAndAlpha.minecraft;
 			roleCheck.vacation = assignRolesFile.staff.vacation;
-		   }
-		   
-		if (message.member.roles.cache.has(assignee.LinuxMaintainer))
-		{
 			roleCheck.linuxTest = assignRolesFile.linuxMaintainer.linuxTest;
-	   	}
-	}
+		} else {
+			if (message.member.roles.cache.has(assignee.alphaRole))
+			{
+				roleCheck.minecraft = assignRolesFile.betaAndAlpha.minecraft;
+			}
+	
+			if (message.member.roles.cache.has(assignee.betaRole))
+			{
+				roleCheck.minecraft = assignRolesFile.betaAndAlpha.minecraft;
+			}
+	
+			if (message.member.roles.cache.has(assignee.staff))
+			{
+				roleCheck.vacation = assignRolesFile.staff.vacation;
+			}
+			
+			if (message.member.roles.cache.has(assignee.LinuxMaintainer))
+			{
+				roleCheck.linuxTest = assignRolesFile.linuxMaintainer.linuxTest;
+			}
+		}
+	
 
 	let assignRoles: Discord.Role[] = Object.values(roleCheck)
 	.map(r => message.guild.roles.cache.get(r))
