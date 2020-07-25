@@ -1,41 +1,44 @@
 import * as Discord from "discord.js";
 import { pmdDB } from "../../../database/client";
+import config from "../../../config";
 
 module.exports.run = async (message: Discord.Message, args: Array<string>) => {
     let embed: Discord.MessageEmbed;
-    let usage: string, title: string, presance;
+    let usage: string, title: string, presence: { name: string; };
     const query = args.join(" ");
 
     if (query.length < 1) {
-        title = "Usage of PreMiD (aka all users)";
+        title = "Usage of PreMiD";
     } else {
-        title = `Searching for a Preasance called **\"${query}\"**`;
-
-        const presencesColl = pmdDB.collection("presences");
-        presance = await presencesColl.findOne(
-            { $or: [
-                {
-                    name: { $regex: query, '$options': 'i' }
-                },
-                {
-                    "metadata.service": { $regex: query, '$options': 'i' }
-                },
-                {
-                    "metadata.url": { $regex: query, '$options': 'i' }
-                },
-                {
-                    "metadata.tags": { $regex: query, '$options': 'i' }
-                },
-                {
-                    "metadata.altnames": { $regex: query, '$options': 'i' }
-                },
-                {
-                    "metadata.category": { $regex: query, '$options': 'i' }
-                }
-            ]
-        })
+        title = `Searching for a Presence called **\"${query}\"**`;
+        try {
+            const presencesColl = pmdDB.collection("presences");
+            presence = await presencesColl.findOne(
+                { $or: [
+                    {
+                        name: { $regex: query, '$options': 'i' }
+                    },
+                    {
+                        "metadata.service": { $regex: query, '$options': 'i' }
+                    },
+                    {
+                        "metadata.url": { $regex: query, '$options': 'i' }
+                    },
+                    {
+                        "metadata.altnames": { $regex: query, '$options': 'i' }
+                    }
+                ]
+            })
+        } catch(e){
+            embed = new Discord.MessageEmbed({
+                title: "Invalid input. Please use words and numbers only.",
+                color: "#ff0000"
+            })
+               
+            return message.channel.send(embed)
+            .then(msg => msg.delete({ timeout: 15 * 1000 }));
+        }
     }
-
     embed = new Discord.MessageEmbed({
         title,
         description: "<a:loading:521018476480167937> **Loading....**",
@@ -50,22 +53,23 @@ module.exports.run = async (message: Discord.Message, args: Array<string>) => {
 
             if (query.length < 1) {            
                 usage = results.length.toString();
+                embed.setFooter(`You can also use  \|\| ${config.prefix}usage [Presence name] \|\|  to search for a specific one.`);
             } else {
-                if (presance == undefined){
-                    embed.setDescription(`Couldn't find a Preasance called: \"${query}\" or there are no active users.`);
+                if (presence == undefined){
+                    embed.setDescription(`Couldn't find a Presence called: \"${query}\".`);
                     return msg.edit(embed).then(msg => msg.delete({ timeout: 15 * 1000 }));
                 }
-                embed.setTitle(`Found a Presance called: **${presance.name}**`)
-                usage = prepareUsage(results)[presance.name];
+                embed.setTitle(`Found a Presence called: \"${presence.name}\"`)
+                usage = prepareUsage(results)[presence.name];
             };
         }
         catch(e) {
             console.error(e);
-            embed.setDescription("There was an error getting data. Try again later. (NO DATABASE RESPONSE)");
+            embed.setDescription("There was an error getting data. Try again later.");
             return msg.edit(embed).then(msg => msg.delete({ timeout: 15 * 1000 }));
         };
         
-        embed.setDescription(`Currently there are: ${usage} users.`);
+        embed.setDescription(`Currently there are: ${usage == undefined ? 0 : usage} users.`);
 		msg.edit(embed).then(msg => msg.delete({ timeout: 15 * 1000 }));
     });
     if (!message.deleted) message.delete();
@@ -73,7 +77,7 @@ module.exports.run = async (message: Discord.Message, args: Array<string>) => {
 
 module.exports.config = {
 	name: "usage",
-	description: "Get current usage / user list of PreMiD or any preasence! (to check Preasnce users type the name of it after the command!)"
+	description: "Get current usage / user count of PreMiD or any Presence!"
 };
 
 function prepareUsage(science: any[]){
