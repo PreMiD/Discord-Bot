@@ -77,7 +77,7 @@ module.exports.run = async (message: Discord.Message, args: Array<string>) => {
 
 module.exports.config = {
 	name: "usage",
-	description: "Get current usage / user list of PreMiD or any Presence!"
+	description: "Get current usage / user count of PreMiD or any Presence!"
 };
 
 function prepareUsage(science: any[]){
