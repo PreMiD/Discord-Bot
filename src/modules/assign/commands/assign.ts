@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import assignee from "../assignee";
-import assignRolesFile from "../assignRoles";
 import config from "../../../config";
+import assignRolesFile from "../assignRoles";
 
 let embed: Discord.MessageEmbed;
 
@@ -9,22 +9,31 @@ module.exports.run = async (
 	message: Discord.Message,
 	params: Array<String>
 ) => {
-	let roleCheck: { movieNight: string; minecraft?: string;
-    linuxTest?: string; vacation?: string; } = assignRolesFile.everyone;
+	let roleCheck: { movieNight?: string; minecraft?: string;
+	linuxTest?: string; vacation?: string; } = {};
+	
+	roleCheck.movieNight = assignRolesFile.everyone.movieNight;
 	
 	if (message.member.hasPermission("ADMINISTRATOR")) {
 		roleCheck.minecraft = assignRolesFile.betaAndAlpha.minecraft;
 		roleCheck.vacation = assignRolesFile.staff.vacation;
 		roleCheck.linuxTest = assignRolesFile.linuxMaintainer.linuxTest;
 	} else {
-		if (message.member.roles.cache.has(assignee.alphaRole || assignee.betaRole))
+		if (message.member.roles.cache.has(assignee.alphaRole))
 		{
 			roleCheck.minecraft = assignRolesFile.betaAndAlpha.minecraft;
 		}
+
+		if (message.member.roles.cache.has(assignee.betaRole))
+		{
+			roleCheck.minecraft = assignRolesFile.betaAndAlpha.minecraft;
+		}
+
 		if (message.member.roles.cache.has(assignee.staff))
 		{
 			roleCheck.vacation = assignRolesFile.staff.vacation;
 		}
+		
 		if (message.member.roles.cache.has(assignee.LinuxMaintainer))
 		{
 			roleCheck.linuxTest = assignRolesFile.linuxMaintainer.linuxTest;
@@ -40,9 +49,9 @@ module.exports.run = async (
 		embed = new Discord.MessageEmbed({
 			title: "Assignable Roles",
 			description: `*You can assign these roles by typing
-		\`\`${config.prefix}assign <roleName> [optianlly tag a member to give the role to]\`\`*
+			\`\`${config.prefix}assign <roleName> [optianlly tag a member to give the role to]\`\`*
 
-		${assignRoles.map(r => `**${r.name}**`).join(", ")}`,
+			${assignRoles.map(r => `**${r.name}**`).join(", ")}`,
 			color: "#7289DA"
 		});
 
@@ -72,7 +81,7 @@ module.exports.run = async (
 			.then(msg => (msg as Discord.Message).delete({ timeout: 10 * 1000 }));
 		return;
 	}
-	
+
 	let asRole = assignRole[0];
 	const mentioned = message.mentions.members.first();
 
