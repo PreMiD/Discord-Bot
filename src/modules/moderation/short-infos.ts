@@ -58,7 +58,7 @@ export default {
 	donate: {
 		title: "Donate to PreMiD's Development",
 		color: "RANDOM",
-		aliases: ["maketimeraarich", "gaytim", "serverboost", "boost", "nitroboost"],
+		aliases: ["maketimeraarich", "gaytim", "serverboost", "boost", "nitroboost", "adsensewasntenough", "dontskipads", "adblockisasin"],
 		description:
 			"Want to support PreMiD's Development? Great! You can do so by boosting our discord server, which will get you a special role, or you can support our [Patreon](https://patreon.com/Timeraa) or donate via [PayPal](https://www.paypal.com/paypalme2/TimeraaDEV)!",
 		footer: false
@@ -77,6 +77,14 @@ export default {
 		aliases: ["suggestpresence"],
 		description:
 			"If you would like to suggest a presence, you can head over to our github repository and create a new issue with the [Presence Request](https://github.com/PreMiD/Presences/issues/new?template=service_request.md) template! If you would like to make a presence yourself, you can find more information on [Development Docs](https://docs.premid.app/dev/presence)",
+		footer: false
+	},
+	allowed: {
+		title: "PreMiD and Discord",
+		color: "RANDOM",
+		aliases: ["legit", "legal", "legality"],
+		description: 
+			"We are fully allowed by Discord and they themselves confirmed that [here.](https://twitter.com/discord/status/1233704070390669312)",
 		footer: false
 	}
 };

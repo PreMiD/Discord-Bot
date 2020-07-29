@@ -7,17 +7,10 @@ module.exports.run = async (
 ) => {
 	message.delete();
 
-	if (params.length === 0) {
-		(await message.reply("Please enter a name to search.")).delete({
-			timeout: 5 * 1000
-		});
-		return;
-	}
-
-	if (params[0].toLowerCase() === "list") {
+if (params[0] == undefined || params[0].length == 0 || params[0].toLowerCase() == "list") {
 		message.reply(
 			new Discord.MessageEmbed({
-				title: "Shortcut list",
+				title: "All possible options for this command:",
 				color: "RANDOM",
 				description: client.infos
 					.keyArray()
@@ -65,6 +58,5 @@ module.exports.run = async (
 
 module.exports.config = {
 	name: "info",
-	description: "Shortcut to .cache.get things easier.",
-	permLevel: 1
+	description: "Shortcuts to get things done faster."
 };
