@@ -3,5 +3,5 @@ export default {
 	betaRole: "591284574823120909",
 	alphaRole: "694481247564595211",
 	staffHead: "685969048399249459",
-	LinuxMaintainer: "691393583189721088"
+	linuxMaintainer: "691393583189721088"
 };
