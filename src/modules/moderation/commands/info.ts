@@ -7,30 +7,23 @@ module.exports.run = async (
 ) => {
 	message.delete();
 
-	if (params.length === 0) {
-		(await message.reply("Please enter a name to search.")).delete({
-			timeout: 5 * 1000
-		});
-		return;
-	}
-
-	if (params[0].toLowerCase() === "list") {
-		message.reply(
-			new Discord.MessageEmbed({
-				title: "Shortcut list",
-				color: "RANDOM",
-				description: client.infos
-					.keyArray()
-					.map(k => {
-						return "``" + k + "``";
-					})
-					.join(", "),
-				footer: {
-					text: message.author.tag,
-					iconURL: message.author.avatarURL()
-				}
-			})
-		);
+if (params[0] == undefined || params[0].length == 0 || params[0].toLowerCase() == "list") {
+		const embed = new Discord.MessageEmbed({
+			title: "All possible options for this command:",
+			color: "RANDOM",
+			description: client.infos
+				.keyArray()
+				.map(k => {
+					
+					return `**${client.infos.get(k).title}**:\n\`\`${k}\`\`, \`\`${client.infos.get(k).aliases.join("\`\`, \`\`")}\`\`` ;
+				})
+				.join("\n\n "),
+			footer: {
+				text: message.author.tag,
+				iconURL: message.author.avatarURL()
+			}
+		})
+		message.reply(embed);
 		return;
 	}
 
@@ -65,6 +58,5 @@ module.exports.run = async (
 
 module.exports.config = {
 	name: "info",
-	description: "Shortcut to .cache.get things easier.",
-	permLevel: 1
+	description: "Shortcuts to get things done faster."
 };
