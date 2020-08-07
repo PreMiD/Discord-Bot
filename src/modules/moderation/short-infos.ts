@@ -58,7 +58,7 @@ export default {
 	donate: {
 		title: "Donate to PreMiD's Development",
 		color: "RANDOM",
-		aliases: ["maketimeraarich", "gaytim", "serverboost", "boost", "nitroboost"],
+		aliases: ["maketimeraarich", "gaytim", "serverboost", "boost", "nitroboost", "adsensewasntenough", "dontskipads", "adblockisasin"],
 		description:
 			"Want to support PreMiD's Development? Great! You can do so by boosting our discord server, which will get you a special role, or you can support our [Patreon](https://patreon.com/Timeraa) or donate via [PayPal](https://www.paypal.com/paypalme2/TimeraaDEV)!",
 		footer: false
@@ -77,6 +77,21 @@ export default {
 		aliases: ["suggestpresence"],
 		description:
 			"If you would like to suggest a presence, you can head over to our github repository and create a new issue with the [Presence Request](https://github.com/PreMiD/Presences/issues/new?template=service_request.md) template! If you would like to make a presence yourself, you can find more information on [Development Docs](https://docs.premid.app/dev/presence)",
+		footer: false
+	},
+	allowed: {
+		title: "PreMiD and Discord",
+		color: "RANDOM",
+		aliases: ["legit", "legal", "legality"],
+		description: 
+			"We are fully allowed by Discord and they themselves confirmed that [here.](https://twitter.com/discord/status/1233704070390669312)",
+		footer: false
+	},
+	unidentifieddev: {
+		title: "Allow apps from unidentified developer",
+		color: "RANDOM",
+		aliases: [ "macdev", "unidentifieddeveloper", "undev", "ud"],
+		description: "1. Open System Preferences.\n2. Go to the Security & Privacy tab.\n3. Click on the lock and enter your password so you can make changes.\n4. Change the setting for 'Allow apps downloaded from' to 'App Store and identified developers' from just 'App Store'.",
 		footer: false
 	}
 };
