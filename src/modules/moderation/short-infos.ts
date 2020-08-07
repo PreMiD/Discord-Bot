@@ -86,5 +86,12 @@ export default {
 		description: 
 			"We are fully allowed by Discord and they themselves confirmed that [here.](https://twitter.com/discord/status/1233704070390669312)",
 		footer: false
+	},
+	unidentifieddev: {
+		title: "Allow apps from unidentified developer",
+		color: "RANDOM",
+		aliases: [ "macdev", "unidentifieddeveloper", "undev", "ud"],
+		description: "1. Open System Preferences.\n2. Go to the Security & Privacy tab.\n3. Click on the lock and enter your password so you can make changes.\n4. Change the setting for 'Allow apps downloaded from' to 'App Store and identified developers' from just 'App Store'.",
+		footer: false
 	}
 };

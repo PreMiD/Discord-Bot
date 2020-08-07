@@ -8,22 +8,22 @@ module.exports.run = async (
 	message.delete();
 
 if (params[0] == undefined || params[0].length == 0 || params[0].toLowerCase() == "list") {
-		message.reply(
-			new Discord.MessageEmbed({
-				title: "All possible options for this command:",
-				color: "RANDOM",
-				description: client.infos
-					.keyArray()
-					.map(k => {
-						return "``" + k + "``";
-					})
-					.join(", "),
-				footer: {
-					text: message.author.tag,
-					iconURL: message.author.avatarURL()
-				}
-			})
-		);
+		const embed = new Discord.MessageEmbed({
+			title: "All possible options for this command:",
+			color: "RANDOM",
+			description: client.infos
+				.keyArray()
+				.map(k => {
+					
+					return `**${client.infos.get(k).title}**:\n\`\`${k}\`\`, \`\`${client.infos.get(k).aliases.join("\`\`, \`\`")}\`\`` ;
+				})
+				.join("\n\n "),
+			footer: {
+				text: message.author.tag,
+				iconURL: message.author.avatarURL()
+			}
+		})
+		message.reply(embed);
 		return;
 	}
 
