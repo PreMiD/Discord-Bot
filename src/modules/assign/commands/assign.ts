@@ -12,31 +12,32 @@ module.exports.run = async (
 	let roleCheck: { movieNight?: string; minecraft?: string;
 	linuxTest?: string; vacation?: string; } = {};
 	
-	roleCheck.movieNight = assignRolesFile.everyone.movieNight;
+	roleCheck.movieNight = assignRolesFile.movieNight;
 	
-	if (message.member.hasPermission("ADMINISTRATOR")) {
-		roleCheck.minecraft = assignRolesFile.betaAndAlpha.minecraft;
-		roleCheck.vacation = assignRolesFile.staff.vacation;
-		roleCheck.linuxTest = assignRolesFile.linuxMaintainer.linuxTest;
+	if (message.member.hasPermission("ADMINISTRATOR")
+	 || message.member.roles.cache.has(assignee.staffHead)) {
+		roleCheck.minecraft = assignRolesFile.minecraft;
+		roleCheck.vacation = assignRolesFile.vacation;
+		roleCheck.linuxTest = assignRolesFile.linuxTest;
 	} else {
-		if (message.member.roles.cache.has(assignee.alphaRole))
+		if (assignee.alphaRole)
 		{
-			roleCheck.minecraft = assignRolesFile.betaAndAlpha.minecraft;
+			roleCheck.minecraft = assignRolesFile.minecraft;
 		}
 
 		if (message.member.roles.cache.has(assignee.betaRole))
 		{
-			roleCheck.minecraft = assignRolesFile.betaAndAlpha.minecraft;
+			roleCheck.minecraft = assignRolesFile.minecraft;
 		}
 
 		if (message.member.roles.cache.has(assignee.staff))
 		{
-			roleCheck.vacation = assignRolesFile.staff.vacation;
+			roleCheck.vacation = assignRolesFile.vacation;
 		}
-		
-		if (message.member.roles.cache.has(assignee.LinuxMaintainer))
+
+		if (message.member.roles.cache.has(assignee.linuxMaintainer))
 		{
-			roleCheck.linuxTest = assignRolesFile.linuxMaintainer.linuxTest;
+			roleCheck.linuxTest = assignRolesFile.linuxTest;
 		}
 	}
 
@@ -88,11 +89,10 @@ module.exports.run = async (
 	let userToAddRole = message.member;
 
 	if (mentioned != undefined){
-		if (message.member.hasPermission("ADMINISTRATOR") 
-			|| (asRole.id == assignRolesFile.linuxMaintainer.linuxTest
-			&& message.member.roles.cache.has(assignee.LinuxMaintainer))
-			|| (asRole.id == assignRolesFile.staff.vacation
-			&& message.member.roles.cache.has(assignee.staffHead))
+		if (message.member.hasPermission("ADMINISTRATOR")
+			|| message.member.roles.cache.has(assignee.staffHead) 
+			|| (asRole.id == assignRolesFile.linuxTest
+			&& message.member.roles.cache.has(assignee.linuxMaintainer))
 		){
 			userToAddRole = mentioned;
 		} else {
@@ -104,7 +104,7 @@ module.exports.run = async (
 				color: "#ff5050"
 			});
 		
-			message.channel.send(embed).then(msg => {
+			return message.channel.send(embed).then(msg => {
 				message.delete({ timeout: 10 * 1000 });
 				(msg as Discord.Message).delete({ timeout: 10 * 1000 });
 			});
@@ -136,6 +136,8 @@ module.exports.run = async (
 		message.delete({ timeout: 10 * 1000 });
 		(msg as Discord.Message).delete({ timeout: 10 * 1000 });
 	});
+
+	if (!message.deleted) message.delete()
 };
 
 module.exports.config = {
