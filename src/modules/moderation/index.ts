@@ -3,8 +3,6 @@ import { client } from "../..";
 import roles from "../../roles";
 import { pmdDB } from "../../database/client";
 
-export let blacklistedWords: string[] = [];
-
 (async () => {
 	let coll = pmdDB.collection("mutes"),
 		mutes = await coll.find({ mutedUntil: { $exists: true } }).toArray();
@@ -24,16 +22,4 @@ export let blacklistedWords: string[] = [];
 		if (mute.mutedUntil - Date.now() <= 0) unmute(mute.userId);
 		else setTimeout(() => unmute(mute.userId), mute.mutedUntil - Date.now());
 	});
-
-	updateBlacklist();
-	setInterval(updateBlacklist, 60 * 1000);
 })();
-
-async function updateBlacklist() {
-	blacklistedWords = (
-		await pmdDB
-			.collection("blacklist")
-			.find({}, { projection: { _id: false, word: true } })
-			.toArray()
-	).map(w => w.word);
-}

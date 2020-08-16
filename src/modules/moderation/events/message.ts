@@ -1,17 +1,9 @@
 import * as Discord from "discord.js";
 import { client } from "../../..";
-import { blacklistedWords } from "..";
 
 module.exports = async (message: Discord.Message) => {
 	//* Ignore bots
 	if (message.author.bot) return;
-
-	if (
-		client.elevation(message.author.id) === 0 &&
-		blacklistedWords.find(w => message.content.includes(w))
-	) {
-		message.delete();
-	}
 
 	if (await checkInvite(message.content)) {
 		message
