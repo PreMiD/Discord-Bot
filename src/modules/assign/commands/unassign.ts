@@ -20,7 +20,7 @@ module.exports.run = async (
 		roleCheck.vacation = assignRolesFile.vacation;
 		roleCheck.linuxTest = assignRolesFile.linuxTest;
 	} else {
-		if (assignee.alphaRole)
+		if (message.member.roles.cache.has(assignee.alphaRole))
 		{
 			roleCheck.minecraft = assignRolesFile.minecraft;
 		}
@@ -105,10 +105,8 @@ module.exports.run = async (
 				color: "#ff5050"
 			});
 		
-			return message.channel.send(embed).then(msg => {
-				message.delete({ timeout: 10 * 1000 });
-				(msg as Discord.Message).delete({ timeout: 10 * 1000 });
-			});
+			return message.channel.send(embed)
+			.then(msg => (msg as Discord.Message).delete({ timeout: 10 * 1000 }));
 		}
 	}
 
@@ -133,10 +131,8 @@ module.exports.run = async (
 			color: "#50ff50"
 		});
 	}
-	message.channel.send(embed).then(msg => {
-		message.delete({ timeout: 10 * 1000 });
-		(msg as Discord.Message).delete({ timeout: 10 * 1000 });
-	});
+	message.channel.send(embed)
+	.then(msg => (msg as Discord.Message).delete({ timeout: 10 * 1000 }));
 
 	if (!message.deleted) message.delete()
 };

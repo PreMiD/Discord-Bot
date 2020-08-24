@@ -20,21 +20,18 @@ module.exports.run = async (
 		roleCheck.vacation = assignRolesFile.vacation;
 		roleCheck.linuxTest = assignRolesFile.linuxTest;
 	} else {
-		if (assignee.alphaRole)
+		if (message.member.roles.cache.has(assignee.alphaRole))
 		{
 			roleCheck.minecraft = assignRolesFile.minecraft;
 		}
-
 		if (message.member.roles.cache.has(assignee.betaRole))
 		{
 			roleCheck.minecraft = assignRolesFile.minecraft;
 		}
-
 		if (message.member.roles.cache.has(assignee.staff))
 		{
 			roleCheck.vacation = assignRolesFile.vacation;
 		}
-
 		if (message.member.roles.cache.has(assignee.linuxMaintainer))
 		{
 			roleCheck.linuxTest = assignRolesFile.linuxTest;
@@ -45,7 +42,7 @@ module.exports.run = async (
 	.map(r => message.guild.roles.cache.get(r))
 	.filter(v => v != undefined);
 
-	if (params.length == 0) {
+	if (params == undefined || params.length == 0) {
 		message.delete();
 		embed = new Discord.MessageEmbed({
 			title: "Assignable Roles",
@@ -104,10 +101,8 @@ module.exports.run = async (
 				color: "#ff5050"
 			});
 		
-			return message.channel.send(embed).then(msg => {
-				message.delete({ timeout: 10 * 1000 });
-				(msg as Discord.Message).delete({ timeout: 10 * 1000 });
-			});
+			return message.channel.send(embed)
+			.then(msg => (msg as Discord.Message).delete({ timeout: 10 * 1000 }));
 		}
 	}
 
@@ -132,10 +127,8 @@ module.exports.run = async (
 		description,
 		color
 	});
-	message.channel.send(embed).then(msg => {
-		message.delete({ timeout: 10 * 1000 });
-		(msg as Discord.Message).delete({ timeout: 10 * 1000 });
-	});
+	message.channel.send(embed)
+	.then(msg => (msg as Discord.Message).delete({ timeout: 10 * 1000 }));
 
 	if (!message.deleted) message.delete()
 };
