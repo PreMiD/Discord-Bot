@@ -4,8 +4,8 @@
 	"repository": "https://github.com/PreMiD/Discord-Bot",
 	"version": "2.4.0",
 	"scripts": {
-		"start": "node index",
-		"compile": "rimraf dist && yarn --silent && tsc && devScript --copyOnly",
+		"start": "cd dist && node index",
+		"compile": "yarn --silent && rimraf dist && tsc && devScript --copyOnly",
 		"dev": "devScript"
 	},
 	"license": "MPL-2.0",
