@@ -14,5 +14,5 @@ jobs:
           username: Timeraa
           password: ${{ secrets.GH_TOKEN }}
           registry: docker.pkg.github.com
-          repository: premid/bot/bot
+          repository: premid/discord-bot/discord-bot
           tags: latest
