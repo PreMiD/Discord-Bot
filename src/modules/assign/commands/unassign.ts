@@ -10,35 +10,36 @@ module.exports.run = async (
 	params: Array<String>
 ) => {
 	let roleCheck: { movieNight?: string; minecraft?: string;
-		linuxTest?: string; vacation?: string; } = {};
+	linuxTest?: string; vacation?: string; } = {};
 		
-		roleCheck.movieNight = assignRolesFile.everyone.movieNight;
+	roleCheck.movieNight = assignRolesFile.movieNight;
 		
-		if (message.member.hasPermission("ADMINISTRATOR")) {
-			roleCheck.minecraft = assignRolesFile.betaAndAlpha.minecraft;
-			roleCheck.vacation = assignRolesFile.staff.vacation;
-			roleCheck.linuxTest = assignRolesFile.linuxMaintainer.linuxTest;
-		} else {
-			if (message.member.roles.cache.has(assignee.alphaRole))
-			{
-				roleCheck.minecraft = assignRolesFile.betaAndAlpha.minecraft;
-			}
-	
-			if (message.member.roles.cache.has(assignee.betaRole))
-			{
-				roleCheck.minecraft = assignRolesFile.betaAndAlpha.minecraft;
-			}
-	
-			if (message.member.roles.cache.has(assignee.staff))
-			{
-				roleCheck.vacation = assignRolesFile.staff.vacation;
-			}
-			
-			if (message.member.roles.cache.has(assignee.LinuxMaintainer))
-			{
-				roleCheck.linuxTest = assignRolesFile.linuxMaintainer.linuxTest;
-			}
+	if (message.member.hasPermission("ADMINISTRATOR")
+	 || message.member.roles.cache.has(assignee.staffHead)) {
+		roleCheck.minecraft = assignRolesFile.minecraft;
+		roleCheck.vacation = assignRolesFile.vacation;
+		roleCheck.linuxTest = assignRolesFile.linuxTest;
+	} else {
+		if (assignee.alphaRole)
+		{
+			roleCheck.minecraft = assignRolesFile.minecraft;
 		}
+
+		if (message.member.roles.cache.has(assignee.betaRole))
+		{
+			roleCheck.minecraft = assignRolesFile.minecraft;
+		}
+
+		if (message.member.roles.cache.has(assignee.staff))
+		{
+			roleCheck.vacation = assignRolesFile.vacation;
+		}
+
+		if (message.member.roles.cache.has(assignee.linuxMaintainer))
+		{
+			roleCheck.linuxTest = assignRolesFile.linuxTest;
+		}
+	}
 	
 
 	let assignRoles: Discord.Role[] = Object.values(roleCheck)
@@ -89,27 +90,25 @@ module.exports.run = async (
 	let userToAddRole = message.member;
 
 	if (mentioned != undefined){
-		if (message.member.hasPermission("ADMINISTRATOR") 
-			|| (asRole.id == assignRolesFile.linuxMaintainer.linuxTest
-			&& message.member.roles.cache.has(assignee.LinuxMaintainer) 
-			|| (message.member.roles.cache.has(assignee.staffHead)
-			&& asRole.id == assignRolesFile.staff.vacation)
-		)){
+		if (message.member.hasPermission("ADMINISTRATOR")
+			|| message.member.roles.cache.has(assignee.staffHead) 
+			|| (asRole.id == assignRolesFile.linuxTest
+			&& message.member.roles.cache.has(assignee.linuxMaintainer))
+		){
 			userToAddRole = mentioned;
 		} else {
 			message.react("❌");
-			let description = `You do not have permission to remove the role to user **${mentioned.displayName}**.`;
+			let description = `You do not have permission to add the role to user **${mentioned.displayName}**.`;
 			embed = new Discord.MessageEmbed({
 				title: "Assign",
 				description,
 				color: "#ff5050"
 			});
 		
-			message.channel.send(embed).then(msg => {
+			return message.channel.send(embed).then(msg => {
 				message.delete({ timeout: 10 * 1000 });
 				(msg as Discord.Message).delete({ timeout: 10 * 1000 });
 			});
-			return ;
 		}
 	}
 
@@ -138,9 +137,11 @@ module.exports.run = async (
 		message.delete({ timeout: 10 * 1000 });
 		(msg as Discord.Message).delete({ timeout: 10 * 1000 });
 	});
+
+	if (!message.deleted) message.delete()
 };
 
 module.exports.config = {
 	name: "unassign",
-	description: "Unassign yourself roles."
+	description: "Unassign roles from yourself or other member."
 };
