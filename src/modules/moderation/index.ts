@@ -1,7 +1,7 @@
-import { unmute } from "./commands/warn";
 import { client } from "../..";
-import roles from "../../roles";
 import { pmdDB } from "../../database/client";
+import roles from "../../roles";
+import { unmute } from "./commands/warn";
 
 export let blacklistedWords: string[] = [];
 
@@ -35,5 +35,5 @@ async function updateBlacklist() {
 			.collection("blacklist")
 			.find({}, { projection: { _id: false, word: true } })
 			.toArray()
-	).map(w => w.word);
+	).map(w => w.word) as string[];
 }

@@ -1,7 +1,7 @@
-import roles from "../../roles";
 import { client } from "../..";
-import { info } from "../../util/debug";
 import { pmdDB } from "../../database/client";
+import roles from "../../roles";
+import { info } from "../../util/debug";
 
 const betaUserColl = pmdDB.collection("betaUsers"),
 	discordUsers = pmdDB.collection("discordUsers");
@@ -33,7 +33,7 @@ async function updateDiscordUsers() {
 }
 
 async function updateBetaUsers() {
-	const betaUsers = await betaUserColl
+	const betaUsers: any = await betaUserColl
 		.find({}, { projection: { _id: false } })
 		.toArray();
 

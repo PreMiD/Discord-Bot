@@ -1,8 +1,9 @@
 import * as Discord from "discord.js";
-import channels from "../../../channels";
+
+import { sortTickets } from "../";
 import { client } from "../../..";
+import channels from "../../../channels";
 import { pmdDB } from "../../../database/client";
-import { sortTickets } from "..";
 
 const coll = pmdDB.collection("tickets"),
 	circleFolder =
@@ -242,6 +243,7 @@ export class Ticket {
 		];
 		this.ticketMessage.edit(this.embed);
 
+		//@ts-ignore False types...
 		this.embed.fields.pop();
 		this.embed.footer = {
 			text: "p!close - Closes this ticket."
@@ -302,6 +304,7 @@ export class Ticket {
 
 		this.supporters.push(member);
 
+		//@ts-ignore False types...
 		this.embed.fields[0] = {
 			name: "Supporter",
 			value: this.supporters.join(", ")
@@ -310,6 +313,8 @@ export class Ticket {
 		this.ticketMessage.edit(this.embed);
 
 		let supportEmbed = Object.assign({}, this.embed);
+
+		//@ts-ignore False types...
 		supportEmbed.fields.pop();
 		supportEmbed.footer = {
 			text: "p!close - Closes this ticket."
@@ -341,6 +346,7 @@ export class Ticket {
 		if (this.supporters.find(s => s.id === member.id)) {
 			this.supporters = this.supporters.filter(s => s.id !== member.id);
 
+			//@ts-ignore False types...
 			this.embed.fields[0] = {
 				name: "Supporter",
 				value: this.supporters.toString()
@@ -348,6 +354,7 @@ export class Ticket {
 
 			this.ticketMessage.edit(this.embed);
 			let supportEmbed = Object.assign({}, this.embed);
+			//@ts-ignore False types...
 			supportEmbed.fields.pop();
 			supportEmbed.footer = {
 				text: "p!close - Closes this ticket."
