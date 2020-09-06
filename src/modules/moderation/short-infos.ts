@@ -7,12 +7,12 @@ export default {
 			"If you haven't read our troubleshooting page yet, please make sure you read everything carefully before creating a ticket. Check our troubleshooting page by clicking [here](https://docs.premid.app/en/troubleshooting) and see if anything in there will fix your issue. You can or you may continue to discuss more about it in your ticket after that.",
 		footer: false
 	},
-	betterdiscord: {
-		title: "Using BetterDiscord",
+	modifiedclient: {
+		title: "Using Modified Clients",
 		color: "FF0000",
-		aliases: ["bd", "bdiscord"],
+		aliases: ["bd", "bdiscord", "pc", "powercord", "modified", "betterdiscord"],
 		description:
-			"Using better Discord is an abuse of Discord ToS. If you want to keep using Discord, you have to follow them and make sure you're not breaking any of the rules Discord has decided to put. Even using BetterDiscord for themes, some customizations is not 'welcomed' in Discord. Your account could get banned just because of that and you can read Discord's official Tweet from [here](https://twitter.com/discordapp/status/908000828690182145).",
+			"Using a modified client is an abuse of Discord ToS. If you want to keep using Discord, you have to follow them and make sure you're not breaking any of the rules Discord has decided to put. Even using modified clients for themes, some customizations is not 'welcomed' in Discord. Your account could get banned just because of that and you can read Discord's official Tweet from [here](https://twitter.com/discordapp/status/908000828690182145).",
 		footer: false
 	},
 	creatingpresence: {
