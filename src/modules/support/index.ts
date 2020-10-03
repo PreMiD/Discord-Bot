@@ -9,8 +9,11 @@ export async function sortTickets() {
 	info("Sorting ticket channels...");
 	const ticketCat = client.guilds.cache
 			.first()
-			.channels.cache.get(channels.ticketCategory) as CategoryChannel,
-		positions = ticketCat.children
+			.channels.cache.get(channels.ticketCategory) as CategoryChannel;
+
+	if(!ticketCat) return;
+
+	const positions = ticketCat.children
 			.filter(ch => ch.name !== "tickets")
 			.sort((fC, sC) => {
 				return parseInt(fC.name as string) > parseInt(sC.name as string)
@@ -20,7 +23,6 @@ export async function sortTickets() {
 
 	for (let i = 0; i < positions.size; i++) {
 		const channel = positions.array()[i];
-
 		if (channel.position !== i + 1) await channel.setPosition(i + 1);
 	}
 	success("Sorted ticket channels.");
@@ -36,8 +38,11 @@ client.once("ready", () => {
 async function checkOldTickets() {
 	const ticketCat = client.guilds.cache
 			.first()
-			.channels.cache.get(channels.ticketCategory) as CategoryChannel,
-		ticketsWithoutNotification = await pmdDB
+			.channels.cache.get(channels.ticketCategory) as CategoryChannel;
+
+	if(!ticketCat) return;
+
+	const ticketsWithoutNotification = await pmdDB
 			.collection("tickets")
 			.find({
 				lastUserMessage: { $lte: Date.now() - 5 * 24 * 60 * 60 * 1000 },

@@ -45,9 +45,7 @@ export class Ticket {
 		this.status = ticket.status;
 
 		try {
-			this.ticketMessage = await (client.guilds.cache
-				.first()
-				.channels.cache.get(
+			this.ticketMessage = await (client.channels.cache.get(channels.ticketCategory).guild.channels.cache.get(
 					channels.ticketChannel
 				) as Discord.TextChannel).messages.fetch(ticket.ticketMessage);
 			this.embed = this.ticketMessage.embeds[0];
@@ -56,30 +54,26 @@ export class Ticket {
 		}
 
 		if (this.status === 1) {
-			this.channel = client.guilds.cache
-				.first()
-				.channels.cache.get(ticket.supportChannel) as Discord.TextChannel;
+			this.channel = client.channels.cache.get(channels.ticketCategory).guild.channels.cache
+				.get(ticket.supportChannel) as Discord.TextChannel;
 			this.channelMessage = await this.channel?.messages.fetch(
 				ticket.supportEmbed
 			);
 			this.supporters = await Promise.all(
 				ticket.supporters.map((s: string) =>
-					client.guilds.cache.first().members.fetch(s)
+					client.channels.cache.get(channels.ticketCategory).guild.members.fetch(s)
 				)
 			);
 		}
 
 		if (ticket.attachmentMessage)
-			this.attachmentsMessage = await (client.guilds.cache
-				.first()
-				.channels.cache.get(
+			this.attachmentsMessage = await (client.channels.cache.get(channels.ticketCategory).guild.channels.cache
+				.get(
 					channels.ticketChannel
 				) as Discord.TextChannel).messages.fetch(ticket.attachmentMessage);
 
 		try {
-			this.user = await client.guilds.cache
-				.first()
-				.members.fetch(ticket.userId);
+			this.user = await client.channels.cache.get(channels.ticketCategory).guild.members.fetch(ticket.userId);
 		} catch (_) {}
 		return true;
 	}
@@ -115,16 +109,14 @@ export class Ticket {
 				.react("🚫")
 				.then(() =>
 					this.ticketMessage.react(
-						message.guild.emojis.cache.get("521018476870107156")
+						client.guilds.cache.get("493130730549805057").emojis.cache.get("521018476870107156")
 					)
 				);
 
 			if (message.attachments.size > 0)
-				this.attachmentsMessage = await (client.guilds.cache
-					.first()
-					.channels.cache.get(
+				this.attachmentsMessage = await (client.channels.cache.get(channels.ticketCategory).guild.channels.cache.get(
 						channels.ticketChannel
-					) as Discord.TextChannel).send(message.attachments.first());
+					) as Discord.TextChannel).send(`**${this.id}**:`, message.attachments.first());
 
 			message.author
 				.send(
@@ -145,7 +137,7 @@ export class Ticket {
 
 			message.delete().catch(() => {});
 		} catch (err) {
-			(message.guild.channels.cache.get(
+			(client.channels.cache.get(
 				channels.dev
 			) as Discord.TextChannel).send(
 				new Discord.MessageEmbed({
@@ -158,17 +150,11 @@ export class Ticket {
 
 	async accept(supporter: Discord.GuildMember) {
 		if (
-			(client.guilds.cache
-				.first()
-				.channels.resolve(channels.ticketCategory) as Discord.CategoryChannel)
+			(client.channels.resolve(channels.ticketCategory) as Discord.CategoryChannel)
 				.children.size >= 50
 		) {
 			(
-				await (client.guilds.cache
-					.first()
-					.channels.resolve(
-						channels.ticketChannel
-					) as Discord.TextChannel).send(
+				await (client.channels.resolve(channels.ticketChannel) as Discord.TextChannel).send(
 					`${supporter.toString()}, Can't accept ticket, the category limit has been reached.`
 				)
 			).delete({ timeout: 15 * 1000 });
@@ -197,13 +183,15 @@ export class Ticket {
 			"USE_EXTERNAL_EMOJIS"
 		];
 
-		this.channel = (await client.guilds.cache.first().channels.create(this.id, {
+		console.log(supporter.guild.id, this.user.id, supporter.id)
+		this.channel = (
+			//@ts-ignore
+			await client.channels.cache.get(channels.ticketCategory).guild.channels.create(this.id, {
 			parent: channels.ticketCategory,
 			type: "text",
-			//@ts-ignore
 			permissionOverwrites: [
 				{
-					id: client.guilds.cache.first().id,
+					id: supporter.guild.id,
 					deny: ["VIEW_CHANNEL"]
 				},
 				{
