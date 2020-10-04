@@ -7,13 +7,14 @@ import { pmdDB } from "../../../database/client";
 
 const coll = pmdDB.collection("tickets"),
 	circleFolder =
-		"https://raw.githubusercontent.com/PreMiD/Discord-Bot/master/.discord/";
+		"https://github.com/PreMiD/Discord-Bot/blob/main/.discord/";
 
 let ticketCount = 0;
 
 export class Ticket {
 	id: string;
 	status: number;
+	ticketContent: string;
 
 	ticketMessage: Discord.Message;
 	user: Discord.GuildMember;
@@ -86,10 +87,12 @@ export class Ticket {
 
 			this.id = ticketCount.toString().padStart(5, "0");
 
+			this.ticketContent = message.cleanContent;
+
 			this.embed = {
 				author: {
 					name: `Ticket#${this.id} [OPEN]`,
-					iconURL: `${circleFolder}green_circle.png`
+					iconURL: `${circleFolder}green_circle.png?raw=true`
 				},
 				description: message.cleanContent,
 				footer: {
@@ -119,9 +122,7 @@ export class Ticket {
 					) as Discord.TextChannel).send(`**${this.id}**:`, message.attachments.first());
 
 			message.author
-				.send(
-					`Your ticket \`\`#${this.id}\`\` has been submitted and will be answered shortly. Please be patient. Thank you!`
-				)
+				.send(`Your ticket \`\`#${this.id}\`\` has been submitted and will be answered shortly.`)
 				.catch(() => {});
 
 			coll.insertOne({
@@ -167,7 +168,7 @@ export class Ticket {
 		this.embed.author = {
 			name: `Ticket#${this.id} [PENDING]`,
 			iconURL:
-				"https://raw.githubusercontent.com/PreMiD/Discord-Bot/master/.discord/yellow_circle.png"
+				"https://github.com/PreMiD/Discord-Bot/blob/main/.discord/yellow_circle.png?raw=true"
 		};
 		this.embed.color = "#f4dd1a";
 
@@ -183,7 +184,6 @@ export class Ticket {
 			"USE_EXTERNAL_EMOJIS"
 		];
 
-		console.log(supporter.guild.id, this.user.id, supporter.id)
 		this.channel = (
 			//@ts-ignore
 			await client.channels.cache.get(channels.ticketCategory).guild.channels.create(this.id, {
@@ -202,19 +202,19 @@ export class Ticket {
 					id: supporter.id,
 					allow: channelPerms
 				}
-			].concat(
-				(
-					await pmdDB
-						.collection("userSettings")
-						.find({ seeAllTickets: true })
-						.toArray()
-				).map(uSett => {
-					return {
-						id: uSett.userId,
-						allow: channelPerms
-					};
-				})
-			)
+			]//.concat(
+			// 	(
+			// 		await pmdDB
+			// 			.collection("userSettings")
+			// 			.find({ seeAllTickets: true })
+			// 			.toArray()
+			// 	).map(uSett => {
+			// 		return {
+			// 			id: uSett.userId,
+			// 			allow: channelPerms
+			// 		};
+			// 	})
+			// )
 		})) as Discord.TextChannel;
 
 		this.embed.fields = [
@@ -259,19 +259,44 @@ export class Ticket {
 	}
 
 	async close(closer?: Discord.GuildMember, reason?: string) {
-		if (reason)
-			this.user
-				.send(
-					`Your Ticket \`\`#${this.id}\`\` has been closed. Reason:\n\n*\`\`${reason}\`\`*`
-				)
-				.catch(() => {});
-
+		this.user
+			.send(`Your Ticket \`\`#${this.id}\`\` has been closed by **${closer.user.tag}**!. Reason: \`\`${reason || "Not Specified"}\`\``).catch(() => {});
+		client.channels.cache.get(channels.ticketLogs)
+			// @ts-ignore
+			.send({ embed: {
+				author: {
+					name: `Ticket#${this.id} [CLOSED]`,
+					iconURL: "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/red_circle.png?raw=true"
+				},
+				color: "#b52222",
+				description: `${this.embed.description}`,
+				fields: [
+					{
+						name: `Opened By`,
+						value: this.user.user.tag,
+						inline: true
+					},
+					{
+						name: `Closed By`,
+						value: closer.user.tag,
+						inline: true
+					},
+					{name: `​`, value: `​`, inline: true},
+					{
+						name: `Reason`,
+						value: reason || "Not Specified",
+						inline: true
+					},
+					{
+						name: `Supporter(s)`,
+						value: this.supporters,
+						inline: true
+					}
+				]
+			}})
 		if (this.embed.thumbnail) delete this.embed.thumbnail;
 		delete this.embed.fields;
-
-		if (this.attachmentsMessage && this.attachmentsMessage.deletable)
-			this.attachmentsMessage.delete();
-
+		if (this.attachmentsMessage && this.attachmentsMessage.deletable) this.attachmentsMessage.delete();
 		if (this.ticketMessage.deletable) this.ticketMessage.delete();
 		if (this.channel.deletable) this.channel.delete();
 
