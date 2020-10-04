@@ -97,12 +97,7 @@ module.exports = async (message: Discord.Message) => {
 		return;
 	}
 
-	if (
-		ticketFound &&
-		message.content.startsWith(">>") &&
-		(message.member.roles.cache.has(roles.ticketManager) ||
-			message.member.permissions.has("ADMINISTRATOR"))
-	) {
+	if ( ticketFound && message.content.startsWith(">>") ) {
 		const args = message.content
 			.split(" ")
 			.slice(1, message.content.split(" ").length);
