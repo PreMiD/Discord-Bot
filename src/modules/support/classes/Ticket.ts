@@ -262,6 +262,7 @@ export class Ticket {
 	async close(closer?: Discord.GuildMember, reason?: string) {
 		this.user
 			.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``).catch(() => {});
+		
 		client.channels.cache.get(channels.ticketLogs)
 			// @ts-ignore
 			.send({ embed: {
