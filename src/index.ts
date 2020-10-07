@@ -89,5 +89,5 @@ process.on("SIGINT", async () => {
 });
 
 process.on("unhandledRejection", (err) => {
-	error(err.toString())
+	error(err.stack.toString())
 })

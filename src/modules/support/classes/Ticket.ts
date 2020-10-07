@@ -256,9 +256,9 @@ export class Ticket {
 		sortTickets();
 	}
 
-	async close(closer?: Discord.GuildMember, reason?: string) {
+	async close(closer?: any, reason?: string, dm = false) {
 		this.user
-			.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``).catch(() => {});
+			.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${dm ? closer.tag : closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``).catch(() => {});
 		
 		client.channels.cache.get(channels.ticketLogs)
 			// @ts-ignore
@@ -277,7 +277,7 @@ export class Ticket {
 					},
 					{
 						name: `Closed By`,
-						value: closer.user.tag,
+						value: dm ? closer.tag : closer.user.tag,
 						inline: true
 					},
 					{name: `​`, value: `​`, inline: true},
@@ -305,7 +305,7 @@ export class Ticket {
 				$unset: { supportChannel: "", supportEmbed: "" },
 				$set: {
 					status: 2,
-					closer: closer?.id || undefined
+					closer: closer?.id
 				}
 			}
 		);
