@@ -87,3 +87,7 @@ process.on("SIGINT", async () => {
 	await Promise.all([MongoClient.close(), client.destroy()]);
 	process.exit();
 });
+
+process.on("unhandledRejection", (err) => {
+	error(err.toString())
+})

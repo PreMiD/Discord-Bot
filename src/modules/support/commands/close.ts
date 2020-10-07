@@ -5,9 +5,10 @@ module.exports.run = async (
 	message: Discord.Message,
 	params: Array<string>
 ) => {
-	let t = new Ticket();
+	let t = new Ticket(), ticketFound;
 
-	const ticketFound = await t.fetch("channel", message.channel.id);
+	if(message.channel.type == "dm") ticketFound = await t.fetch("ticket", params[0].replace("#", ""))
+	else ticketFound = await t.fetch("channel", message.channel.id);
 
 	if (!ticketFound) return;
 

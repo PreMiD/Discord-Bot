@@ -167,8 +167,7 @@ export class Ticket {
 
 		this.embed.author = {
 			name: `Ticket#${this.id} [PENDING]`,
-			iconURL:
-				"https://github.com/PreMiD/Discord-Bot/blob/main/.discord/yellow_circle.png?raw=true"
+			iconURL: "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/yellow_circle.png?raw=true"
 		};
 		this.embed.color = "#f4dd1a";
 
@@ -189,7 +188,7 @@ export class Ticket {
 			await client.channels.cache.get(channels.ticketCategory).guild.channels.create(this.id, {
 			parent: channels.ticketCategory,
 			type: "text",
-			topic: `Available Commands:\np!attatch - Attatch assets to this ticket!\n>> Username - Add's a user to the ticket (Example '>> Callum')`,
+			topic: `Type 'p!ticketCommands' to view the available commands for this ticket.`,
 			permissionOverwrites: [
 				{
 					id: supporter.guild.id,
@@ -300,10 +299,10 @@ export class Ticket {
 		delete this.embed.fields;
 		if (this.attachmentsMessage && this.attachmentsMessage.deletable) this.attachmentsMessage.delete();
 		if (this.ticketMessage.deletable) this.ticketMessage.delete();
-		if (this.channel.deletable) this.channel.delete();
+	    if (this.channel && this.channel.deletable) this.channel.delete();
 
 		coll.findOneAndUpdate(
-			{ supportChannel: this.channel.id },
+			{ supportChannel: this.channel.id || 0 },
 			{
 				$unset: { supportChannel: "", supportEmbed: "" },
 				$set: {
