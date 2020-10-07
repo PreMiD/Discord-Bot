@@ -30,15 +30,13 @@ export class Ticket {
 
 	constructor() {}
 
-	async fetch(type: "ticket" | "message" | "channel", arg: any) {
+	async fetch(type: "ticket" | "message" | "channel" | "author", arg: any) {
 		const ticket =
 			type === "ticket"
 				? arg
-				: await coll.findOne(
-						type === "message"
-							? { ticketMessage: arg }
-							: { supportChannel: arg }
-				  );
+				: type === "author"
+				? await coll.findOne({ userId: arg })
+				: await coll.findOne(type === "message" ? { ticketMessage: arg } : { supportChannel: arg });
 
 		if (!ticket) return false;
 
