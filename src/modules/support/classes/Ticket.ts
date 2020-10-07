@@ -319,7 +319,7 @@ export class Ticket {
 		//@ts-ignore False types...
 		this.embed.fields[0] = {
 			name: "Supporter",
-			value: this.supporters.join(", ")
+			value: this.supporters.join(", ") || "None"
 		};
 
 		this.ticketMessage.edit(this.embed);
