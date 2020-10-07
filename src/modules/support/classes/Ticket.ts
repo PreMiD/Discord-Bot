@@ -135,6 +135,10 @@ export class Ticket {
 			});
 
 			message.delete().catch(() => {});
+			//@ts-ignore
+			client.channels.cache.get(channels.supportChannel).updateOverwrite(message.author.id, {
+				SEND_MESSAGES: false
+			})
 		} catch (err) {
 			(client.channels.cache.get(
 				channels.dev
@@ -298,6 +302,9 @@ export class Ticket {
 		if (this.attachmentsMessage && this.attachmentsMessage.deletable) this.attachmentsMessage.delete();
 		if (this.ticketMessage.deletable) this.ticketMessage.delete();
 	    if (this.channel && this.channel.deletable) this.channel.delete();
+		
+		//@ts-ignore
+		client.channels.cache.get(channels.supportChannel).permissionOverwrites.get(this.user.id).delete()
 
 		coll.findOneAndUpdate(
 			{ supportChannel: this.channel.id || 0 },
@@ -305,7 +312,7 @@ export class Ticket {
 				$unset: { supportChannel: "", supportEmbed: "" },
 				$set: {
 					status: 2,
-					closer: closer?.id
+					closer: closer.id
 				}
 			}
 		);

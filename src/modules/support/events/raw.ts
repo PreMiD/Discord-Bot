@@ -1,5 +1,6 @@
 import { client } from "../../..";
 import { Ticket } from "../classes/Ticket";
+import channels from "../../../channels";
 
 module.exports = async packet => {
 	if (!["MESSAGE_REACTION_ADD"].includes(packet.t)) return;
@@ -43,8 +44,10 @@ module.exports = async packet => {
 				)
 				.then(() => {
 					ticket.ticketMessage.delete();
-					if (typeof ticket.attachmentsMessage !== "undefined")
-						ticket.attachmentsMessage.delete();
+					client.channels.cache.get(channels.supportChannel)
+						//@ts-ignore
+						.permissionOverwrites.get(ticket.user.id).delete()
+					if (typeof ticket.attachmentsMessage !== "undefined") ticket.attachmentsMessage.delete();
 				})
 				.catch(() => {
 					ticket.ticketMessage.reactions
