@@ -44,9 +44,10 @@ module.exports = async packet => {
 				)
 				.then(() => {
 					ticket.ticketMessage.delete();
+					ticket.user.user.send(`<${packet.d.user_id}> has closed your ticket \`#${ticket.id}\``)
 					client.channels.cache.get(channels.supportChannel)
 						//@ts-ignore
-						.permissionOverwrites.get(ticket.user.id).delete()
+						.permissionOverwrites.get(ticket.user.id).delete();
 					if (typeof ticket.attachmentsMessage !== "undefined") ticket.attachmentsMessage.delete();
 				})
 				.catch(() => {

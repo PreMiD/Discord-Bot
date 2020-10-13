@@ -12,6 +12,7 @@ const coll = pmdDB.collection("tickets");
 let users: Array<string> = [];
 
 module.exports = async (message: Discord.Message) => {
+	
 	if (
 		message.author.bot ||
 		(message.channel.id !== channels.supportChannel &&

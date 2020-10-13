@@ -397,6 +397,12 @@ export class Ticket {
 		}
 	}
 
+	attach(arg, attachment = false) {
+		if(attachment) {
+		} else {
+		}
+	}
+
 	async sendCloseWarning() {
 		this.channel.send(
 			`${this.user.toString()}, ${this.supporters
