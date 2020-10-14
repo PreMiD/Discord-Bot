@@ -15,6 +15,7 @@ export class Ticket {
 	id: string;
 	status: number;
 	ticketContent: string;
+	attachments: Array<string>;
 
 	ticketMessage: Discord.Message;
 	user: Discord.GuildMember;
@@ -27,7 +28,6 @@ export class Ticket {
 	embed: Discord.MessageEmbedOptions;
 
 	attachmentsMessage: Discord.Message;
-
 	constructor() {}
 
 	async fetch(type: "ticket" | "message" | "channel" | "author", arg: any) {
@@ -44,7 +44,7 @@ export class Ticket {
 		this.status = ticket.status;
 
 		try {
-			this.ticketMessage = await (client.channels.cache.get(channels.ticketCategory).guild.channels.cache.get(
+			this.ticketMessage = await ((client.channels.cache.get(channels.ticketCategory) as any).guild.channels.cache.get(
 					channels.ticketChannel
 				) as Discord.TextChannel).messages.fetch(ticket.ticketMessage);
 			this.embed = this.ticketMessage.embeds[0];
@@ -53,26 +53,26 @@ export class Ticket {
 		}
 
 		if (this.status === 1) {
-			this.channel = client.channels.cache.get(channels.ticketCategory).guild.channels.cache
+			this.channel = (client.channels.cache.get(channels.ticketCategory) as any).guild.channels.cache
 				.get(ticket.supportChannel) as Discord.TextChannel;
 			this.channelMessage = await this.channel?.messages.fetch(
 				ticket.supportEmbed
 			);
 			this.supporters = await Promise.all(
 				ticket.supporters.map((s: string) =>
-					client.channels.cache.get(channels.ticketCategory).guild.members.fetch(s)
+					(client.channels.cache.get(channels.ticketCategory) as any).guild.members.fetch(s)
 				)
 			);
 		}
 
 		if (ticket.attachmentMessage)
-			this.attachmentsMessage = await (client.channels.cache.get(channels.ticketCategory).guild.channels.cache
+			this.attachmentsMessage = await ((client.channels.cache.get(channels.ticketCategory) as any).guild.channels.cache
 				.get(
 					channels.ticketChannel
 				) as Discord.TextChannel).messages.fetch(ticket.attachmentMessage);
 
 		try {
-			this.user = await client.channels.cache.get(channels.ticketCategory).guild.members.fetch(ticket.userId);
+			this.user = await (client.channels.cache.get(channels.ticketCategory) as any).guild.members.fetch(ticket.userId);
 		} catch (_) {}
 		return true;
 	}
@@ -87,6 +87,8 @@ export class Ticket {
 
 			this.ticketContent = message.cleanContent;
 
+			this.attachments = [];
+
 			this.embed = {
 				author: {
 					name: `Ticket#${this.id} [OPEN]`,
@@ -99,6 +101,15 @@ export class Ticket {
 				},
 				color: "#77ff77"
 			};
+
+			if (message.attachments.size > 0) {
+				this.attachments.push(`[${message.attachments.first().name}](${message.attachments.first().proxyURL})`)
+				this.embed.fields = [{
+					name: "Attachments",
+					value: this.attachments.join(", "),
+					inline: false
+				}]
+			}
 
 			this.ticketMessage = await (message.guild.channels.cache.get(
 				channels.ticketChannel
@@ -114,11 +125,6 @@ export class Ticket {
 					)
 				);
 
-			if (message.attachments.size > 0)
-				this.attachmentsMessage = await (client.channels.cache.get(channels.ticketCategory).guild.channels.cache.get(
-						channels.ticketChannel
-					) as Discord.TextChannel).send(`**${this.id}**:`, message.attachments.first());
-
 			message.author
 				.send(`Your ticket \`\`#${this.id}\`\` has been submitted and will be answered shortly.`)
 				.catch(() => {});
@@ -128,15 +134,12 @@ export class Ticket {
 				userId: message.author.id,
 				ticketMessage: this.ticketMessage.id,
 				timestamp: Date.now(),
-				attachmentMessage: this.attachmentsMessage
-					? this.attachmentsMessage.id
-					: undefined,
+				attachments: this.attachments,
 				created: Date.now()
 			});
 
 			message.delete().catch(() => {});
-			//@ts-ignore
-			client.channels.cache.get(channels.supportChannel).updateOverwrite(message.author.id, {
+			(client.channels.cache.get(channels.supportChannel) as any).updateOverwrite(message.author.id, {
 				SEND_MESSAGES: false
 			})
 		} catch (err) {
@@ -186,11 +189,9 @@ export class Ticket {
 		];
 
 		this.channel = (
-			//@ts-ignore
-			await client.channels.cache.get(channels.ticketCategory).guild.channels.create(this.id, {
+			await (client.channels.cache.get(channels.ticketCategory) as any).guild.channels.create(this.id, {
 			parent: channels.ticketCategory,
 			type: "text",
-			topic: `Type 'p!ticketCommands' to view the available commands for this ticket.`,
 			permissionOverwrites: [
 				{
 					id: supporter.guild.id,
@@ -231,10 +232,17 @@ export class Ticket {
 				inline: true
 			}
 		];
+
+		if(this.attachments.length > 0) this.embed.fields.push({
+			name: "Attachments", 
+			value: this.attachments.join(", "),
+			inline: true
+		})
+
 		this.ticketMessage.edit(this.embed);
 
 		//@ts-ignore False types...
-		this.embed.fields.pop();
+		this.embed.fields = this.embed.fields.filter(x => x.name != "Channel");
 		this.embed.footer = {
 			text: "p!close - Closes this ticket."
 		};
@@ -264,56 +272,60 @@ export class Ticket {
 		this.user
 			.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${dm ? closer.tag : closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``).catch(() => {});
 		
-		client.channels.cache.get(channels.ticketLogs)
-			// @ts-ignore
-			.send({ embed: {
-				author: {
-					name: `Ticket#${this.id} [CLOSED]`,
-					iconURL: "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/red_circle.png?raw=true"
+		const getVars = url => 
+		    /^https:\/\/discordapp\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.test(url) ? {
+		    id: /^https:\/\/discordapp\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.exec(url)[1],
+		    token: /^https:\/\/discordapp\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.exec(url)[2]
+		}
+		: null,
+		vars = getVars(process.env.ticketLogsWebhook),
+		webhook = new Discord.WebhookClient(vars.id, vars.token),
+		embed = new Discord.MessageEmbed()
+			.setAuthor(`Ticket#${this.id} [CLOSED]`, "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/red_circle.png?raw=true")
+			.setColor("#b52222")
+			.setDescription(this.embed.description)
+			.addFields([
+				{
+					name: `Opened By`,
+					value: this.user.user.tag,
+					inline: true
 				},
-				color: "#b52222",
-				description: `${this.embed.description}`,
-				fields: [
-					{
-						name: `Opened By`,
-						value: this.user.user.tag,
-						inline: true
-					},
-					{
-						name: `Closed By`,
-						value: dm ? closer.tag : closer.user.tag,
-						inline: true
-					},
-					{name: `​`, value: `​`, inline: true},
-					{
-						name: `Reason`,
-						value: reason || "Not Specified",
-						inline: true
-					},
-					{
-						name: `Supporter(s)`,
-						value: this.supporters,
-						inline: true
-					}
-				]
-			}})
+				{
+					name: `Closed By`,
+					value: dm ? closer.tag : closer.user.tag,
+					inline: true
+				},
+				{
+					name: `Reason`,
+					value: reason || "Not Specified",
+					inline: true
+				},
+				{
+					name: `Supporter(s)`,
+					value: this.supporters,
+					inline: true
+				},
+				{
+					name: "Attachments",
+					value: this.attachments ? this.attachments.join(", ") : "None",
+					inline: true
+				}
+			]);
+
+		webhook.send(embed);
+
 		if (this.embed.thumbnail) delete this.embed.thumbnail;
 		delete this.embed.fields;
 		if (this.attachmentsMessage && this.attachmentsMessage.deletable) this.attachmentsMessage.delete();
 		if (this.ticketMessage.deletable) this.ticketMessage.delete();
 	    if (this.channel && this.channel.deletable) this.channel.delete();
 		
-		//@ts-ignore
-		client.channels.cache.get(channels.supportChannel).permissionOverwrites.get(this.user.id).delete()
+		(client.channels.cache.get(channels.supportChannel) as any).permissionOverwrites.get(this.user.id).delete()
 
 		coll.findOneAndUpdate(
-			{ supportChannel: this.channel.id || 0 },
-			{
+			{ supportChannel: this.channel ? this.channel.id : 0}, {
 				$unset: { supportChannel: "", supportEmbed: "" },
-				$set: {
-					status: 2,
-					closer: closer.id
-				}
+				$set: { status: 2, closer: closer.id	}
 			}
 		);
 	}
@@ -397,10 +409,18 @@ export class Ticket {
 		}
 	}
 
-	attach(arg, attachment = false) {
-		if(attachment) {
-		} else {
-		}
+	attach(imageObj) {
+		//@ts-ignore
+		console.log(this.attachments)
+		this.attachments.push(`[${imageObj.name}](${imageObj.proxyURL})`);
+		this.embed.fields ?
+			this.embed.fields.filter(x => x.name == "Attachments").length == 1 ?
+				(this.embed.fields.filter(x => x.name == "Attachments")[0].value = this.attachments.join(", "))
+			: this.embed.fields.push({name: "Attachments", value: this.attachments.join(", ")})
+		: this.embed.fields = [{name: "Attachments", value: this.attachments.join(", ")}];
+
+		this.channelMessage.edit(this.embed);
+
 	}
 
 	async sendCloseWarning() {

@@ -88,6 +88,6 @@ process.on("SIGINT", async () => {
 	process.exit();
 });
 
-process.on("unhandledRejection", (err) => {
+process.on("unhandledRejection", (err: any) => {
 	error(err.stack.toString())
 })

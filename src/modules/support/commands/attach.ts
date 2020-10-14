@@ -2,8 +2,7 @@ import * as Discord from "discord.js";
 import { Ticket } from "../classes/Ticket";
 
 module.exports.run = async (
-	message: Discord.Message,
-	params: Array<string>
+	message: Discord.Message
 ) => {
 	let t = new Ticket(), dm = message.channel.type == "dm", ticketFound;
 
@@ -12,14 +11,11 @@ module.exports.run = async (
 
 	if (!ticketFound) return;
 
-    if(params.length > 0) {
-        t.attach(
-            message.content
-                .split(" ")
-                .slice(1, message.content.split(" ").length)
-                .join(" ")
-        )
-    }
+	if(!message.attachments.first()) return message.reply("please attach an image when running that command!");
+	
+	t.attach(message.attachments.first());
+
+	message.channel.send("The attachment has been added!");
 };
 
 module.exports.config = {
