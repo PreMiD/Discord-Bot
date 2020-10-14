@@ -27,8 +27,7 @@ module.exports.run = async (
 				.split(" ")
 				.slice(1, message.content.split(" ").length)
 				.join(" ")
-			|| "Not Specified",
-			true
+			|| "Not Specified"
 		)
 	else t.close(message.member);
 };

@@ -16,7 +16,7 @@ module.exports = async (message: Discord.Message) => {
 	if (
 		message.author.bot ||
 		(message.channel.id !== channels.supportChannel &&
-			(message.channel as Discord.TextChannel).parent.id !==
+			(message.channel as Discord.TextChannel).parent?.id !==
 				channels.ticketCategory)
 	)
 		return;

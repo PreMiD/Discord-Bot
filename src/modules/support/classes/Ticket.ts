@@ -6,8 +6,7 @@ import channels from "../../../channels";
 import { pmdDB } from "../../../database/client";
 
 const coll = pmdDB.collection("tickets"),
-	circleFolder =
-		"https://github.com/PreMiD/Discord-Bot/blob/main/.discord/";
+	circleFolder = "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/";
 
 let ticketCount = 0;
 
@@ -31,6 +30,7 @@ export class Ticket {
 	constructor() {}
 
 	async fetch(type: "ticket" | "message" | "channel" | "author", arg: any) {
+
 		const ticket =
 			type === "ticket"
 				? arg
@@ -42,6 +42,7 @@ export class Ticket {
 
 		this.id = ticket.ticketId;
 		this.status = ticket.status;
+		this.attachments = ticket.attachments;
 
 		try {
 			this.ticketMessage = await ((client.channels.cache.get(channels.ticketCategory) as any).guild.channels.cache.get(
@@ -238,7 +239,7 @@ export class Ticket {
 			value: this.attachments.join(", "),
 			inline: true
 		})
-
+		
 		this.ticketMessage.edit(this.embed);
 
 		//@ts-ignore False types...
@@ -268,9 +269,9 @@ export class Ticket {
 		sortTickets();
 	}
 
-	async close(closer?: any, reason?: string, dm = false) {
-		this.user
-			.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${dm ? closer.tag : closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``).catch(() => {});
+	async close(closer?: any, reason?: string) {
+
+		this.user.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${closer.tag ? closer.tag : closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``).catch(() => {});
 		
 		const getVars = url => 
 		    /^https:\/\/discordapp\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.test(url) ? {
@@ -292,7 +293,7 @@ export class Ticket {
 				},
 				{
 					name: `Closed By`,
-					value: dm ? closer.tag : closer.user.tag,
+					value: closer.tag ? closer.tag : closer.user.tag,
 					inline: true
 				},
 				{
@@ -307,7 +308,7 @@ export class Ticket {
 				},
 				{
 					name: "Attachments",
-					value: this.attachments ? this.attachments.join(", ") : "None",
+					value: this.attachments.length > 0 ? this.attachments.join(", ") : "None",
 					inline: true
 				}
 			]);
@@ -409,17 +410,34 @@ export class Ticket {
 		}
 	}
 
-	attach(imageObj) {
+	async attach(imageObj, userId) {
 		//@ts-ignore
-		console.log(this.attachments)
-		this.attachments.push(`[${imageObj.name}](${imageObj.proxyURL})`);
+		const { attachments } = await coll.findOne({userId: userId, status: 1});
+		attachments.push(`[${imageObj.name}](${imageObj.proxyURL})`);
+		console.log(attachments)
 		this.embed.fields ?
 			this.embed.fields.filter(x => x.name == "Attachments").length == 1 ?
-				(this.embed.fields.filter(x => x.name == "Attachments")[0].value = this.attachments.join(", "))
-			: this.embed.fields.push({name: "Attachments", value: this.attachments.join(", ")})
-		: this.embed.fields = [{name: "Attachments", value: this.attachments.join(", ")}];
-
+				(this.embed.fields.filter(x => x.name == "Attachments")[0].value = attachments.join(", "))
+			: this.embed.fields.push({name: "Attachments", value: attachments.join(", ")})
+		: this.embed.fields = [{name: "Attachments", value: attachments.join(", ")}];
+		
 		this.channelMessage.edit(this.embed);
+
+		let emb = this.ticketMessage.embeds[0];
+
+		emb.fields ?
+			emb.fields.filter(x => x.name == "Attachments").length == 1 ?
+				(emb.fields.filter(x => x.name == "Attachments")[0].value = attachments.join(", "))
+			: emb.fields.push({name: "Attachments", value: attachments.join(", "), inline: true})
+		: emb.fields = [{name: "Attachments", value: attachments.join(", "), inline: true}];
+
+		this.ticketMessage.edit(emb);
+
+		coll.findOneAndUpdate({userId: userId}, { 
+			$set: {
+				attachments: attachments
+			}
+		})
 
 	}
 

@@ -30,7 +30,7 @@ module.exports = async packet => {
 				.members.cache.get(packet.d.user_id)
 				.hasPermission("ADMINISTRATOR"))
 	) {
-		ticket.close(packet.d.user_id);
+		ticket.close(client.users.cache.get(packet.d.user_id));
 		return;
 	}
 
