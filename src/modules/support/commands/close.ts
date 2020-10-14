@@ -21,7 +21,6 @@ module.exports.run = async (
 				.join(" ")
 		);
 	else if(dm) t.close(
-			//@ts-ignore
 			message.author,
 				message.content
 				.split(" ")

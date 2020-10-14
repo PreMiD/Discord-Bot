@@ -20,25 +20,17 @@ module.exports.run = async (
 	let userSettings = await coll.findOne({ userId: message.author.id });
 	if (!userSettings) {
 		userSettings = (
-			await coll.insertOne({
-				userId: message.author.id,
-				seeAllTickets: true
-			})
+			await coll.insertOne({ userId: message.author.id, seeAllTickets: true })
 		).ops[0];
 	} else {
 		userSettings.seeAllTickets = !userSettings.seeAllTickets;
 		userSettings = (
-			await coll.findOneAndUpdate(
-				{ userId: message.author.id },
-				{ $set: { seeAllTickets: userSettings.seeAllTickets } }
-			)
+			await coll.findOneAndUpdate( { userId: message.author.id }, { $set: { seeAllTickets: userSettings.seeAllTickets } })
 		).value;
 	}
 	message
 		.reply(
-			userSettings.seeAllTickets
-				? `You can now see all tickets.`
-				: `You can no longer see all tickets.`
+			userSettings.seeAllTickets ? `You can now see all tickets.` : `You can no longer see all tickets.`
 		)
 		.then(msg => msg.delete({ timeout: 10 * 1000 }));
 
@@ -46,8 +38,7 @@ module.exports.run = async (
 		const tickets = await tcoll.find({ status: 1 }).toArray();
 
 		tickets.map(async t => {
-			const ticket = new Ticket(),
-				ticketFound = await ticket.fetch("channel", t.supportChannel);
+			const ticket = new Ticket(), ticketFound = await ticket.fetch("channel", t.supportChannel);
 
 			if (!ticketFound) return;
 			ticket.channel?.updateOverwrite(message.member, {

@@ -418,8 +418,8 @@ export class Ticket {
 		this.embed.fields ?
 			this.embed.fields.filter(x => x.name == "Attachments").length == 1 ?
 				(this.embed.fields.filter(x => x.name == "Attachments")[0].value = attachments.join(", "))
-			: this.embed.fields.push({name: "Attachments", value: attachments.join(", ")})
-		: this.embed.fields = [{name: "Attachments", value: attachments.join(", ")}];
+			: this.embed.fields.push({name: "Attachments", value: attachments.join(", "), inline: true})
+		: this.embed.fields = [{name: "Attachments", value: attachments.join(", "), inline: true}];
 		
 		this.channelMessage.edit(this.embed);
 
