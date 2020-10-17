@@ -15,8 +15,7 @@ export let blacklistedWords: string[] = [];
 			.first()
 			.members.fetch(mute.userId)
 			.then(m => {
-				if (!m.roles.cache.has(roles.muted))
-					coll.findOneAndDelete({ userId: mute.userId });
+				if (!m.roles.cache.has(roles.muted)) coll.findOneAndDelete({ userId: mute.userId });
 			})
 			.catch(() => {});
 

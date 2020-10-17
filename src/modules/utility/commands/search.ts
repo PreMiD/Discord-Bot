@@ -10,7 +10,6 @@ module.exports.run = async (message: Discord.Message, args: Array<string>) => {
 	}
 
 	const m = await message.reply(
-		null,
 		new Discord.MessageEmbed({
 			title: "Presence Search Query",
 			description: "<a:loading:521018476480167937> Searching..."
@@ -24,8 +23,7 @@ module.exports.run = async (message: Discord.Message, args: Array<string>) => {
 			mention,
 			new Discord.MessageEmbed({
 				title: "Presence Search Query",
-				description:
-					"<a:loading:521018476480167937> Searching...\n\n<:sad_cat:587782591847989288> Looks like you drew the short straw! We are still indexing the database, so your query will take a while."
+				description: "<a:loading:521018476480167937> Searching...\n\n<:sad_cat:587782591847989288> Looks like you drew the short straw! We are still indexing the database, so your query will take a while."
 			})
 		);
 	}, 10000);
@@ -59,11 +57,10 @@ module.exports.run = async (message: Discord.Message, args: Array<string>) => {
 		.toArray();
 	clearTimeout(sadCatTimeout);
 
-	if (results.length < 1) {
-		return await m
+	if (results.length < 1) 
+		await m
 			.edit(mention + "No presences found!", { embed: null })
 			.then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }));
-	}
 
 	let descriptionFunsies = "";
 	for (const result of results) {
@@ -80,8 +77,7 @@ module.exports.run = async (message: Discord.Message, args: Array<string>) => {
 		}!")`;
 		descriptionFunsies += "\n_";
 		let description = result.metadata.description.en;
-		if (description.length > 100)
-			description = description.substr(0, 100) + "...";
+		if (description.length > 100) description = description.substr(0, 100) + "...";
 		descriptionFunsies += description;
 		descriptionFunsies += "_\n\n";
 	}

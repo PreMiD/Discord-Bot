@@ -93,8 +93,7 @@ module.exports.run = async (
 	if (warns == 3) warnNumberText = "3rd";
 
 	embed = new Discord.MessageEmbed({
-		title:
-			"<:lolipatrol:606599634567168089> WARNING <:lolipatrol:606599634567168089>",
+		title: "<:lolipatrol:606599634567168089> WARNING <:lolipatrol:606599634567168089>",
 		color: "#FF7000",
 		description: `This is your ${warnNumberText} warning. More will cause a mute or other consequenses!\nPlease read our rules in <#518466088263090176> carefully to prevent more warnings!`,
 		fields: [
