@@ -206,19 +206,19 @@ export class Ticket {
 					id: supporter.id,
 					allow: channelPerms
 				}
-			]//.concat(
-			// 	(
-			// 		await pmdDB
-			// 			.collection("userSettings")
-			// 			.find({ seeAllTickets: true })
-			// 			.toArray()
-			// 	).map(uSett => {
-			// 		return {
-			// 			id: uSett.userId,
-			// 			allow: channelPerms
-			// 		};
-			// 	})
-			// )
+			].concat(
+				(
+					await pmdDB
+						.collection("userSettings")
+						.find({ seeAllTickets: true })
+						.toArray()
+				).map(uSett => {
+					return {
+						id: uSett.userId,
+						allow: channelPerms
+					};
+				})
+			)
 		})) as Discord.TextChannel;
 
 		this.embed.fields = [
@@ -234,7 +234,7 @@ export class Ticket {
 			}
 		];
 
-		if(this.attachments.length > 0) this.embed.fields.push({
+		if(this.attachments.length > 0) this.embed.fields["push"]({
 			name: "Attachments", 
 			value: this.attachments.join(", "),
 			inline: true
@@ -418,7 +418,7 @@ export class Ticket {
 		this.embed.fields ?
 			this.embed.fields.filter(x => x.name == "Attachments").length == 1 ?
 				(this.embed.fields.filter(x => x.name == "Attachments")[0].value = attachments.join(", "))
-			: this.embed.fields.push({name: "Attachments", value: attachments.join(", "), inline: true})
+			: this.embed.fields['push']({name: "Attachments", value: attachments.join(", "), inline: true})
 		: this.embed.fields = [{name: "Attachments", value: attachments.join(", "), inline: true}];
 		
 		this.channelMessage.edit(this.embed);
@@ -428,7 +428,7 @@ export class Ticket {
 		emb.fields ?
 			emb.fields.filter(x => x.name == "Attachments").length == 1 ?
 				(emb.fields.filter(x => x.name == "Attachments")[0].value = attachments.join(", "))
-			: emb.fields.push({name: "Attachments", value: attachments.join(", "), inline: true})
+			: emb.fields["push"]({name: "Attachments", value: attachments.join(", "), inline: true})
 		: emb.fields = [{name: "Attachments", value: attachments.join(", "), inline: true}];
 
 		this.ticketMessage.edit(emb);

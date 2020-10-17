@@ -6,6 +6,8 @@ import { client } from "..";
 const col = pmdDB.collection("presences");
 
 module.exports.run = async (client: Discord.Client) => {
+	console.log(require("fs"))
+
 	if (client.user) success(`Connected as ${client.user.tag}`);
 	updatePresenceAuthors();
 	setInterval(updatePresenceAuthors, 15 * 60 * 1000);
