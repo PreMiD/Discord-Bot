@@ -12,8 +12,8 @@ module.exports.run = async (client: Discord.Client) => {
 };
 
 async function updatePresenceAuthors() {
-	const guild = client.guilds.cache.get("493130730549805057")
-	,	presenceAuthors = (await col.find().toArray()).map(p => p.metadata.author.id);
+	const guild = client.guilds.cache.get("493130730549805057"),
+		presenceAuthors = (await col.find().toArray()).map(p => p.metadata.author.id);
 
 	for (const author of presenceAuthors) {
 		const member = guild.members.resolve(author);
