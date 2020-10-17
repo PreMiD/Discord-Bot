@@ -45,7 +45,7 @@ export class Ticket {
 		this.attachments = ticket.attachments;
 
 		try {
-			this.ticketMessage = await ((client.channels.cache.get(channels.ticketCategory) as any).guild.channels.cache.get(
+			this.ticketMessage = await ((client.channels.cache.get(channels.ticketCategory) as Discord.TextChannel).guild.channels.cache.get(
 					channels.ticketChannel
 				) as Discord.TextChannel).messages.fetch(ticket.ticketMessage);
 			this.embed = this.ticketMessage.embeds[0];
@@ -54,26 +54,26 @@ export class Ticket {
 		}
 
 		if (this.status === 1) {
-			this.channel = (client.channels.cache.get(channels.ticketCategory) as any).guild.channels.cache
+			this.channel = (client.channels.cache.get(channels.ticketCategory) as Discord.TextChannel).guild.channels.cache
 				.get(ticket.supportChannel) as Discord.TextChannel;
 			this.channelMessage = await this.channel?.messages.fetch(
 				ticket.supportEmbed
 			);
 			this.supporters = await Promise.all(
 				ticket.supporters.map((s: string) =>
-					(client.channels.cache.get(channels.ticketCategory) as any).guild.members.fetch(s)
+					(client.channels.cache.get(channels.ticketCategory) as Discord.TextChannel).guild.members.fetch(s)
 				)
 			);
 		}
 
 		if (ticket.attachmentMessage)
-			this.attachmentsMessage = await ((client.channels.cache.get(channels.ticketCategory) as any).guild.channels.cache
+			this.attachmentsMessage = await ((client.channels.cache.get(channels.ticketCategory) as Discord.TextChannel).guild.channels.cache
 				.get(
 					channels.ticketChannel
 				) as Discord.TextChannel).messages.fetch(ticket.attachmentMessage);
 
 		try {
-			this.user = await (client.channels.cache.get(channels.ticketCategory) as any).guild.members.fetch(ticket.userId);
+			this.user = await (client.channels.cache.get(channels.ticketCategory) as Discord.TextChannel).guild.members.fetch(ticket.userId);
 		} catch (_) {}
 		return true;
 	}
@@ -140,7 +140,7 @@ export class Ticket {
 			});
 
 			message.delete().catch(() => {});
-			(client.channels.cache.get(channels.supportChannel) as any).updateOverwrite(message.author.id, {
+			(client.channels.cache.get(channels.supportChannel) as Discord.TextChannel).updateOverwrite(message.author.id, {
 				SEND_MESSAGES: false
 			})
 		} catch (err) {
@@ -190,9 +190,10 @@ export class Ticket {
 		];
 
 		this.channel = (
-			await (client.channels.cache.get(channels.ticketCategory) as any).guild.channels.create(this.id, {
+			await (client.channels.cache.get(channels.ticketCategory) as Discord.CategoryChannel).guild.channels.create(this.id, {
 			parent: channels.ticketCategory,
 			type: "text",
+			//@ts-ignore
 			permissionOverwrites: [
 				{
 					id: supporter.guild.id,
@@ -321,7 +322,7 @@ export class Ticket {
 		if (this.ticketMessage.deletable) this.ticketMessage.delete();
 	    if (this.channel && this.channel.deletable) this.channel.delete();
 		
-		(client.channels.cache.get(channels.supportChannel) as any).permissionOverwrites.get(this.user.id).delete()
+		(client.channels.cache.get(channels.supportChannel) as Discord.TextChannel).permissionOverwrites.get(this.user.id).delete()
 
 		coll.findOneAndUpdate(
 			{ supportChannel: this.channel ? this.channel.id : 0}, {
