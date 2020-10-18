@@ -15,7 +15,8 @@ async function updateCredits() {
 
 	let credits = creditUsers.map(m => {
 		const highestRole = m.roles.cache.get(containsAny(Object.values(creditRoles), m.roles.cache.keyArray())[0]),
-			colorRole = m.roles.cache.filter(x => x.hexColor !== "#000000").first();
+			colorRole = m.roles.cache.filter(x => x.hexColor !== "#000000").first(),
+			staff = ["656913616100130816", "672175812102979605"].map(x => m.roles.cache.map(x => x.id).includes(x)).includes(true);
 
 		return {
 			userId: m.id,
@@ -30,7 +31,7 @@ async function updateCredits() {
 			roleId: highestRole.id,
 			roles: m.roles.cache.filter(r => r.name !== "@everyone").map(r => r.name),
 			roleIds: m.roles.cache.filter(r => r.name !== "@everyone").map(r => r.id),
-			roleColor: colorRole.hexColor,
+			roleColor: staff ? colorRole.hexColor : highestRole.hexColor,
 			rolePosition: highestRole.position,
 			status: m.user.presence.status
 		};
