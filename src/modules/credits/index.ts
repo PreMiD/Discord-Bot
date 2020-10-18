@@ -15,7 +15,7 @@ async function updateCredits() {
 
 	let credits = creditUsers.map(m => {
 	const highestRole = m.roles.cache.get(containsAny(Object.values(creditRoles), m.roles.cache.keyArray())[0]),
-			colorRole = m.roles.cache.filter(x => x.hexColor !== "#000000").first();
+			colorRole = m.roles.cache.filter(x => x.hexColor !== "#000000").sort((a, b) => a.position - b.position).first();
 
 		return {
 			userId: m.id,
