@@ -19,7 +19,6 @@ const colors = {
 	minor: 0xfc9e43,
 	major: 0xf6640d,
 	critical: 0xdd2e44,
-
 	incidentResolved: 0x77ff77
 };
 
@@ -31,9 +30,7 @@ const toTitleCase = function (str) {
 	return str
 		.toLowerCase()
 		.split(" ")
-		.map(word => {
-			return word.charAt(0).toUpperCase() + word.slice(1);
-		})
+		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
 		.join(" ");
 };
 

@@ -78,11 +78,7 @@ module.exports.run = async (
 				})
 			}
 		});
-	} else {
-		message.reply(
-			"Your permission level is to low to see other people's warnings!"
-		);
-	}
+	} else message.reply("Your permission level is to low to see other people's warnings!");
 };
 
 module.exports.config = {

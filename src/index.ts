@@ -87,3 +87,11 @@ process.on("SIGINT", async () => {
 	await Promise.all([MongoClient.close(), client.destroy()]);
 	process.exit();
 });
+
+process.on("unhandledRejection", (err: any) => {
+	const ignoredErrors = ["DiscordAPIError: Missing Access", "DiscordAPIError: Missing Permissions"]
+
+	if(ignoredErrors.map(x => err.toString().includes(x)).includes(true)) return;
+
+	error(err.stack.toString())
+})

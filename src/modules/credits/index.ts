@@ -125,8 +125,5 @@ schedule.scheduleJob("flag updater", "0 */6 * * *", updateFlags);
 schedule.scheduleJob("credits updater", "*/15 * * * *", updateCredits).invoke();
 
 function containsAny(source: Array<string>, target: Array<string>) {
-	let result = source.filter(function (item) {
-		return target.indexOf(item) > -1;
-	});
-	return result;
+	return source.filter((item) => target.indexOf(item) > -1);;
 }

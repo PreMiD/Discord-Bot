@@ -19,9 +19,7 @@ module.exports = async (
 			const ticket = new Ticket(),
 				ticketFound = await ticket.fetch("channel", t.supportChannel);
 
-			if (!ticketFound) return;
-
-			ticket.removeSupporter(oldMember, false);
+			if (ticketFound) ticket.removeSupporter(oldMember, false);
 		});
 	}
 };

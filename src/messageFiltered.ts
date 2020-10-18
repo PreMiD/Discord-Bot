@@ -5,7 +5,7 @@ export default [
 		mute: true
 	},
 	{
-		message: "discordapp.com/invite/|discord.gg/",
+		message: "discordapp.com/invite/|discord.gg/|discord.com/invite",
 		botMessage: "**Invite links are not allowed on this server!**",
 		mute: false
 	}

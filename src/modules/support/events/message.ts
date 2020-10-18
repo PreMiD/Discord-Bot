@@ -12,10 +12,11 @@ const coll = pmdDB.collection("tickets");
 let users: Array<string> = [];
 
 module.exports = async (message: Discord.Message) => {
+	
 	if (
 		message.author.bot ||
 		(message.channel.id !== channels.supportChannel &&
-			(message.channel as Discord.TextChannel).parent.id !==
+			(message.channel as Discord.TextChannel).parent?.id !==
 				channels.ticketCategory)
 	)
 		return;
@@ -97,12 +98,7 @@ module.exports = async (message: Discord.Message) => {
 		return;
 	}
 
-	if (
-		ticketFound &&
-		message.content.startsWith(">>") &&
-		(message.member.roles.cache.has(roles.ticketManager) ||
-			message.member.permissions.has("ADMINISTRATOR"))
-	) {
+	if ( ticketFound && message.content.startsWith(">>") ) {
 		const args = message.content
 			.split(" ")
 			.slice(1, message.content.split(" ").length);

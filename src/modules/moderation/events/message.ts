@@ -1,19 +1,15 @@
 import * as Discord from "discord.js";
 import { client } from "../../..";
 import { blacklistedWords } from "..";
+import roles from "../../../roles";
 
 module.exports = async (message: Discord.Message) => {
 	//* Ignore bots
 	if (message.author.bot) return;
 
-	if (
-		client.elevation(message.author.id) === 0 &&
-		blacklistedWords.find(w => message.content.includes(w))
-	) {
-		message.delete();
-	}
+	if (client.elevation(message.author.id) === 0 && blacklistedWords.find(w => message.content.includes(` ${w} `))) message.delete();
 
-	if (await checkInvite(message.content)) {
+	if (await checkInvite(message.content) && !(message.member as Discord.GuildMember).roles.cache.map(x => x.id).includes(roles.administrator)) {
 		message
 			.reply("**Invite links are not allowed**")
 			.then(msg => msg.delete({ timeout: 10 * 1000 }));
@@ -24,12 +20,11 @@ module.exports = async (message: Discord.Message) => {
 module.exports.config = {};
 
 export async function checkInvite(string: string) {
-	let invites = (await client.guilds.cache.first().fetchInvites()).map(
-			invite => invite.url
-		),
+	let invites = (await client.guilds.cache.first().fetchInvites()).map(invite => invite.url),
 		disallowedPatterns = [
 			/(discord.gg\/[\s\S]+)/g,
 			/(discord.me\/[\s\S]+)/g,
+			/(discord.com\/invite\/[\s\S]+)/g,
 			/(discordapp.com\/invite\/[\s\S]+)/g,
 			/(top.gg\/servers\/[\s\S]+)/g,
 			/(disboard.org\/server\/join\/[\s\S]+)/g,
