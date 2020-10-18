@@ -9,18 +9,12 @@ const creditsColl = pmdDB.collection("credits");
 async function updateCredits() {
 	info("Updating credits...");
 
-	const creditUsers = (
-		await client.guilds.cache.first().members.fetch()
-	).filter(m =>
-		Object.values(creditRoles).find(cR => m.roles.cache.keyArray().includes(cR))
-			? true
-			: false
+	const creditUsers = (await client.guilds.cache.first().members.fetch()).filter(m =>
+		Object.values(creditRoles).find(cR => m.roles.cache.keyArray().includes(cR)) ? true : false
 	);
 
 	let credits = creditUsers.map(m => {
-		const highestRole = m.roles.cache.get(
-			containsAny(Object.values(creditRoles), m.roles.cache.keyArray())[0]
-		);
+		const highestRole = m.roles.cache.get(containsAny(Object.values(creditRoles), m.roles.cache.keyArray())[0]);
 
 		return {
 			userId: m.id,
