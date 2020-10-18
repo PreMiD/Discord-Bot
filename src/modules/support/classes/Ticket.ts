@@ -412,10 +412,8 @@ export class Ticket {
 	}
 
 	async attach(imageObj, userId) {
-		//@ts-ignore
 		const { attachments } = await coll.findOne({userId: userId, status: 1});
 		attachments.push(`[${imageObj.name}](${imageObj.proxyURL})`);
-		console.log(attachments)
 		this.embed.fields ?
 			this.embed.fields.filter(x => x.name == "Attachments").length == 1 ?
 				(this.embed.fields.filter(x => x.name == "Attachments")[0].value = attachments.join(", "))
