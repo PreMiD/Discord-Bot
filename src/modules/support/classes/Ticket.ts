@@ -280,7 +280,7 @@ export class Ticket {
 		    token: /^https:\/\/discordapp\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.exec(url)[2]
 		}
 		: null,
-		vars = getVars(process.env.ticketLogsWebhook),
+		vars = getVars(process.env.TICKETLOGSWEBHOOK),
 		webhook = new Discord.WebhookClient(vars.id, vars.token),
 		embed = new Discord.MessageEmbed()
 			.setAuthor(`Ticket#${this.id} [CLOSED]`, "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/red_circle.png?raw=true")
