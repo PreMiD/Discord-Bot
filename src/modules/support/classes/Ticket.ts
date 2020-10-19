@@ -289,7 +289,7 @@ export class Ticket {
 			.addFields([
 				{
 					name: `Opened By`,
-					value: this.user.user.tag,
+					value: this.user ? this.user.user.tag : `<@${this.userId}>`,
 					inline: true
 				},
 				{
