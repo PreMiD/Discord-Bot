@@ -272,7 +272,7 @@ export class Ticket {
 
 	async close(closer?: any, reason?: string) {
 
-		this.user.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${closer.tag ? closer.tag : closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``).catch(() => {});
+		if(this.user) this.user.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${closer.tag ? closer.tag : closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``).catch(() => {});
 		
 		const getVars = url => 
 		    /^https:\/\/discordapp\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.test(url) ? {
