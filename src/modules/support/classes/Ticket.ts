@@ -41,6 +41,7 @@ export class Ticket {
 		if (!ticket) return false;
 
 		this.id = ticket.ticketId;
+		this.userId = ticket.userId;
 		this.status = ticket.status;
 		this.attachments = ticket.attachments;
 
