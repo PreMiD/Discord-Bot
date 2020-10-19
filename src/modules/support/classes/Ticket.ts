@@ -12,6 +12,7 @@ let ticketCount = 0;
 
 export class Ticket {
 	id: string;
+	userId: string;
 	status: number;
 	ticketContent: string;
 	attachments: Array<string>;
