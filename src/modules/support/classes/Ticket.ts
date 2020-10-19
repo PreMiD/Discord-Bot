@@ -247,14 +247,9 @@ export class Ticket {
 
 		//@ts-ignore False types...
 		this.embed.fields = this.embed.fields.filter(x => x.name != "Channel");
-		this.embed.footer = {
-			text: "p!close - Closes this ticket."
-		};
+		this.embed.footer = { text: "p!close - Closes this ticket." };
 		this.channelMessage = await this.channel.send({ embed: this.embed });
-
-		this.channel.send(
-			`${this.user}, Your ticket \`\`#${this.id}\`\` has been accepted by **${supporter.displayName}**.`
-		);
+		this.channel.send(`${this.user}, Your ticket \`\`#${this.id}\`\` has been accepted by **${supporter.displayName}**.`);
 
 		coll.findOneAndUpdate(
 			{ ticketMessage: this.ticketMessage.id },
@@ -318,13 +313,12 @@ export class Ticket {
 
 		webhook.send(embed);
 
-		if (this.embed.thumbnail) delete this.embed.thumbnail;
 		delete this.embed.fields;
+		if (this.embed.thumbnail) delete this.embed.thumbnail;
 		if (this.attachmentsMessage && this.attachmentsMessage.deletable) this.attachmentsMessage.delete();
 		if (this.ticketMessage.deletable) this.ticketMessage.delete();
-	    if (this.channel && this.channel.deletable) this.channel.delete();
-		
-		(client.channels.cache.get(channels.supportChannel) as Discord.TextChannel).permissionOverwrites.get(this.user.id).delete()
+	    	if (this.channel && this.channel.deletable) this.channel.delete();
+		if (this.user) (client.channels.cache.get(channels.supportChannel) as Discord.TextChannel).permissionOverwrites.get(this.user.id).delete()
 
 		coll.findOneAndUpdate(
 			{ supportChannel: this.channel ? this.channel.id : 0}, {
