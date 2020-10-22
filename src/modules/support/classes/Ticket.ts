@@ -457,7 +457,7 @@ export class Ticket {
 	addLog(input) {
 		coll.findOneAndUpdate({supportChannel: this.channel.id}, { 
 			$push: {
-				logs: `[${moment(new Date()).format("DD/MM/YY LT")} (GMT)] ${input}`
+				logs: `[${moment(new Date()).format("DD/MM/YY LT")} (GMT+1)] ${input}`
 			}
 		})
 	}
