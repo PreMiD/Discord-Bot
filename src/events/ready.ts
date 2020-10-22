@@ -3,7 +3,7 @@ import roles from "../roles";
 import { pmdDB } from "../database/client";
 import { success } from "../util/debug";
 import { client } from "..";
-import { Console } from "console";
+
 const col = pmdDB.collection("presences");
 
 module.exports.run = async (client: Discord.Client) => {
