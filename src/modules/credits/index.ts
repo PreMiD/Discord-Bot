@@ -35,7 +35,11 @@ async function updateCredits() {
 			rolePosition: highestRole.position,
 			status: m.user.presence.status
 		};
-	});
+	}).sort((a, b) => {
+		if(a.name < b.name) return -1;
+		if(a.name > b.name) return 1;
+		return 0;
+	})
 
 	await creditsColl.bulkWrite(
 		credits.map(cU => {
@@ -81,8 +85,6 @@ async function updateFlags() {
 				const memberArray = r.members.array();
 				for (let i = 0; i < r.members.size; i++) {
 					const member = memberArray[i];
-
-					// @ts-ignore
 					const userFlags = (await member.user.fetchFlags()).toArray();
 
 					if (!flagUsers.find(cU => cU.userId === member.id))
