@@ -47,7 +47,10 @@ function updateBoosters() {
 				if (!member.roles.cache.has(roles.donator))
 					member.roles.add(roles.donator);
 
-				if (!member.roles.cache.has(roles.beta))
+				if (
+					!member.roles.cache.has(roles.beta) &&
+					!member.roles.cache.has(roles.alpha)
+				)
 					member.roles.add(roles.beta);
 			}
 		}
