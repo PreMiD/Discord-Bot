@@ -14,6 +14,7 @@ let ticketCount = 0;
 
 export class Ticket {
 	id: string;
+	userId: string;
 	status: number;
 	ticketContent: string;
 	attachments: Array<string>;
@@ -43,6 +44,7 @@ export class Ticket {
 		if (!ticket) return false;
 
 		this.id = ticket.ticketId;
+		this.userId = ticket.userId;
 		this.status = ticket.status;
 		this.attachments = ticket.attachments;
 
@@ -250,14 +252,9 @@ export class Ticket {
 
 		//@ts-ignore False types...
 		this.embed.fields = this.embed.fields.filter(x => x.name != "Channel");
-		this.embed.footer = {
-			text: "p!close - Closes this ticket."
-		};
+		this.embed.footer = { text: "p!close - Closes this ticket." };
 		this.channelMessage = await this.channel.send({ embed: this.embed });
-
-		this.channel.send(
-			`${this.user}, Your ticket \`\`#${this.id}\`\` has been accepted by **${supporter.displayName}**.`
-		);
+		this.channel.send(`${this.user}, Your ticket \`\`#${this.id}\`\` has been accepted by **${supporter.displayName}**.`);
 
 		coll.findOneAndUpdate(
 			{ ticketMessage: this.ticketMessage.id },
@@ -282,7 +279,7 @@ export class Ticket {
 			if(err) console.log(err)
 			fs.readFile(`${process.cwd()}/../TicketLogs/${this.id}.txt`, {encoding: "utf-8"}, (err, data) => {
 				if(err) return console.log(err);	
-				this.user.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${closer.tag ? closer.tag : closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``, {
+				if(this.user) this.user.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${closer.tag ? closer.tag : closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``, {
 					files: [{
 						attachment: `${process.cwd()}/../TicketLogs/${this.id}.txt`,
 						name: `Ticket-${this.id}.txt`
@@ -304,7 +301,7 @@ export class Ticket {
 					.addFields([
 						{
 							name: `Opened By`,
-							value: this.user.user.tag,
+							value: this.user ? this.user.user.tag : `<@${this.userId}>`,
 							inline: true
 						},
 						{
@@ -342,8 +339,7 @@ export class Ticket {
 				if (this.attachmentsMessage && this.attachmentsMessage.deletable) this.attachmentsMessage.delete();
 				if (this.ticketMessage.deletable) this.ticketMessage.delete();
 				if (this.channel && this.channel.deletable) this.channel.delete();
-				
-				(client.channels.cache.get(channels.supportChannel) as Discord.TextChannel).permissionOverwrites.get(this.user.id).delete()
+				if (this.user) (client.channels.cache.get(channels.supportChannel) as Discord.TextChannel).permissionOverwrites.get(this.user.id).delete()
 		
 				coll.findOneAndUpdate(
 					{ supportChannel: this.channel ? this.channel.id : 0}, {
