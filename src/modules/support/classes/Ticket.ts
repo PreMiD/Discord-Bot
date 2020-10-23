@@ -42,7 +42,8 @@ export class Ticket {
 				: await coll.findOne(type === "message" ? { ticketMessage: arg } : { supportChannel: arg });
 
 		if (!ticket) return false;
-
+		if (!ticket.logs) coll.findOneAndUpdate({userId: ticket.userId}, {$push: {logs: ["[LOG CREATED] A few messages may be missing, this may be because your ticket was created before our logging system was introduced."]}});
+		
 		this.id = ticket.ticketId;
 		this.userId = ticket.userId;
 		this.status = ticket.status;
@@ -83,6 +84,9 @@ export class Ticket {
 	}
 
 	async create(message: Discord.Message) {
+
+		this.addLog(`[TICKET CREATED] Awaiting supporter`);
+
 		try {
 			if (!ticketCount) ticketCount = await coll.countDocuments({});
 
@@ -463,6 +467,7 @@ export class Ticket {
 	}
 
 	async sendCloseWarning() {
+		this.addLog(`[WARNING] This ticket will be closed in 2 days due to inactivity`);
 		this.channel.send(
 			`${this.user.toString()}, ${this.supporters
 				.map(s => s.toString())
