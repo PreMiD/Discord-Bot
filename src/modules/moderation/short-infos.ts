@@ -60,7 +60,7 @@ export default {
 		color: "RANDOM",
 		aliases: ["maketimeraarich", "gaytim", "serverboost", "boost", "nitroboost", "adsensewasntenough", "dontskipads", "adblockisasin"],
 		description:
-			"Want to support PreMiD's Development? Great! You can do so by boosting our discord server, which will get you a special role, or you can support our [Patreon](https://patreon.com/Timeraa) or donate via [PayPal](https://www.paypal.com/paypalme2/TimeraaDEV)!",
+			"Want to support PreMiD's Development? Great! You can do so by boosting our Discord server, which will get you a special role, or you can support our [Patreon](https://patreon.com/Timeraa) or donate via [PayPal](https://www.paypal.com/paypalme2/TimeraaDEV)!",
 		footer: false
 	},
 	ticket: {
@@ -68,7 +68,7 @@ export default {
 		color: "RANDOM",
 		aliases: ["support", "createticket", "properticket"],
 		description:
-			"We have a <#566738846650335232> channel where you can create a ticket and let ticket managers/moderators help you, but sometimes people just abuse it by typing nonse stuff in there. Please make sure you've tried everything on our [troubleshooting](https://docs.premid.app/en/troubleshooting) page before creating a ticket.\n\nIncluding screenshots in tickets, such as console output, any error you got on the extension will speed up processing your ticket.",
+			"We have a <#566738846650335232> channel where you can create a ticket and let support agents/moderators help you, but sometimes people just abuse it by typing nonsense in there. Please make sure you've tried everything in our [troubleshooting](https://docs.premid.app/en/troubleshooting) page before creating a ticket.\n\nIncluding screenshots in tickets, such as console output, any error you got on the extension will speed up processing your ticket.",
 		footer: false
 	},
 	suggest: {
@@ -76,7 +76,7 @@ export default {
 		color: "RANDOM",
 		aliases: ["suggestpresence"],
 		description:
-			"If you would like to suggest a presence, you can head over to our github repository and create a new issue with the [Presence Request](https://github.com/PreMiD/Presences/issues/new?template=service_request.md) template! If you would like to make a presence yourself, you can find more information on [Development Docs](https://docs.premid.app/dev/presence)",
+			"If you would like to suggest a presence, you can head over to our [GitHub repository](https://github.com/PreMID/Presences) and create a new issue with the [Presence Request](https://github.com/PreMiD/Presences/issues/new?template=service_request.md) template! If you would like to make a presence yourself, you can find more information on [Development Docs](https://docs.premid.app/dev/presence)",
 		footer: false
 	},
 	allowed: {
@@ -91,8 +91,7 @@ export default {
 		title: "Allow apps from unidentified developer",
 		color: "RANDOM",
 		aliases: [ "macdev", "unidentifieddeveloper", "undev", "ud"],
-		description: 
-			"1. Open System Preferences.\n2. Go to the Security & Privacy tab.\n3. Click on the lock and enter your password so you can make changes.\n4. Change the setting for 'Allow apps downloaded from' to 'App Store and identified developers' from just 'App Store'.",
+		description: "1. Open System Preferences.\n2. Go to the Security & Privacy tab.\n3. Click on the lock and enter your password or scan your fingerprint so you can make changes.\n4. Change the setting for 'Allow apps downloaded from' to 'App Store and identified developers' from just 'App Store'.",
 		footer: false
 	}
 };
