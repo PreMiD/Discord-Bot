@@ -22,15 +22,12 @@ module.exports.run = async (message: Discord.Message) => {
 	let embed = new Discord.MessageEmbed({
 		title: "Help",
 		description: cmds
-			.map(cmd => {
-				return `**${config.prefix}${cmd[0]}**\n\`\`${cmd[1]}\`\``;
-			})
+			.map(cmd => `**${config.prefix}${cmd[0]}**\n\`\`${cmd[1]}\`\``)
 			.join("\n"),
 		fields: [
 			{
 				name: "\u200b",
-				value:
-					"*These are the commands you can execute with your permission level.*"
+				value: "*These are the commands you can execute with your permission level.*"
 			}
 		],
 		color: "#7289DA"

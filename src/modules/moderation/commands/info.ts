@@ -34,7 +34,7 @@ if (params[0] == undefined || params[0].length == 0 || params[0].toLowerCase() =
 			client.infos.has(client.infoAliases.get(params[0].toLowerCase()))
 		)
 	) {
-		(await message.reply("Please enter a valid name")).delete({
+		(await message.reply("please enter a valid name!")).delete({
 			timeout: 5 * 1000
 		});
 		return;
@@ -49,7 +49,7 @@ if (params[0] == undefined || params[0].length == 0 || params[0].toLowerCase() =
 			color: info.color || "36393F",
 			footer: {
 				text: info.footer || `by ${message.author.tag}`,
-				iconURL: message.author.avatarURL({})
+				iconURL: message.author.avatarURL()
 			}
 		});
 

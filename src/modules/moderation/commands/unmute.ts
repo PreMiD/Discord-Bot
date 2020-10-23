@@ -25,11 +25,10 @@ module.exports.run = async (message: Discord.Message) => {
 	message.guild.members.cache
 		.get(message.mentions.users.first().id)
 		.roles.remove(roles.muted)
-		.then(() => {
-			message
-				.reply(`Successfully unmuted **${message.mentions.users.first().tag}**`)
-				.then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }));
-		});
+		.then(() => message
+			.reply(`Successfully unmuted **${message.mentions.users.first().tag}**`)
+			.then((msg: Discord.Message) => msg.delete({ timeout: 10 * 1000 }))
+		);
 };
 
 module.exports.config = {

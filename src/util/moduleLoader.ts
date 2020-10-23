@@ -84,11 +84,7 @@ async function loadModules(client: Discord.Client) {
 
 	for (let i in shortInfos) {
 		client.infos.set(i, shortInfos[i]);
-
-		if (shortInfos[i].aliases)
-			shortInfos[i].aliases.forEach((alias: string) => {
-				client.infoAliases.set(alias, i);
-			});
+		if (shortInfos[i].aliases) shortInfos[i].aliases.forEach((alias: string) => client.infoAliases.set(alias, i));
 	}
 }
 
@@ -128,10 +124,7 @@ async function loadCommands(filePath: string, client: Discord.Client) {
 
 		client.commands.set(props.config.name, props);
 		//* Only add aliases if there are any
-		if (typeof props.config.aliases != "undefined")
-			props.config.aliases.forEach((alias: string) => {
-				client.aliases.set(alias, props.config.name);
-			});
+		if (typeof props.config.aliases != "undefined") props.config.aliases.forEach((alias: string) => client.aliases.set(alias, props.config.name));
 	});
 }
 

@@ -14,20 +14,16 @@ module.exports = (message: Discord.Message) => {
 		cmd: any;
 
 	//* Get current command from commands/aliases
-	if (message.client.commands.has(command))
-		cmd = message.client.commands.get(command);
-	else if (message.client.aliases.has(command)) {
-		cmd = message.client.commands.get(message.client.aliases.get(command));
-	}
+	if (message.client.commands.has(command)) cmd = message.client.commands.get(command);
+	else if (message.client.aliases.has(command)) cmd = message.client.commands.get(message.client.aliases.get(command));
 
 	//* Run command if found
 	if (cmd) {
 		function sendFancyMessage() {
 			message.channel.send({
 				embed: {
-					description:
-						"Whoopsies, it seems' like you do not have permission to run this command!",
-					color: "#36393F",
+					description: "Whoopsies, it seems' like you do not have permission to run this command!",
+					color: "RED",
 					footer: message.author.tag
 				}
 			});

@@ -1,5 +1,7 @@
+import { TextChannel } from "discord.js";
 import { client } from "../../..";
 import { Ticket } from "../classes/Ticket";
+import channels from "../../../channels";
 
 module.exports = async packet => {
 	if (!["MESSAGE_REACTION_ADD"].includes(packet.t)) return;
@@ -29,7 +31,7 @@ module.exports = async packet => {
 				.members.cache.get(packet.d.user_id)
 				.hasPermission("ADMINISTRATOR"))
 	) {
-		ticket.close(packet.d.user_id);
+		ticket.close(client.users.cache.get(packet.d.user_id));
 		return;
 	}
 
@@ -43,8 +45,9 @@ module.exports = async packet => {
 				)
 				.then(() => {
 					ticket.ticketMessage.delete();
-					if (typeof ticket.attachmentsMessage !== "undefined")
-						ticket.attachmentsMessage.delete();
+					ticket.user.user.send(`<${packet.d.user_id}> has closed your ticket \`#${ticket.id}\``);
+					(client.channels.cache.get(channels.supportChannel) as TextChannel).permissionOverwrites.get(ticket.user.id).delete();
+					if (typeof ticket.attachmentsMessage !== "undefined") ticket.attachmentsMessage.delete();
 				})
 				.catch(() => {
 					ticket.ticketMessage.reactions

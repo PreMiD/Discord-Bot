@@ -9,18 +9,14 @@ const creditsColl = pmdDB.collection("credits");
 async function updateCredits() {
 	info("Updating credits...");
 
-	const creditUsers = (
-		await client.guilds.cache.first().members.fetch()
-	).filter(m =>
-		Object.values(creditRoles).find(cR => m.roles.cache.keyArray().includes(cR))
-			? true
-			: false
+	const creditUsers = (await client.guilds.cache.first().members.fetch()).filter(m =>
+		Object.values(creditRoles).find(cR => m.roles.cache.keyArray().includes(cR)) ? true : false
 	);
 
 	let credits = creditUsers.map(m => {
-		const highestRole = m.roles.cache.get(
-			containsAny(Object.values(creditRoles), m.roles.cache.keyArray())[0]
-		);
+		const highestRole = m.roles.cache.get(containsAny(Object.values(creditRoles), m.roles.cache.keyArray())[0]),
+			colorRole = m.roles.cache.filter(x => x.hexColor !== "#000000").sort((a, b) => a.position - b.position).map(x => x).reverse()[0],
+			staff = ["656913616100130816", "672175812102979605"].map(x => m.roles.cache.map(x => x.id).includes(x)).includes(true);
 
 		return {
 			userId: m.id,
@@ -35,7 +31,7 @@ async function updateCredits() {
 			roleId: highestRole.id,
 			roles: m.roles.cache.filter(r => r.name !== "@everyone").map(r => r.name),
 			roleIds: m.roles.cache.filter(r => r.name !== "@everyone").map(r => r.id),
-			roleColor: highestRole.hexColor,
+			roleColor: staff ? colorRole.hexColor : highestRole.hexColor,
 			rolePosition: highestRole.position,
 			status: m.user.presence.status
 		};
@@ -125,8 +121,5 @@ schedule.scheduleJob("flag updater", "0 */6 * * *", updateFlags);
 schedule.scheduleJob("credits updater", "*/15 * * * *", updateCredits).invoke();
 
 function containsAny(source: Array<string>, target: Array<string>) {
-	let result = source.filter(function (item) {
-		return target.indexOf(item) > -1;
-	});
-	return result;
+	return source.filter((item) => target.indexOf(item) > -1);;
 }
