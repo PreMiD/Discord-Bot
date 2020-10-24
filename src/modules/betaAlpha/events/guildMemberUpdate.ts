@@ -92,7 +92,8 @@ module.exports = async (
 	//* If user boosts and doesn't have beta role, give it to them.
 	if (
 		newMember.roles.cache.has(roles.booster) &&
-		!newMember.roles.cache.has(roles.beta)
+		!newMember.roles.cache.has(roles.beta) &&
+            	!m.roles.cache.has(roles.alpha)
 	) {
 		newMember.roles.add(roles.beta);
 	}
