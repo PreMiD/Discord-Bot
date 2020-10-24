@@ -15,7 +15,9 @@ module.exports.run = async (
 	
 	t.attach(message.attachments.first(), message.author.id);
 
-	message.channel.send("The attachment has been added!");
+	message.reply("your attachment has been added!");
+	message.delete();
+	t.addLog(`[ATTCHMENT] ${message.member.user.tag} added an attachment`);
 };
 
 module.exports.config = {

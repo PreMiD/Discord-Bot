@@ -1,6 +1,8 @@
 node_modules
 dist
 
+TicketLogs/*
+
 src/package.json
 
 .vscode

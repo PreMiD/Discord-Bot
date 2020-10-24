@@ -13,6 +13,10 @@ let users: Array<string> = [];
 
 module.exports = async (message: Discord.Message) => {
 	
+	const args = message.content
+		.split(" ")
+		.slice(1, message.content.split(" ").length);
+
 	if (
 		message.author.bot ||
 		(message.channel.id !== channels.supportChannel &&
@@ -81,45 +85,53 @@ module.exports = async (message: Discord.Message) => {
 			}
 		);
 
-	if (ticketFound && !message.author.bot)
+	if (ticketFound && !message.author.bot) {
 		coll.findOneAndUpdate(
 			{ ticketId: t.id },
 			{ $set: { lastUserMessage: Date.now() } }
 		);
+		if(message.content.toLowerCase().startsWith("p!")) return;
+		t.addLog(`[MESSAGE] ${message.member.user.tag} - ${message.cleanContent}`);
+	}
 
 	if (
 		ticketFound &&
 		message.content.startsWith("<<") &&
-		(message.member.roles.cache.has(roles.ticketManager) ||
-			message.member.permissions.has("ADMINISTRATOR"))
+		(message.member.roles.cache.has(roles.ticketManager) || message.member.permissions.has("ADMINISTRATOR"))
 	) {
-		t.removeSupporter(message.member);
+		if(args.length > 0) {
+			const userToRemove = message.guild.members.cache.find(
+				m => (m.id === args.join(" ") || m.displayName.toLowerCase() === args.join(" ").toLowerCase())
+			);
+
+			t.removeSupporter(userToRemove);
+			t.addLog(`[USER REMOVED] ${message.member.user.tag} removed ${userToRemove.user.tag}`);
+		} else {
+			t.removeSupporter(message.member);
+			t.addLog(`[USER LEAVE] ${message.member.user.tag}`);
+		}
+
 		message.delete();
 		return;
 	}
 
-	if ( ticketFound && message.content.startsWith(">>") ) {
-		const args = message.content
-			.split(" ")
-			.slice(1, message.content.split(" ").length);
+	if ( 
+		ticketFound && message.content.startsWith(">>") &&
+		(message.member.roles.cache.has(roles.ticketManager) || message.member.permissions.has("ADMINISTRATOR"))) 
+	{
 		if (args.length === 0) return;
 		const userToAdd = message.guild.members.cache.find(
-			m =>
-				(m.id === args.join(" ") ||
-					m.displayName.toLowerCase() === args.join(" ").toLowerCase()) &&
-				(message.member.roles.cache.has(roles.ticketManager) ||
-					message.member.permissions.has("ADMINISTRATOR"))
+			m => (m.id === args.join(" ") || m.displayName.toLowerCase() === args.join(" ").toLowerCase()) 
 		);
 		t.addSupporter(userToAdd);
+		t.addLog(`[USER ADDED] ${message.member.user.tag} added ${userToAdd.user.tag}`);
 		message.delete();
 		return;
 	}
 
 	if (
-		ticketFound &&
-		!message.content.startsWith("<<") &&
-		(message.member.roles.cache.has(roles.ticketManager) 
-		 	|| message.member.permissions.has("ADMINISTRATOR"))
+		ticketFound && !message.content.startsWith("<<") &&
+		(message.member.roles.cache.has(roles.ticketManager) || message.member.permissions.has("ADMINISTRATOR"))
 	) {
 		t.addSupporter(message.member);
 		return;

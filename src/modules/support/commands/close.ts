@@ -2,8 +2,7 @@ import * as Discord from "discord.js";
 import { Ticket } from "../classes/Ticket";
 
 module.exports.run = async (
-	message: Discord.Message,
-	params: Array<string>
+	message: Discord.Message
 ) => {
 	let t = new Ticket(), dm = message.channel.type == "dm", ticketFound;
 
@@ -12,23 +11,27 @@ module.exports.run = async (
 
 	if (!ticketFound) return;
 
-	if (params.length > 0)
+	t.addLog(`[TICKET CLOSED] ${message.author.tag} has closed the ticket`)
+
+	if (!dm) {
 		t.close(
 			message.member,
 			message.content
 				.split(" ")
 				.slice(1, message.content.split(" ").length)
-				.join(" ")
-		);
-	else if(dm) t.close(
+				.join(" ") || "Not Specified",
+			message
+		)
+	} else {
+		t.close(
 			message.author,
-				message.content
+			message.content
 				.split(" ")
 				.slice(1, message.content.split(" ").length)
-				.join(" ")
-			|| "Not Specified"
+				.join(" ") || "Not Specified",
+			message
 		)
-	else t.close(message.member);
+	}
 };
 
 module.exports.config = {

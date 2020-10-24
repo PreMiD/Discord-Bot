@@ -1,10 +1,12 @@
 import * as Discord from "discord.js";
 
+import moment from "moment";
+import fs from "fs";
+
 import { sortTickets } from "../";
 import { client } from "../../..";
 import channels from "../../../channels";
 import { pmdDB } from "../../../database/client";
-
 const coll = pmdDB.collection("tickets"),
 	circleFolder = "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/";
 
@@ -40,7 +42,8 @@ export class Ticket {
 				: await coll.findOne(type === "message" ? { ticketMessage: arg } : { supportChannel: arg });
 
 		if (!ticket) return false;
-
+		if (!ticket.logs) coll.findOneAndUpdate({userId: ticket.userId}, {$push: {logs: ["[LOG CREATED] A few messages may be missing, this may be because your ticket was created before our logging system was introduced."]}});
+		
 		this.id = ticket.ticketId;
 		this.userId = ticket.userId;
 		this.status = ticket.status;
@@ -81,6 +84,9 @@ export class Ticket {
 	}
 
 	async create(message: Discord.Message) {
+
+		this.addLog(`[TICKET CREATED] Awaiting supporter`);
+
 		try {
 			if (!ticketCount) ticketCount = await coll.countDocuments({});
 
@@ -158,6 +164,9 @@ export class Ticket {
 	}
 
 	async accept(supporter: Discord.GuildMember) {
+
+		this.addLog(`[ACCEPTED] Ticket accepted by ${supporter.user.id}`);
+
 		if (
 			(client.channels.resolve(channels.ticketCategory) as Discord.CategoryChannel)
 				.children.size >= 50
@@ -247,14 +256,9 @@ export class Ticket {
 
 		//@ts-ignore False types...
 		this.embed.fields = this.embed.fields.filter(x => x.name != "Channel");
-		this.embed.footer = {
-			text: "p!close - Closes this ticket."
-		};
+		this.embed.footer = { text: "p!close - Closes this ticket." };
 		this.channelMessage = await this.channel.send({ embed: this.embed });
-
-		this.channel.send(
-			`${this.user}, Your ticket \`\`#${this.id}\`\` has been accepted by **${supporter.displayName}**.`
-		);
+		this.channel.send(`${this.user}, Your ticket \`\`#${this.id}\`\` has been accepted by **${supporter.displayName}**.`);
 
 		coll.findOneAndUpdate(
 			{ ticketMessage: this.ticketMessage.id },
@@ -272,72 +276,90 @@ export class Ticket {
 		sortTickets();
 	}
 
-	async close(closer?: any, reason?: string) {
-
-		if(this.user) this.user.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${closer.tag ? closer.tag : closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``).catch(() => {});
-		
-		const getVars = url => 
-		    /^https:\/\/discordapp\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.test(url) ? {
-		    id: /^https:\/\/discordapp\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.exec(url)[1],
-		    token: /^https:\/\/discordapp\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.exec(url)[2]
-		}
-		: null,
-		vars = getVars(process.env.TICKETLOGSWEBHOOK),
-		webhook = new Discord.WebhookClient(vars.id, vars.token),
-		embed = new Discord.MessageEmbed()
-			.setAuthor(`Ticket#${this.id} [CLOSED]`, "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/red_circle.png?raw=true")
-			.setColor("#b52222")
-			.setDescription(this.embed.description)
-			.addFields([
-				{
-					name: `Opened By`,
-					value: this.user ? this.user.user.tag : `<@${this.userId}>`,
-					inline: true
-				},
-				{
-					name: `Closed By`,
-					value: closer.tag ? closer.tag : closer.user.tag,
-					inline: true
-				},
-				{
-					name: `Reason`,
-					value: reason || "Not Specified",
-					inline: true
-				},
-				{
-					name: `Supporter(s)`,
-					value: this.supporters,
-					inline: true
-				},
-				{
-					name: "Attachments",
-					value: this.attachments.length > 0 ? this.attachments.join(", ") : "None",
-					inline: true
+	async close(closer?: any, reason?: string, message=null) {
+		if(message) message.react("521018476480167937"); 
+		let logs = await coll.findOne({supportChannel: this.channel.id});
+		fs.writeFile(`${process.cwd()}/../TicketLogs/${this.id}.txt`, logs.logs.join("\n"), (err) => {
+			if(err) console.log(err)
+			fs.readFile(`${process.cwd()}/../TicketLogs/${this.id}.txt`, {encoding: "utf-8"}, (err, data) => {
+				if(err) return console.log(err);	
+				if(this.user) this.user.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${closer.tag ? closer.tag : closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``, {
+					files: [{
+						attachment: `${process.cwd()}/../TicketLogs/${this.id}.txt`,
+						name: `Ticket-${this.id}.txt`
+					}]
+				}).catch(() => {});
+				
+				const getVars = url => 
+					/^https:\/\/discordapp\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.test(url) ? {
+					id: /^https:\/\/discordapp\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.exec(url)[1],
+					token: /^https:\/\/discordapp\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.exec(url)[2]
 				}
-			]);
-
-		webhook.send(embed);
-
-		if (this.embed.thumbnail) delete this.embed.thumbnail;
-		delete this.embed.fields;
-		if (this.attachmentsMessage && this.attachmentsMessage.deletable) this.attachmentsMessage.delete();
-		if (this.ticketMessage.deletable) this.ticketMessage.delete();
-	    if (this.channel && this.channel.deletable) this.channel.delete();
+				: null,
+				vars = getVars(process.env.TICKETLOGSWEBHOOK),
+				webhook = new Discord.WebhookClient(vars.id, vars.token),
+				embed = new Discord.MessageEmbed()
+					.setAuthor(`Ticket#${this.id} [CLOSED]`, "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/red_circle.png?raw=true")
+					.setColor("#b52222")
+					.setDescription(this.embed.description)
+					.addFields([
+						{
+							name: `Opened By`,
+							value: this.user ? this.user.user.tag : `<@${this.userId}>`,
+							inline: true
+						},
+						{
+							name: `Closed By`,
+							value: closer.tag ? closer.tag : closer.user.tag,
+							inline: true
+						},
+						{
+							name: `Reason`,
+							value: reason || "Not Specified",
+							inline: true
+						},
+						{
+							name: `Supporter(s)`,
+							value: this.supporters,
+							inline: true
+						},
+						{
+							name: "Attachments",
+							value: this.attachments.length > 0 ? this.attachments.join(", ") : "None",
+							inline: true
+						}
+					]);
 		
-		(client.channels.cache.get(channels.supportChannel) as Discord.TextChannel).permissionOverwrites.get(this.user.id).delete()
-
-		coll.findOneAndUpdate(
-			{ supportChannel: this.channel ? this.channel.id : 0}, {
-				$unset: { supportChannel: "", supportEmbed: "" },
-				$set: { status: 2, closer: closer.id	}
-			}
-		);
+				webhook.send("", {
+					embeds: [embed],
+					files: [{
+						attachment: `${process.cwd()}/../TicketLogs/${this.id}.txt`,
+						name: `Ticket-${this.id}.txt`
+					}]
+				});
+				
+				delete this.embed.fields;
+				if (this.embed.thumbnail) delete this.embed.thumbnail;
+				if (this.attachmentsMessage && this.attachmentsMessage.deletable) this.attachmentsMessage.delete();
+				if (this.ticketMessage.deletable) this.ticketMessage.delete();
+				if (this.channel && this.channel.deletable) this.channel.delete();
+				if (this.user) (client.channels.cache.get(channels.supportChannel) as Discord.TextChannel).permissionOverwrites.get(this.user.id).delete()
+		
+				coll.findOneAndUpdate(
+					{ supportChannel: this.channel ? this.channel.id : 0}, {
+						$unset: { supportChannel: "", supportEmbed: "" },
+						$set: { status: 2, closer: closer.id	}
+					}
+				);
+			});
+		});
 	}
 
 	async addSupporter(member: Discord.GuildMember, sendMessage = true) {
 		if (this.supporters.find(s => s.id === member.id)) return;
 
 		this.supporters.push(member);
+		this.addLog(`[SUPPORTER ADDED] ${member.user.tag}`);
 
 		//@ts-ignore False types...
 		this.embed.fields[0] = {
@@ -381,15 +403,10 @@ export class Ticket {
 		if (this.supporters.find(s => s.id === member.id)) {
 			this.supporters = this.supporters.filter(s => s.id !== member.id);
 
-			//@ts-ignore False types...
-			this.embed.fields[0] = {
-				name: "Supporter",
-				value: this.supporters.toString()
-			};
 
 			this.ticketMessage.edit(this.embed);
 			let supportEmbed = Object.assign({}, this.embed);
-			//@ts-ignore False types...
+			// @ts-ignore False types...
 			supportEmbed.fields.pop();
 			supportEmbed.footer = {
 				text: "p!close - Closes this ticket."
@@ -439,10 +456,18 @@ export class Ticket {
 				attachments: attachments
 			}
 		})
+	}
 
+	addLog(input) {
+		coll.findOneAndUpdate({supportChannel: this.channel.id}, { 
+			$push: {
+				logs: `[${moment(new Date()).format("DD/MM/YY LT")} (GMT+1)] ${input}`
+			}
+		})
 	}
 
 	async sendCloseWarning() {
+		this.addLog(`[WARNING] This ticket will be closed in 2 days due to inactivity`);
 		this.channel.send(
 			`${this.user.toString()}, ${this.supporters
 				.map(s => s.toString())
