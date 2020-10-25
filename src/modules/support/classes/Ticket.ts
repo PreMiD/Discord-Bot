@@ -84,7 +84,6 @@ export class Ticket {
 	}
 
 	async create(message: Discord.Message) {
-		
 		try {
 			if (!ticketCount) ticketCount = await coll.countDocuments({});
 
@@ -269,14 +268,14 @@ export class Ticket {
 			}
 		);
 
-		this.addLog(`[ACCEPTED] Ticket accepted by ${supporter.user.id}`);
+		this.addLog(`[ACCEPTED] Ticket accepted by ${supporter.user.tag}`);
 		
 		sortTickets();
 	}
 
 	async close(closer?: any, reason?: string, message=null) {
 		
-		if (this.channel && this.channel.deletable) this.channel.delete();
+		if (this.channel.deletable) this.channel.delete();
 
 		let logs = await coll.findOne({supportChannel: this.channel.id});
 		fs.writeFile(`${process.cwd()}/../TicketLogs/${this.id}.txt`, logs.logs.join("\n"), (err) => {
