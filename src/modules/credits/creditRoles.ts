@@ -9,10 +9,10 @@ export default {
     moderator: "514546359865442304",
     supportAgent: "566417964820070421",
     representative: "691384256672563332",
-    booster: "585532751663333383",
     patron: "515874214750715904",
-    proofreader: "522755339448483840",
     donator: "502165799172309013",
+    booster: "585532751663333383",
+    proofreader: "522755339448483840",
     translator: "502148045991968788",
     presenceDev: "606222296016879722",
 };
