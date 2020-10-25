@@ -19,7 +19,7 @@ module.exports = async (user: Discord.GuildMember) => {
 			} catch (_) {}
 		} else if (ticket.status === 1) {
 			const t = new Ticket();
-			if (await t.fetch("ticket", ticket)) t.close(client.user, "Ticket creator left the Discord.");
+			if (await t.fetch("ticket", ticket)) t.close({tag: "PreMiD Bot"}, "Ticket creator left the Discord.");
 		}
 	});
 };
