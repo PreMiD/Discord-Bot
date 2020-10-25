@@ -142,7 +142,8 @@ export class Ticket {
 				ticketMessage: this.ticketMessage.id,
 				timestamp: Date.now(),
 				attachments: this.attachments,
-				created: Date.now()
+				created: Date.now(),
+				logs: [`[${moment(new Date()).format("DD/MM/YY LT")} (GMT+1)] [TICKET CREATED] Awaiting supporter!`]
 			});
 
 			message.delete().catch(() => {});
