@@ -84,9 +84,7 @@ export class Ticket {
 	}
 
 	async create(message: Discord.Message) {
-
-		this.addLog(`[TICKET CREATED] Awaiting supporter`);
-
+		
 		try {
 			if (!ticketCount) ticketCount = await coll.countDocuments({});
 
