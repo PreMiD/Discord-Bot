@@ -84,7 +84,6 @@ export class Ticket {
 	}
 
 	async create(message: Discord.Message) {
-		
 		try {
 			if (!ticketCount) ticketCount = await coll.countDocuments({});
 
@@ -163,9 +162,6 @@ export class Ticket {
 	}
 
 	async accept(supporter: Discord.GuildMember) {
-
-		this.addLog(`[ACCEPTED] Ticket accepted by ${supporter.user.id}`);
-
 		if (
 			(client.channels.resolve(channels.ticketCategory) as Discord.CategoryChannel)
 				.children.size >= 50
@@ -272,11 +268,15 @@ export class Ticket {
 			}
 		);
 
+		this.addLog(`[ACCEPTED] Ticket accepted by ${supporter.user.tag}`);
+		
 		sortTickets();
 	}
 
 	async close(closer?: any, reason?: string, message=null) {
-		if(message) message.react("521018476480167937"); 
+		
+		if (this.channel.deletable) this.channel.delete();
+
 		let logs = await coll.findOne({supportChannel: this.channel.id});
 		fs.writeFile(`${process.cwd()}/../TicketLogs/${this.id}.txt`, logs.logs.join("\n"), (err) => {
 			if(err) console.log(err)
@@ -341,7 +341,6 @@ export class Ticket {
 				if (this.embed.thumbnail) delete this.embed.thumbnail;
 				if (this.attachmentsMessage && this.attachmentsMessage.deletable) this.attachmentsMessage.delete();
 				if (this.ticketMessage.deletable) this.ticketMessage.delete();
-				if (this.channel && this.channel.deletable) this.channel.delete();
 				if (this.user) (client.channels.cache.get(channels.supportChannel) as Discord.TextChannel).permissionOverwrites.get(this.user.id).delete()
 		
 				coll.findOneAndUpdate(
