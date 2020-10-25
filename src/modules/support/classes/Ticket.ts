@@ -163,9 +163,6 @@ export class Ticket {
 	}
 
 	async accept(supporter: Discord.GuildMember) {
-
-		this.addLog(`[ACCEPTED] Ticket accepted by ${supporter.user.id}`);
-
 		if (
 			(client.channels.resolve(channels.ticketCategory) as Discord.CategoryChannel)
 				.children.size >= 50
@@ -272,6 +269,8 @@ export class Ticket {
 			}
 		);
 
+		this.addLog(`[ACCEPTED] Ticket accepted by ${supporter.user.id}`);
+		
 		sortTickets();
 	}
 
