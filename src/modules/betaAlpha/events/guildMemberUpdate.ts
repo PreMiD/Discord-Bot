@@ -93,7 +93,7 @@ module.exports = async (
 	if (
 		newMember.roles.cache.has(roles.booster) &&
 		!newMember.roles.cache.has(roles.beta) &&
-            	!mewMember.roles.cache.has(roles.alpha)
+            	!newMember.roles.cache.has(roles.alpha)
 	) {
 		newMember.roles.add(roles.beta);
 	}
