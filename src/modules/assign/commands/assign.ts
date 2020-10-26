@@ -10,34 +10,25 @@ module.exports.run = async (
 	params: Array<String>
 ) => {
 	let roleCheck: {
-		//movieNight?: string;
 		minecraft?: string;
 		linuxTest?: string;
 		vacation?: string;
-	} = {};
-
-	//roleCheck.movieNight = assignRolesFile.movieNight;
+		updates?: string;
+	} = {
+		updates: assignRolesFile.updates
+	};
 
 	if (
-		message.member.hasPermission("ADMINISTRATOR") ||
-		message.member.roles.cache.has(assignee.staffHead)
+		message.member.hasPermission("ADMINISTRATOR") || message.member.roles.cache.has(assignee.staffHead)
 	) {
 		roleCheck.minecraft = assignRolesFile.minecraft;
 		roleCheck.vacation = assignRolesFile.vacation;
 		roleCheck.linuxTest = assignRolesFile.linuxTest;
 	} else {
-		if (message.member.roles.cache.has(assignee.alphaRole)) {
-			roleCheck.minecraft = assignRolesFile.minecraft;
-		}
-		if (message.member.roles.cache.has(assignee.betaRole)) {
-			roleCheck.minecraft = assignRolesFile.minecraft;
-		}
-		if (message.member.roles.cache.has(assignee.staff)) {
-			roleCheck.vacation = assignRolesFile.vacation;
-		}
-		if (message.member.roles.cache.has(assignee.linuxMaintainer)) {
-			roleCheck.linuxTest = assignRolesFile.linuxTest;
-		}
+		if (message.member.roles.cache.has(assignee.alphaRole)) roleCheck.minecraft = assignRolesFile.minecraft;
+		if (message.member.roles.cache.has(assignee.betaRole)) roleCheck.minecraft = assignRolesFile.minecraft;
+		if (message.member.roles.cache.has(assignee.staff)) roleCheck.vacation = assignRolesFile.vacation;
+		if (message.member.roles.cache.has(assignee.linuxMaintainer)) roleCheck.linuxTest = assignRolesFile.linuxTest;
 	}
 
 	let assignRoles: Discord.Role[] = Object.values(roleCheck)
@@ -49,9 +40,7 @@ module.exports.run = async (
 		embed = new Discord.MessageEmbed({
 			title: "Assignable Roles",
 			description: `*You can assign these roles by typing
-			\`\`${
-				config.prefix
-			}assign <roleName> [optianlly tag a member to give the role to]\`\`*
+			\`\`${config.prefix}assign <roleName> [optionally tag a member to give the role to]\`\`*
 
 			${assignRoles.map((r) => `**${r.name}**`).join(", ")}`,
 			color: "#7289DA",
@@ -68,9 +57,7 @@ module.exports.run = async (
 		params.pop();
 	}
 
-	let assignRole = assignRoles.filter(
-		(r) => r.name.toLowerCase() == params.join(" ").toLowerCase()
-	);
+	let assignRole = assignRoles.filter(r => r.name.toLowerCase() == params.join(" ").toLowerCase());
 
 	if (assignRole.length == 0) {
 		embed = new Discord.MessageEmbed({
@@ -84,25 +71,21 @@ module.exports.run = async (
 		return;
 	}
 
-	let asRole = assignRole[0];
-	const mentioned = message.mentions.members.first();
-
-	let userToAddRole = message.member;
+	let asRole = assignRole[0],
+		mentioned = message.mentions.members.first(),
+		userToAddRole = message.member;
 
 	if (mentioned != undefined) {
 		if (
 			message.member.hasPermission("ADMINISTRATOR") ||
 			message.member.roles.cache.has(assignee.staffHead) ||
-			(asRole.id == assignRolesFile.linuxTest &&
-				message.member.roles.cache.has(assignee.linuxMaintainer))
-		) {
-			userToAddRole = mentioned;
-		} else {
+			(asRole.id == assignRolesFile.linuxTest && message.member.roles.cache.has(assignee.linuxMaintainer))
+		) userToAddRole = mentioned;
+		else {
 			message.react("❌");
-			let description = `You do not have permission to add the role to user **${mentioned.displayName}**.`;
 			embed = new Discord.MessageEmbed({
 				title: "Assign",
-				description,
+				description: `You do not have permission to add the role to user **${mentioned.displayName}**.`,
 				color: "#ff5050",
 			});
 
@@ -137,13 +120,12 @@ module.exports.run = async (
 	});
 	message.channel
 		.send(embed)
-		.then((msg) => (msg as Discord.Message).delete({ timeout: 10 * 1000 }));
+		.then(msg => msg.delete({ timeout: 10 * 1000 }));
 
 	if (!message.deleted) message.delete();
 };
 
 module.exports.config = {
 	name: "assign",
-	description:
-		"Assign roles to yourself (or if you're a mod to someone else too).",
+	description: "Assign roles to yourself (or if you're a mod to someone else too).",
 };

@@ -35,10 +35,6 @@ async function updateCredits() {
 			rolePosition: highestRole.position,
 			status: m.user.presence.status
 		};
-	}).sort((a, b) => {
-		if(a.name < b.name) return -1;
-		if(a.name > b.name) return 1;
-		return 0;
 	})
 
 	await creditsColl.bulkWrite(

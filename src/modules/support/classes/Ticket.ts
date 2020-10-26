@@ -42,7 +42,7 @@ export class Ticket {
 				: await coll.findOne(type === "message" ? { ticketMessage: arg } : { supportChannel: arg });
 
 		if (!ticket) return false;
-		if (!ticket.logs) coll.findOneAndUpdate({userId: ticket.userId}, {$push: {logs: ["[LOG CREATED] A few messages may be missing, this may be because your ticket was created before our logging system was introduced."]}});
+		if (!ticket.logs) coll.findOneAndUpdate({userId: ticket.userId}, {$set: {logs: []}});
 		
 		this.id = ticket.ticketId;
 		this.userId = ticket.userId;
