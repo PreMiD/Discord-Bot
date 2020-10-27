@@ -43,14 +43,12 @@ async function updateBetaUsers() {
 			.members.fetch({ limit: 0 })
 	).filter(
 		m =>
-			(m.roles.cache.has(roles.booster) ||
-				betaUsers.find(b => b.userId === m.user.id)) &&
+			(m.roles.cache.has(roles.booster) || betaUsers.find(b => b.userId === m.user.id)) &&
 			!m.roles.cache.has(roles.alpha) &&
 			!m.roles.cache.has(roles.beta)
 	);
 
-	for (let i = 0; i < guildMembers.size; i++)
-		await guildMembers.array()[i].roles.add(roles.beta);
+	for (let i = 0; i < guildMembers.size; i++) await guildMembers.array()[i].roles.add(roles.beta);
 
 	info("Updated beta users.");
 }

@@ -36,9 +36,7 @@ export async function checkInvite(string: string) {
 
 	invites.push("discord.gg/premid");
 
-	let ownInvite = invites.filter(iURL =>
-		string.toLowerCase().includes(iURL.toLowerCase())
-	);
+	let ownInvite = invites.filter(iURL => string.toLowerCase().includes(iURL.toLowerCase()));
 
 	if (ownInvite.length > 0) invites.map(i => (string = string.replace(i, "")));
 
