@@ -2,6 +2,7 @@ import * as Discord from "discord.js";
 
 import moment from "moment";
 import fs from "fs";
+import rimraf from "rimraf";
 
 import { sortTickets } from "../";
 import { client } from "../../..";
@@ -343,6 +344,8 @@ export class Ticket {
 				if (this.ticketMessage.deletable) this.ticketMessage.delete();
 				if (this.user) (client.channels.cache.get(channels.supportChannel) as Discord.TextChannel).permissionOverwrites.get(this.user.id).delete()
 		
+				rimraf(`${process.cwd()}/../TicketLogs/${this.id}.txt`, () => {});
+
 				coll.findOneAndUpdate(
 					{ supportChannel: this.channel ? this.channel.id : 0}, {
 						$unset: { supportChannel: "", supportEmbed: "" },
