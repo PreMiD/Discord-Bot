@@ -142,7 +142,7 @@ export class Ticket {
 				timestamp: Date.now(),
 				attachments: this.attachments,
 				created: Date.now(),
-				logs: [`[${moment(new Date()).format("DD/MM/YY LT")} (GMT+1)] [TICKET CREATED] Awaiting supporter!`]
+				logs: [`[${moment(new Date()).format("DD/MM/YY LT")} (${Date().split("(")[1].replace(")", "")})] [TICKET CREATED] Awaiting supporter!`]
 			});
 
 			message.delete().catch(() => {});
@@ -459,7 +459,7 @@ export class Ticket {
 	addLog(input) {
 		coll.findOneAndUpdate({supportChannel: this.channel.id}, { 
 			$push: {
-				logs: `[${moment(new Date()).format("DD/MM/YY LT")} (GMT+1)] ${input}`
+				logs: `[${moment(new Date()).format("DD/MM/YY LT")} (${Date().split("(")[1].replace(")", "")})] ${input}`
 			}
 		})
 	}
