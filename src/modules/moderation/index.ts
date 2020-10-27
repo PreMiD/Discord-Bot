@@ -17,7 +17,7 @@ export let blacklistedWords: string[] = [];
 			.then(m => {
 				if (!m.roles.cache.has(roles.muted)) coll.findOneAndDelete({ userId: mute.userId });
 			})
-			.catch(() => {});
+			.catch(null);
 
 		//* If mute penalty time expired unmute else setTimeout to do it when it ends
 		if (mute.mutedUntil - Date.now() <= 0) unmute(mute.userId);

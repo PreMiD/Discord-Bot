@@ -52,9 +52,7 @@ async function updateCredits() {
 	const dbCredits = await creditsColl
 			.find({}, { projection: { _id: false, userId: true } })
 			.toArray(),
-		usersToRemove = dbCredits.filter(
-			mC => !credits.find(cU => cU.userId === mC.userId)
-		);
+		usersToRemove = dbCredits.filter(mC => !credits.find(cU => cU.userId === mC.userId));
 
 	if (usersToRemove.length > 0)
 		await creditsColl.bulkWrite(

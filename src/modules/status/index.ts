@@ -1,7 +1,7 @@
 //! Temporary until I find a fix for the config -Tony
 const statusUpdateChannel = "518467470894563345";
-const statusUpdateURL =
-	"https://status.premid.app/api/v2/incidents/unresolved.json";
+const statusUpdateURL = "https://status.premid.app/api/v2/incidents/unresolved.json";
+
 import axios from "axios";
 import { client } from "../..";
 import { TextChannel } from "discord.js";

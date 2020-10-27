@@ -13,10 +13,7 @@ if (params[0] == undefined || params[0].length == 0 || params[0].toLowerCase() =
 			color: "RANDOM",
 			description: client.infos
 				.keyArray()
-				.map(k => {
-					
-					return `**${client.infos.get(k).title}**:\n\`\`${k}\`\`, \`\`${client.infos.get(k).aliases.join("\`\`, \`\`")}\`\`` ;
-				})
+				.map(k => `**${client.infos.get(k).title}**:\n\`\`${k}\`\`, \`\`${client.infos.get(k).aliases.join("\`\`, \`\`")}\`\``)
 				.join("\n\n "),
 			footer: {
 				text: message.author.tag,
@@ -34,14 +31,11 @@ if (params[0] == undefined || params[0].length == 0 || params[0].toLowerCase() =
 			client.infos.has(client.infoAliases.get(params[0].toLowerCase()))
 		)
 	) {
-		(await message.reply("please enter a valid name!")).delete({
-			timeout: 5 * 1000
-		});
+		(await message.reply("please enter a valid name!")).delete({timeout: 5 * 1000});
 		return;
 	}
 
-	const info =
-			client.infos.get(params[0].toLowerCase()) ||
+	const info = client.infos.get(params[0].toLowerCase()) ||
 			client.infos.get(client.infoAliases.get(params[0].toLowerCase())),
 		embed = new Discord.MessageEmbed({
 			title: info.title || "No Title",
