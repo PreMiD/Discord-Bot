@@ -21,7 +21,7 @@ async function updatePresenceAuthors() {
 		presences = await col.find().toArray(),
 		presenceDevelopers = presences.map(p => p.metadata.author.id);
 
-		presenceDevelopers.concat(presences.map(p => p.metadata.contributors).map(x => x.id)[0])
+	presenceDevelopers.concat(presences.map(p => p.metadata.contributors).map(x => x.id)[0])
 
 	for (const author of presenceDevelopers) {
 		const member = guild.members.resolve(author);
