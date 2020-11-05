@@ -2,15 +2,16 @@ import * as Discord from "discord.js";
 
 import moment from "moment";
 import fs from "fs";
+import rimraf from "rimraf";
 
 import { sortTickets } from "../";
 import { client } from "../../..";
 import channels from "../../../channels";
 import { pmdDB } from "../../../database/client";
-const coll = pmdDB.collection("tickets"),
-	circleFolder = "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/";
 
-let ticketCount = 0;
+let coll = pmdDB.collection("tickets"),
+	circleFolder = "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/",
+	ticketCount = 0;
 
 export class Ticket {
 	id: string;
@@ -42,7 +43,7 @@ export class Ticket {
 				: await coll.findOne(type === "message" ? { ticketMessage: arg } : { supportChannel: arg });
 
 		if (!ticket) return false;
-		if (!ticket.logs) coll.findOneAndUpdate({userId: ticket.userId}, {$push: {logs: ["[LOG CREATED] A few messages may be missing, this may be because your ticket was created before our logging system was introduced."]}});
+		if (!ticket.logs) coll.findOneAndUpdate({userId: ticket.userId}, {$set: {logs: []}});
 		
 		this.id = ticket.ticketId;
 		this.userId = ticket.userId;
@@ -79,7 +80,7 @@ export class Ticket {
 
 		try {
 			this.user = await (client.channels.cache.get(channels.ticketCategory) as Discord.TextChannel).guild.members.fetch(ticket.userId);
-		} catch (_) {}
+		} catch {}
 		return true;
 	}
 
@@ -142,7 +143,7 @@ export class Ticket {
 				timestamp: Date.now(),
 				attachments: this.attachments,
 				created: Date.now(),
-				logs: [`[${moment(new Date()).format("DD/MM/YY LT")} (GMT+1)] [TICKET CREATED] Awaiting supporter!`]
+				logs: [`[${moment(new Date()).format("DD/MM/YY LT")} (${Date().split("(")[1].replace(")", "")})] [TICKET CREATED] Awaiting supporter!`]
 			});
 
 			message.delete().catch(() => {});
@@ -150,9 +151,7 @@ export class Ticket {
 				SEND_MESSAGES: false
 			})
 		} catch (err) {
-			(client.channels.cache.get(
-				channels.dev
-			) as Discord.TextChannel).send(
+			(client.channels.cache.get(channels.dev) as Discord.TextChannel).send(
 				new Discord.MessageEmbed({
 					title: "Error: " + err.name,
 					description: err.message
@@ -163,8 +162,7 @@ export class Ticket {
 
 	async accept(supporter: Discord.GuildMember) {
 		if (
-			(client.channels.resolve(channels.ticketCategory) as Discord.CategoryChannel)
-				.children.size >= 50
+			(client.channels.resolve(channels.ticketCategory) as Discord.CategoryChannel).children.size >= 50
 		) {
 			(
 				await (client.channels.resolve(channels.ticketChannel) as Discord.TextChannel).send(
@@ -343,10 +341,12 @@ export class Ticket {
 				if (this.ticketMessage.deletable) this.ticketMessage.delete();
 				if (this.user) (client.channels.cache.get(channels.supportChannel) as Discord.TextChannel).permissionOverwrites.get(this.user.id).delete()
 		
+				rimraf(`${process.cwd()}/../TicketLogs/${this.id}.txt`, () => {});
+
 				coll.findOneAndUpdate(
 					{ supportChannel: this.channel ? this.channel.id : 0}, {
 						$unset: { supportChannel: "", supportEmbed: "" },
-						$set: { status: 2, closer: closer.id	}
+						$set: { status: 2, closer: closer.id }
 					}
 				);
 			});
@@ -388,19 +388,14 @@ export class Ticket {
 
 		coll.findOneAndUpdate(
 			{ supportChannel: this.channel.id },
-			{
-				$set: {
-					supportChannel: this.channel.id,
-					supporters: this.supporters.map(s => s.id)
-				}
-			}
+			{ $set: { supportChannel: this.channel.id, supporters: this.supporters.map(s => s.id) } }
 		);
 	}
 
 	async removeSupporter(member: Discord.GuildMember, sendMessage = true) {
 		if (this.supporters.find(s => s.id === member.id)) {
+			
 			this.supporters = this.supporters.filter(s => s.id !== member.id);
-
 
 			this.ticketMessage.edit(this.embed);
 			let supportEmbed = Object.assign({}, this.embed);
@@ -450,28 +445,20 @@ export class Ticket {
 		this.ticketMessage.edit(emb);
 
 		coll.findOneAndUpdate({userId: userId}, { 
-			$set: {
-				attachments: attachments
-			}
+			$set: { attachments: attachments }
 		})
 	}
 
 	addLog(input) {
 		coll.findOneAndUpdate({supportChannel: this.channel.id}, { 
-			$push: {
-				logs: `[${moment(new Date()).format("DD/MM/YY LT")} (GMT+1)] ${input}`
-			}
+			$push: { logs: `[${moment(new Date()).format("DD/MM/YY LT")} (${Date().split("(")[1].replace(")", "")})] ${input}` }
 		})
 	}
 
 	async sendCloseWarning() {
 		this.addLog(`[WARNING] This ticket will be closed in 2 days due to inactivity`);
 		this.channel.send(
-			`${this.user.toString()}, ${this.supporters
-				.map(s => s.toString())
-				.join(
-					", "
-				)}, This ticket will be closed automatically due to inactivity in **2 days**. To prevent this simply send a message in this channel.`
+			`${this.user.toString()}, ${this.supporters.map(s => s.toString()).join(", ")}, This ticket will be closed automatically due to inactivity in **2 days**. To prevent this simply send a message in this channel.`
 		);
 		coll.findOneAndUpdate(
 			{ supportChannel: this.channel.id },

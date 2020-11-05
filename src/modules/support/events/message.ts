@@ -90,7 +90,7 @@ module.exports = async (message: Discord.Message) => {
 			{ ticketId: t.id },
 			{ $set: { lastUserMessage: Date.now() } }
 		);
-		if(message.content.toLowerCase().startsWith("p!")) return;
+		if(message.content.toLowerCase().startsWith("p!")) return t.addLog(`[COMMAND ISSUED] ${message.author.tag} issued command: ${message.cleanContent}`);
 		t.addLog(`[MESSAGE] ${message.member.user.tag} - ${message.cleanContent}`);
 	}
 

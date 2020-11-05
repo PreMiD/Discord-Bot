@@ -35,10 +35,6 @@ async function updateCredits() {
 			rolePosition: highestRole.position,
 			status: m.user.presence.status
 		};
-	}).sort((a, b) => {
-		if(a.name < b.name) return -1;
-		if(a.name > b.name) return 1;
-		return 0;
 	})
 
 	await creditsColl.bulkWrite(
@@ -56,9 +52,7 @@ async function updateCredits() {
 	const dbCredits = await creditsColl
 			.find({}, { projection: { _id: false, userId: true } })
 			.toArray(),
-		usersToRemove = dbCredits.filter(
-			mC => !credits.find(cU => cU.userId === mC.userId)
-		);
+		usersToRemove = dbCredits.filter(mC => !credits.find(cU => cU.userId === mC.userId));
 
 	if (usersToRemove.length > 0)
 		await creditsColl.bulkWrite(
