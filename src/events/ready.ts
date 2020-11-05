@@ -1,7 +1,7 @@
 import * as Discord from "discord.js";
 import roles from "../roles";
 import { pmdDB } from "../database/client";
-import { success } from "../util/debug";
+import { success, info } from "../util/debug";
 import { client } from "..";
 
 const col = pmdDB.collection("presences");
@@ -17,11 +17,12 @@ module.exports.run = async (client: Discord.Client) => {
 };
 
 async function updatePresenceAuthors() {
+	info("Updating presence developers & contributors")
 	const guild = client.guilds.cache.get("493130730549805057"),
 		presences = await col.find().toArray(),
 		presenceDevelopers = presences.map(p => p.metadata.author.id);
 
-	presenceDevelopers.concat(presences.map(p => p.metadata.contributors).map(x => x.id)[0])
+	presenceDevelopers.concat(presences.filter(p => p.metadata.contributors).map(p => p.metadata.contributors.map(x => x.id)).join().split(","));
 
 	for (const author of presenceDevelopers) {
 		const member = guild.members.resolve(author);
@@ -32,9 +33,7 @@ async function updatePresenceAuthors() {
 
 function updateBoosters() {
 	const dateNow = new Date(),
-		last90days = new Date(
-			dateNow.setDate(dateNow.getDate() - 3 * 30)
-		).getTime(),
+		last90days = new Date(dateNow.setDate(dateNow.getDate() - 3 * 30)).getTime(),
 		membersWithBoost = client.guilds.cache
 			.get("493130730549805057")
 			.members.cache.array()
