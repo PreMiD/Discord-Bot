@@ -33,7 +33,7 @@ function sendFancyMessage(message, cmd) {
 		embed: {
 			description: "Whoopsies, it seems' like you do not have permission to run this command!",
 			color: "RED",
-			footer: `${message.author.tag} | ${cmd}`
+			footer: `${message.author.tag} | ${cmd.config.name}`
 		}
 	}).then(msg => {
 		message.delete({ timeout: 5 * 1000 });
