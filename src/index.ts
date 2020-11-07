@@ -19,14 +19,14 @@ export let client = new Discord.Client({
 						name: "devs code",
 						type: "WATCHING"
 					}
-			  }
+			}
 			: {
 					status: "online",
 					activity: {
 						name: "p!help",
 						type: "LISTENING"
 					}
-			  }
+			}
 });
 
 //* Commands, Command aliases, Command permission levels
@@ -43,24 +43,23 @@ client.elevation = (userId: string) => {
 
 	if (!member) return 0;
 
+	const memberRoles = member.roles.cache;
+
 	//* Ticket Manager
-	if (member.roles.cache.has(roles.ticketManager)) permlvl = 1;
-	//* Jr Mod
-	if (member.roles.cache.has(roles.jrModerator)) permlvl = 2;
+	if (memberRoles.has(roles.ticketManager)) 
+		permlvl = 1;
 	//* Mod
-	if (
-		member.roles.cache.has(roles.moderator) &&
-		!member.roles.cache.has(roles.jrModerator)
-	)
+	if (memberRoles.has(roles.moderator))
 		permlvl = 3;
+	//* Jr Mod
+	if (memberRoles.has(roles.jrModerator)) 
+		permlvl = 2;
 	//* Admin
-	if (
-		member.roles.cache.has(roles.administrator) ||
-		member.permissions.has("ADMINISTRATOR")
-	)
+	if (memberRoles.has(roles.administrator) || member.permissions.has("ADMINISTRATOR"))
 		permlvl = 4;
 	//* Dev
-	if (member.roles.cache.has(roles.developer)) permlvl = 5;
+	if (memberRoles.has(roles.developer)) 
+		permlvl = 5;
 
 	//* Return permlvl
 	return permlvl;

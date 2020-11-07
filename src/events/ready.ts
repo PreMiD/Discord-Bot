@@ -44,19 +44,13 @@ function updateBoosters() {
 			const userBoost = member.premiumSinceTimestamp;
 
 			if (last90days > userBoost) {
-				if (!member.roles.cache.has(roles.donator))
-					member.roles.add(roles.donator);
-
-				if (
-					!member.roles.cache.has(roles.beta) &&
-					!member.roles.cache.has(roles.alpha)
-				)
-					member.roles.add(roles.beta);
+				if (!member.roles.cache.has(roles.donator)) member.roles.add(roles.donator);
+				if (!member.roles.cache.has(roles.beta) && !member.roles.cache.has(roles.alpha)) member.roles.add(roles.beta);
 			}
 		}
 	}
 }
 
 module.exports.config = {
-	clientOnly: true,
+	clientOnly: true
 };

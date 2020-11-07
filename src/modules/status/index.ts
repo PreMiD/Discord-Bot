@@ -1,9 +1,6 @@
-//! Temporary until I find a fix for the config -Tony
-const statusUpdateChannel = "518467470894563345";
-const statusUpdateURL = "https://status.premid.app/api/v2/incidents/unresolved.json";
-
 import axios from "axios";
 import { client } from "../..";
+import channels from "../../channels";
 import { TextChannel } from "discord.js";
 
 //* Cache that stores the incident data
@@ -15,24 +12,20 @@ let cache = {
 
 //* Impact and other colors
 const colors = {
-	none: null,
-	minor: 0xfc9e43,
-	major: 0xf6640d,
-	critical: 0xdd2e44,
-	incidentResolved: 0x77ff77
-};
-
-//* Interval/check time
-const time = 3 * 1000 * 60;
-
-//* Helper function for strings to make them readable
-const toTitleCase = function (str) {
-	return str
-		.toLowerCase()
-		.split(" ")
-		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
-		.join(" ");
-};
+		none: null,
+		minor: 0xfc9e43,
+		major: 0xf6640d,
+		critical: 0xdd2e44,
+		incidentResolved: 0x77ff77
+	},
+	statusUpdateURL = "https://status.premid.app/api/v2/incidents/unresolved.json",
+	statusUpdateChannel = channels.statusUpdates,
+	time = 3 * 1000 * 60,
+	toTitleCase = (str) => str
+			.toLowerCase()
+			.split(" ")
+			.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(" ");
 
 setInterval(async () => {
 	try {
@@ -41,9 +34,7 @@ setInterval(async () => {
 
 		//* Check returned true
 		if (res && res.send === true) {
-			const channel = (await client.channels.cache.get(
-				statusUpdateChannel
-			)) as TextChannel;
+			const channel = (await client.channels.cache.get(statusUpdateChannel)) as TextChannel;
 
 			//* Type 0 = new incident
 			if (res.type === 0) {
@@ -138,8 +129,7 @@ export async function checkStatus() {
 					const incidentUpdate = incident.incident_updates[0];
 
 					//* Make sure this isn't the same incident
-					if (cache.lastIncident.id === incidentUpdate.id)
-						return { send: false, type: null };
+					if (cache.lastIncident.id === incidentUpdate.id) return { send: false, type: null };
 
 					cache.lastUpdate = {
 						id: incidentUpdate.id,
@@ -160,33 +150,23 @@ export async function checkStatus() {
 
 			//* Bot doesn't know about this incident yet
 			else {
+				let incidentCurr = incident.incident_updates[incident.incident_updates.length - 1];
+
 				//* Store the parts of the incident needed
 				cache.lastIncident = {
 					id: incident.id,
 					name: incident.name,
 					impact: incident.impact,
-					components: incident.components.map(c => {
-						return c.name;
-					}),
+					components: incident.components.map(c => c.name),
 					url: incident.shortlink,
 					createdAt: new Date(incident.created_at)
 				};
 
 				cache.lastUpdate = {
-					id:
-						incident.incident_updates[incident.incident_updates.length - 1]
-							.incident_id,
-					body:
-						incident.incident_updates[incident.incident_updates.length - 1]
-							.body,
-					status:
-						incident.incident_updates[incident.incident_updates.length - 1]
-							.status,
-					createdAt: new Date(
-						incident.incident_updates[
-							incident.incident_updates.length - 1
-						].display_at
-					)
+					id: incidentCurr.incident_id,
+					body: incidentCurr.body,
+					status: incidentCurr.status,
+					createdAt: new Date(incidentCurr.display_at)
 				};
 
 				cache.incidentsSeen = 1;

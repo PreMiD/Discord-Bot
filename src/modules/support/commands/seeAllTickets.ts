@@ -7,8 +7,7 @@ let coll = pmdDB.collection("userSettings"),
 	tcoll = pmdDB.collection("tickets");
 
 module.exports.run = async (
-	message: Discord.Message,
-	params: Array<string>
+	message: Discord.Message
 ) => {
 	if (
 		!message.member.roles.cache.has(roles.ticketManager) &&
@@ -29,9 +28,7 @@ module.exports.run = async (
 		).value;
 	}
 	message
-		.reply(
-			userSettings.seeAllTickets ? `You can now see all tickets.` : `You can no longer see all tickets.`
-		)
+		.reply(userSettings.seeAllTickets ? `You can now see all tickets.` : `You can no longer see all tickets.`)
 		.then(msg => msg.delete({ timeout: 10 * 1000 }));
 
 	if (userSettings.seeAllTickets) {
@@ -51,12 +48,11 @@ module.exports.run = async (
 		});
 	} else {
 		const tickets = await tcoll
-			.find({ supporters: message.member.id })
+			.find({ status: 1 })
 			.toArray();
 
 		tickets.map(async t => {
-			const ticket = new Ticket(),
-				ticketFound = await ticket.fetch("channel", t.supportChannel);
+			const ticket = new Ticket(), ticketFound = await ticket.fetch("channel", t.supportChannel);
 
 			if (!ticketFound || ticket.supporters?.includes(message.member)) return;
 

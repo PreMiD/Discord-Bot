@@ -11,16 +11,13 @@ module.exports.run = async (
 
 	if (!ticketFound) return;
 
-	t.addLog(`[TICKET CLOSED] ${message.author.tag} has closed the ticket`)
-
 	if (!dm) {
 		t.close(
 			message.member,
 			message.content
 				.split(" ")
 				.slice(1, message.content.split(" ").length)
-				.join(" ") || "Not Specified",
-			message
+				.join(" ") || "Not Specified"
 		)
 	} else {
 		t.close(
@@ -28,8 +25,7 @@ module.exports.run = async (
 			message.content
 				.split(" ")
 				.slice(1, message.content.split(" ").length)
-				.join(" ") || "Not Specified",
-			message
+				.join(" ") || "Not Specified"
 		)
 	}
 };
