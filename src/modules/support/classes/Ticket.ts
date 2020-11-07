@@ -274,9 +274,10 @@ export class Ticket {
 				}).catch(null);
 				
 				const getVars = url => {
+					let regexp = /^https:\/\/discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/;
 					return {
-						id: /^https:\/\/discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.exec(url)[1],
-						token: /^https:\/\/discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.exec(url)[2]
+						id: regexp.exec(url)[1],
+						token: regexp.exec(url)[2]
 					}
 				},
 				vars = getVars(process.env.TICKETLOGSWEBHOOK),
