@@ -16,10 +16,10 @@ module.exports = async (user: Discord.GuildMember) => {
 						channels.ticketChannel
 					) as Discord.TextChannel).messages.fetch(ticket.ticketMessage)
 				).delete();
-			} catch (_) {}
+			} catch {}
 		} else if (ticket.status === 1) {
 			const t = new Ticket();
-			if (await t.fetch("ticket", ticket)) t.close({tag: "PreMiD Bot"}, "Ticket creator left the Discord.");
+			if (await t.fetch("ticket", ticket)) t.close({tag: "PreMiD"}, "Ticket creator left the Discord.");
 		}
 	});
 };

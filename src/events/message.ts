@@ -19,6 +19,9 @@ module.exports = (message: Discord.Message) => {
 
 	//* Run command if found
 	if (cmd) {
+		//* Disable use of SeMiD in main server
+		if(message.guild.me.id == "574233163660918784" && message.guild.id == "493130730549805057") return;
+
 		if (typeof cmd.config.permLevel != "undefined" && perms < cmd.config.permLevel)
 			//* Send Embed if user does not have permissions to run the command
 			return sendFancyMessage(message, cmd);
