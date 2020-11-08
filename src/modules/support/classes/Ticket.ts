@@ -275,6 +275,8 @@ export class Ticket {
 			if(err) console.log(err)
 			fs.readFile(`${process.cwd()}/../TicketLogs/${this.id}.txt`, {encoding: "utf-8"}, (err) => {
 				if(err) return console.log(err);
+				//@ts-ignore
+				this.user = client.users.cache.get(this.userId);
 				this.user.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${closer.tag ? closer.tag : closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``, {
 					files: [{
 						attachment: `${process.cwd()}/../TicketLogs/${this.id}.txt`,
@@ -284,10 +286,7 @@ export class Ticket {
 				
 				const getVars = url => {
 					let regexp = /^https:\/\/discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/;
-					return {
-						id: regexp.exec(url)[2],
-						token: regexp.exec(url)[3]
-					}
+					return { id: regexp.exec(url)[2], token: regexp.exec(url)[3] }
 				},
 				vars = getVars(process.env.TICKETLOGSWEBHOOK),
 				webhook = new Discord.WebhookClient(vars.id, vars.token),
@@ -298,12 +297,12 @@ export class Ticket {
 					.addFields([
 						{
 							name: `Opened By`,
-							value: this.user ? this.user.user.tag : `<@${this.userId}>`,
+							value: `<@${this.userId}>`,
 							inline: true
 						},
 						{
 							name: `Closed By`,
-							value: closer.tag ? closer.tag : closer.user.tag,
+							value: `${closer.id}`,
 							inline: true
 						},
 						{
