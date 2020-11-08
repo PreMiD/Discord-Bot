@@ -7,9 +7,7 @@ export function connect() {
 	return new Promise<mongoClient>((resolve, reject) => {
 		mongoClient
 			.connect(
-				`mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASS}@${
-					process.env.MONGOIP
-				}:${27017}`,
+				`mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASS}@${process.env.MONGOIP}:${27017}`,
 				{
 					useUnifiedTopology: true,
 					useNewUrlParser: true,

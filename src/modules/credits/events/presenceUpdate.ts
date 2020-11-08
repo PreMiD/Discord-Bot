@@ -8,7 +8,6 @@ module.exports = async (
 	newPresence: Discord.Presence
 ) => {
 	if (!oldPresence || newPresence.status === oldPresence.status) return;
-
 	coll.findOneAndUpdate(
 		{ userId: newPresence.userID },
 		{ $set: { status: newPresence.status } }

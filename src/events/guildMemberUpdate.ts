@@ -9,10 +9,7 @@ module.exports = async (
 	oldMember: Discord.GuildMember,
 	newMember: Discord.GuildMember
 ) => {
-	if (
-		oldMember.roles.cache.has(roles.ticketManager) &&
-		!newMember.roles.cache.has(roles.ticketManager)
-	) {
+	if (oldMember.roles.cache.has(roles.ticketManager) && !newMember.roles.cache.has(roles.ticketManager)) {
 		const tickets = await coll.find({ supporters: oldMember.id }).toArray();
 
 		tickets.map(async t => {
@@ -22,4 +19,6 @@ module.exports = async (
 			if (ticketFound) ticket.removeSupporter(oldMember, false);
 		});
 	}
+
+
 };

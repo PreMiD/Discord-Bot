@@ -69,11 +69,7 @@ async function checkOldTickets() {
 	if (ticketsWithoutNotification.length > 0)
 		for (let i = 0; i < ticketsWithoutNotification.length; i++) {
 			const ticket = new Ticket();
-			await ticket.fetch(
-				"channel",
-				ticketsWithoutNotification[i].supportChannel
-			);
-
+			await ticket.fetch("channel", ticketsWithoutNotification[i].supportChannel);
 			ticket.sendCloseWarning();
 		}
 
@@ -81,7 +77,6 @@ async function checkOldTickets() {
 		for (let i = 0; i < ticketsToClose.length; i++) {
 			const ticket = new Ticket();
 			await ticket.fetch("channel", ticketsToClose[i].supportChannel);
-
 			ticket.close();
 		}
 }

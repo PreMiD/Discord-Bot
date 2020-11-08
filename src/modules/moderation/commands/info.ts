@@ -35,8 +35,7 @@ if (params[0] == undefined || params[0].length == 0 || params[0].toLowerCase() =
 		return;
 	}
 
-	const info = client.infos.get(params[0].toLowerCase()) ||
-			client.infos.get(client.infoAliases.get(params[0].toLowerCase())),
+	const info = client.infos.get(params[0].toLowerCase()) || client.infos.get(client.infoAliases.get(params[0].toLowerCase())),
 		embed = new Discord.MessageEmbed({
 			title: info.title || "No Title",
 			description: info.description || "No description provided.",

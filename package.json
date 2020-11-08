@@ -7,7 +7,8 @@
 		"start": "cd dist && node index",
 		"compile": "yarn --silent && rimraf dist && tsc && devScript --copyOnly",
 		"build": "yarn && tsc && devScript --copyOnly && npm prune --production",
-		"dev": "devScript"
+		"dev": "devScript",
+		"lazy": "yarn compile && copy .env dist && cd dist && node index"
 	},
 	"license": "MPL-2.0",
 	"dependencies": {

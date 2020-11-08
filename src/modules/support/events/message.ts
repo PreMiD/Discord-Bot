@@ -55,34 +55,16 @@ module.exports = async (message: Discord.Message) => {
 		}
 	}
 
-	if (
-		!ticketFound &&
-		message.channel.id === channels.supportChannel
-	) {
-		if (message.cleanContent.length > 25) 
-			t.create(message);
-		else 
-			message.delete() &&
-			(await message.reply("Please write at least 25 characters.")).delete({timeout: 10 * 1000});
-
+	if (!ticketFound && message.channel.id === channels.supportChannel) {
+		if (message.cleanContent.length > 25) t.create(message);
+		else message.delete() && (await message.reply("please write a minimum of 25 characters.")).delete({timeout: 10 * 1000});
 		return;
 	}
 
 	if (ticketFound && message.content.toLowerCase().includes("p!close"))
 		coll.findOneAndUpdate(
 			{ supportChannel: t.channel.id },
-			{
-				$push: {
-					messages: {
-						userId: message.author.id,
-						content: message.cleanContent,
-						sent: message.createdTimestamp
-					}
-				},
-				$unset: {
-					ticketCloseWarning: true
-				}
-			}
+			{ $unset: { ticketCloseWarning: true } }
 		);
 
 	if (ticketFound && !message.author.bot) {
@@ -103,12 +85,11 @@ module.exports = async (message: Discord.Message) => {
 			const userToRemove = message.guild.members.cache.find(
 				m => (m.id === args.join(" ") || m.displayName.toLowerCase() === args.join(" ").toLowerCase())
 			);
-
 			t.removeSupporter(userToRemove);
 			t.addLog(`[USER REMOVED] ${message.member.user.tag} removed ${userToRemove.user.tag}`);
 		} else {
 			t.removeSupporter(message.member);
-			t.addLog(`[USER LEAVE] ${message.member.user.tag}`);
+			t.addLog(`[USER LEFT] ${message.member.user.tag}`);
 		}
 
 		message.delete();

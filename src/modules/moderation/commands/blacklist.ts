@@ -69,9 +69,7 @@ module.exports.run = async (
 			userId: message.author.id,
 			added: Date.now()
 		});
-		(
-			await message.reply(`Added ${params.slice(1).join(" ")} to the blacklist`)
-		).delete({ timeout: 15 * 1000 });
+		(await message.reply(`Added ${params.slice(1).join(" ")} to the blacklist`)).delete({ timeout: 15 * 1000 });
 		return;
 	}
 

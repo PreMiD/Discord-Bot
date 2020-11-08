@@ -22,8 +22,7 @@ async function loadModules(client: Discord.Client) {
 	modules = modules.filter(module => {
 		if (
 			fs.existsSync(`${moduleFolder}/${module}/config.json`) &&
-			typeof require(`${moduleFolder}/${module}/config.json`).enabled !=
-				"undefined"
+			typeof require(`${moduleFolder}/${module}/config.json`).enabled != "undefined"
 		)
 			return require(`${moduleFolder}/${module}/config.json`).enabled;
 		else return true;
@@ -42,7 +41,6 @@ async function loadModules(client: Discord.Client) {
 					});
 		})
 	).then(cmds => {
-		// @ts-ignore
 		return [].concat(...cmds).filter(f => f).length;
 	});
 
@@ -52,13 +50,11 @@ async function loadModules(client: Discord.Client) {
 				return fs.readdirSync(`${moduleFolder}/${module}/events`).filter(f => {
 					if (f.endsWith(".ts") || f.endsWith(".map")) return false;
 					let props = require(`${moduleFolder}/${module}/events/${f}`);
-					if (typeof props == "function" || typeof props.config != "undefined")
-						return true;
+					if (typeof props == "function" || typeof props.config != "undefined") return true;
 					else return false;
 				});
 		})
 	).then(events => {
-		// @ts-ignore
 		return [].concat(...events).filter(f => f).length;
 	});
 
@@ -77,8 +73,7 @@ async function loadModules(client: Discord.Client) {
 			loadEvents(`${moduleFolder}/${module}/events`, client);
 
 		client.once("ready", async () => {
-			if (fs.existsSync(`${moduleFolder}/${module}/index.js`))
-				require(`${moduleFolder}/${module}/index.js`);
+			if (fs.existsSync(`${moduleFolder}/${module}/index.js`)) require(`${moduleFolder}/${module}/index.js`);
 		});
 	});
 
@@ -119,8 +114,7 @@ async function loadCommands(filePath: string, client: Discord.Client) {
 			return;
 		}
 
-		if (typeof props.config.enabled != "undefined" && !props.config.enabled)
-			return;
+		if (typeof props.config.enabled != "undefined" && !props.config.enabled) return;
 
 		client.commands.set(props.config.name, props);
 		//* Only add aliases if there are any
@@ -153,8 +147,7 @@ async function loadEvents(filePath: string, client: Discord.Client) {
 				return;
 			}
 
-			if (typeof eventFile.config.clientOnly != "undefined")
-				client.on(event, () => eventFile.run(client));
+			if (typeof eventFile.config.clientOnly != "undefined") client.on(event, () => eventFile.run(client));
 		}
 	});
 }

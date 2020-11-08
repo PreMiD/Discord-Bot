@@ -11,14 +11,19 @@ import { pmdDB } from "../../../database/client";
 
 let coll = pmdDB.collection("tickets"),
 	circleFolder = "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/",
-	ticketCount = 0;
+	ticketCount = 0,
+	ticketsChannel,
+	ticketsCategory,
+	supportChannel;
 
 export class Ticket {
 	id: string;
 	userId: string;
 	status: number;
+	acceptedAt: number;
 	ticketContent: string;
 	attachments: Array<string>;
+
 
 	ticketMessage: Discord.Message;
 	user: Discord.GuildMember;
@@ -34,6 +39,9 @@ export class Ticket {
 	constructor() {}
 
 	async fetch(type: "ticket" | "message" | "channel" | "author", arg: any) {
+		ticketsChannel = client.channels.cache.get(channels.ticketChannel) as Discord.TextChannel;
+		ticketsCategory = client.channels.cache.get(channels.ticketCategory) as Discord.CategoryChannel;
+		supportChannel = client.channels.cache.get(channels.supportChannel) as Discord.TextChannel;
 
 		const ticket =
 			type === "ticket"
@@ -49,37 +57,32 @@ export class Ticket {
 		this.userId = ticket.userId;
 		this.status = ticket.status;
 		this.attachments = ticket.attachments;
-
+		this.acceptedAt = ticket.acceptedAt;
+		
 		try {
-			this.ticketMessage = await ((client.channels.cache.get(channels.ticketCategory) as Discord.TextChannel).guild.channels.cache.get(
-					channels.ticketChannel
-				) as Discord.TextChannel).messages.fetch(ticket.ticketMessage);
+			this.ticketMessage = await ticketsChannel.messages.fetch(ticket.ticketMessage);
 			this.embed = this.ticketMessage.embeds[0];
 		} catch (e) {
 			console.log(e);
 		}
 
 		if (this.status === 1) {
-			this.channel = (client.channels.cache.get(channels.ticketCategory) as Discord.TextChannel).guild.channels.cache
-				.get(ticket.supportChannel) as Discord.TextChannel;
+			this.channel = client.channels.cache.get(ticket.supportChannel) as Discord.TextChannel;
 			this.channelMessage = await this.channel?.messages.fetch(
 				ticket.supportEmbed
 			);
 			this.supporters = await Promise.all(
 				ticket.supporters.map((s: string) =>
-					(client.channels.cache.get(channels.ticketCategory) as Discord.TextChannel).guild.members.fetch(s)
+				ticketsChannel.guild.members.fetch(s)
 				)
 			);
 		}
 
 		if (ticket.attachmentMessage)
-			this.attachmentsMessage = await ((client.channels.cache.get(channels.ticketCategory) as Discord.TextChannel).guild.channels.cache
-				.get(
-					channels.ticketChannel
-				) as Discord.TextChannel).messages.fetch(ticket.attachmentMessage);
+			this.attachmentsMessage = await ticketsChannel.messages.fetch(ticket.attachmentMessage);
 
 		try {
-			this.user = await (client.channels.cache.get(channels.ticketCategory) as Discord.TextChannel).guild.members.fetch(ticket.userId);
+			this.user = await ticketsChannel.guild.members.fetch(ticket.userId);
 		} catch {}
 		return true;
 	}
@@ -108,7 +111,7 @@ export class Ticket {
 				},
 				color: "#77ff77"
 			};
-
+			
 			if (message.attachments.size > 0) {
 				this.attachments.push(`[${message.attachments.first().name}](${message.attachments.first().proxyURL})`)
 				this.embed.fields = [{
@@ -118,18 +121,14 @@ export class Ticket {
 				}]
 			}
 
-			this.ticketMessage = await (message.guild.channels.cache.get(
-				channels.ticketChannel
-			) as Discord.TextChannel).send({
+			this.ticketMessage = await ticketsChannel.send({
 				embed: this.embed
 			});
 
 			this.ticketMessage
 				.react("🚫")
 				.then(() =>
-					this.ticketMessage.react(
-						client.guilds.cache.get("493130730549805057").emojis.cache.get("521018476870107156")
-					)
+					this.ticketMessage.react(client.guilds.cache.get("493130730549805057").emojis.cache.get("521018476870107156"))
 				);
 
 			message.author
@@ -147,7 +146,7 @@ export class Ticket {
 			});
 
 			message.delete().catch(() => {});
-			(client.channels.cache.get(channels.supportChannel) as Discord.TextChannel).updateOverwrite(message.author.id, {
+			supportChannel.updateOverwrite(message.author.id, {
 				SEND_MESSAGES: false
 			})
 		} catch (err) {
@@ -161,14 +160,8 @@ export class Ticket {
 	}
 
 	async accept(supporter: Discord.GuildMember) {
-		if (
-			(client.channels.resolve(channels.ticketCategory) as Discord.CategoryChannel).children.size >= 50
-		) {
-			(
-				await (client.channels.resolve(channels.ticketChannel) as Discord.TextChannel).send(
-					`${supporter.toString()}, Can't accept ticket, the category limit has been reached.`
-				)
-			).delete({ timeout: 15 * 1000 });
+		if (ticketsCategory.children.size >= 50) {
+			(await ticketsChannel.send(`${supporter.toString()}, Can't accept ticket, the category limit has been reached.`)).delete({ timeout: 15 * 1000 });
 			this.ticketMessage.reactions.cache
 				.get("521018476870107156")
 				.users.remove(supporter);
@@ -194,7 +187,7 @@ export class Ticket {
 		];
 
 		this.channel = (
-			await (client.channels.cache.get(channels.ticketCategory) as Discord.CategoryChannel).guild.channels.create(this.id, {
+			await ticketsCategory.guild.channels.create(this.id, {
 			parent: channels.ticketCategory,
 			type: "text",
 			//@ts-ignore
@@ -261,7 +254,8 @@ export class Ticket {
 					status: 1,
 					supporters: [supporter.id],
 					supportEmbed: this.channelMessage.id,
-					accepter: supporter.id
+					accepter: supporter.id,
+					acceptedAt: Date.now( )
 				}
 			}
 		);
@@ -271,28 +265,29 @@ export class Ticket {
 		sortTickets();
 	}
 
-	async close(closer?: any, reason?: string, message=null) {
-		
+	async close(closer?: any, reason?: string) {
+		this.addLog(`[TICKET CLOSED] ${closer.tag ? closer.tag : closer.user.tag} has closed the ticket`)
+
 		if (this.channel.deletable) this.channel.delete();
 
 		let logs = await coll.findOne({supportChannel: this.channel.id});
 		fs.writeFile(`${process.cwd()}/../TicketLogs/${this.id}.txt`, logs.logs.join("\n"), (err) => {
 			if(err) console.log(err)
-			fs.readFile(`${process.cwd()}/../TicketLogs/${this.id}.txt`, {encoding: "utf-8"}, (err, data) => {
-				if(err) return console.log(err);	
-				if(this.user) this.user.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${closer.tag ? closer.tag : closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``, {
+			fs.readFile(`${process.cwd()}/../TicketLogs/${this.id}.txt`, {encoding: "utf-8"}, (err) => {
+				if(err) return console.log(err);
+				//@ts-ignore
+				this.user = client.users.cache.get(this.userId);
+				this.user.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${closer.tag ? closer.tag : closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``, {
 					files: [{
 						attachment: `${process.cwd()}/../TicketLogs/${this.id}.txt`,
 						name: `Ticket-${this.id}.txt`
 					}]
-				}).catch(() => {});
+				}).catch(null);
 				
-				const getVars = url => 
-					/^https:\/\/discordapp\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.test(url) ? {
-					id: /^https:\/\/discordapp\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.exec(url)[1],
-					token: /^https:\/\/discordapp\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/.exec(url)[2]
-				}
-				: null,
+				const getVars = url => {
+					let regexp = /^https:\/\/discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/;
+					return { id: regexp.exec(url)[2], token: regexp.exec(url)[3] }
+				},
 				vars = getVars(process.env.TICKETLOGSWEBHOOK),
 				webhook = new Discord.WebhookClient(vars.id, vars.token),
 				embed = new Discord.MessageEmbed()
@@ -302,12 +297,12 @@ export class Ticket {
 					.addFields([
 						{
 							name: `Opened By`,
-							value: this.user ? this.user.user.tag : `<@${this.userId}>`,
+							value: `<@${this.userId}>`,
 							inline: true
 						},
 						{
 							name: `Closed By`,
-							value: closer.tag ? closer.tag : closer.user.tag,
+							value: `${closer.id}`,
 							inline: true
 						},
 						{
@@ -317,7 +312,7 @@ export class Ticket {
 						},
 						{
 							name: `Supporter(s)`,
-							value: this.supporters,
+							value: this.supporters.join(", "),
 							inline: true
 						},
 						{
@@ -326,6 +321,8 @@ export class Ticket {
 							inline: true
 						}
 					]);
+
+				if (this.acceptedAt) embed.setFooter(`Ticket chat lasted ` + moment.duration(moment(Date.now()).diff(moment(this.acceptedAt))).humanize() + `.`)
 		
 				webhook.send("", {
 					embeds: [embed],
@@ -333,14 +330,14 @@ export class Ticket {
 						attachment: `${process.cwd()}/../TicketLogs/${this.id}.txt`,
 						name: `Ticket-${this.id}.txt`
 					}]
-				});
+				})
 				
 				delete this.embed.fields;
 				if (this.embed.thumbnail) delete this.embed.thumbnail;
 				if (this.attachmentsMessage && this.attachmentsMessage.deletable) this.attachmentsMessage.delete();
-				if (this.ticketMessage.deletable) this.ticketMessage.delete();
-				if (this.user) (client.channels.cache.get(channels.supportChannel) as Discord.TextChannel).permissionOverwrites.get(this.user.id).delete()
-		
+				//! DEBUG - I shall find the cause!!!!
+				this.ticketMessage.delete().catch(e => client.users.cache.get("506899274748133376").send(`Error deleting message in #tickets:\n\n**${e}**`));
+				supportChannel.permissionOverwrites.get(this.user.id).delete()
 				rimraf(`${process.cwd()}/../TicketLogs/${this.id}.txt`, () => {});
 
 				coll.findOneAndUpdate(
@@ -450,6 +447,7 @@ export class Ticket {
 	}
 
 	addLog(input) {
+		if(!this.channel) return;
 		coll.findOneAndUpdate({supportChannel: this.channel.id}, { 
 			$push: { logs: `[${moment(new Date()).format("DD/MM/YY LT")} (${Date().split("(")[1].replace(")", "")})] ${input}` }
 		})
