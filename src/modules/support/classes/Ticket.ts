@@ -267,14 +267,14 @@ export class Ticket {
 
 	async close(closer?: any, reason?: string) {
 		this.addLog(`[TICKET CLOSED] ${closer.tag ? closer.tag : closer.user.tag} has closed the ticket`)
-		
+
 		if (this.channel.deletable) this.channel.delete();
 
 		let logs = await coll.findOne({supportChannel: this.channel.id});
 		fs.writeFile(`${process.cwd()}/../TicketLogs/${this.id}.txt`, logs.logs.join("\n"), (err) => {
 			if(err) console.log(err)
 			fs.readFile(`${process.cwd()}/../TicketLogs/${this.id}.txt`, {encoding: "utf-8"}, (err) => {
-				if(err) return console.log(err);	
+				if(err) return console.log(err);
 				this.user.send(`Your ticket \`\`#${this.id}\`\` has been closed by **${closer.tag ? closer.tag : closer.user.tag}**. Reason: \`\`${reason || "Not Specified"}\`\``, {
 					files: [{
 						attachment: `${process.cwd()}/../TicketLogs/${this.id}.txt`,
@@ -336,9 +336,9 @@ export class Ticket {
 				delete this.embed.fields;
 				if (this.embed.thumbnail) delete this.embed.thumbnail;
 				if (this.attachmentsMessage && this.attachmentsMessage.deletable) this.attachmentsMessage.delete();
-				if (this.ticketMessage.deletable) this.ticketMessage.delete();
-				if (this.user) supportChannel.permissionOverwrites.get(this.user.id).delete()
-		
+				//! DEBUG - I shall find the cause!!!!
+				this.ticketMessage.delete().catch(e => client.users.cache.get("506899274748133376").send(`Error deleting message in #tickets:\n\n**${e}**`));
+				supportChannel.permissionOverwrites.get(this.user.id).delete()
 				rimraf(`${process.cwd()}/../TicketLogs/${this.id}.txt`, () => {});
 
 				coll.findOneAndUpdate(
