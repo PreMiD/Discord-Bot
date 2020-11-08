@@ -3,10 +3,7 @@ import { extname } from "path";
 import axios from "axios";
 
 module.exports.run = async (message: Discord.Message) => {
-  if (
-    message.attachments.size == 0 ||
-    extname(message.attachments.first().name) !== ".json"
-  ) {
+  if (message.attachments.size == 0 || extname(message.attachments.first().name) !== ".json") {
     message.delete();
     message
       .reply("Please attach a file containing the embed in **JSON** format.")

@@ -9,18 +9,12 @@ module.exports = async packet => {
 	let guild = client.guilds.cache.get(packet.d.guild_id),
 		member = guild.members.cache.get(packet.d.user_id);
 	
-	if(member.user.bot) return;
+	if(!member || member.user.bot) return;
 
 	let ticket = new Ticket();
 	if (!(await ticket.fetch("message", packet.d.message_id))) return;
 
-	if (
-		packet.d.emoji.id === "521018476870107156" &&
-		typeof ticket.status === "undefined"
-	) {
-		ticket.accept(member);
-		return;
-	}
+	if (packet.d.emoji.id === "521018476870107156" && typeof ticket.status === "undefined") return ticket.accept(member);
 
 	if (
 		packet.d.emoji.name === "🚫" &&
@@ -30,10 +24,7 @@ module.exports = async packet => {
 				.get(packet.d.guild_id)
 				.members.cache.get(packet.d.user_id)
 				.hasPermission("ADMINISTRATOR"))
-	) {
-		ticket.close(client.users.cache.get(packet.d.user_id));
-		return;
-	}
+	) return ticket.close(client.users.cache.get(packet.d.user_id));
 
 	if (packet.d.emoji.name === "🚫" && typeof ticket.status === "undefined") {
 		ticket.ticketMessage.reactions.removeAll().then(() => {
@@ -63,6 +54,5 @@ module.exports = async packet => {
 						);
 				});
 		});
-		return;
 	}
 };
