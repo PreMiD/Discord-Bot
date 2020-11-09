@@ -302,7 +302,7 @@ export class Ticket {
 						},
 						{
 							name: `Closed By`,
-							value: `${closer.id}`,
+							value: `<@${closer.id}>`,
 							inline: true
 						},
 						{
