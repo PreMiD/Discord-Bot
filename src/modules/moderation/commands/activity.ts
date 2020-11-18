@@ -74,7 +74,12 @@ module.exports.run = async (
 			.then((msg) => msg.delete({ timeout: 2500 }));
 
 	//* Management only.
-	if (perms < 4 && params[0].length && userActivity.id !== message.author.id)
+	if (
+		perms < 4 &&
+		params[0] !== undefined &&
+		params[0].length &&
+		userActivity.id !== message.author.id
+	)
 		return message.channel
 			.send(
 				new Discord.MessageEmbed({
