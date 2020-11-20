@@ -4,7 +4,7 @@ export default {
 		color: "RANDOM",
 		aliases: ["troubleshooting", "trouble", "ts", "tshoot"],
 		description:
-			"If you haven't read our troubleshooting page yet, please make sure you read everything carefully before creating a ticket. Check our troubleshooting page by clicking [here](https://docs.premid.app/en/troubleshooting) and see if anything in there will fix your issue. You can or you may continue to discuss more about it in your ticket after that.",
+			"If you have problems with PreMiD, you can read our [troubleshooting guide](https://docs.premid.app/troubleshooting) and if it doesn't solve your problem use our support system by simply writing your concern in <#566738846650335232>.",
 		footer: false
 	},
 	modifiedclient: {
@@ -12,7 +12,7 @@ export default {
 		color: "FF0000",
 		aliases: ["bd", "bdiscord", "pc", "powercord", "modified", "betterdiscord"],
 		description:
-			"Using a modified client is an abuse of Discord ToS. If you want to keep using Discord, you have to follow them and make sure you're not breaking any of the rules Discord has decided to put. Even using modified clients for themes, some customizations is not 'welcomed' in Discord. Your account could get banned just because of that and you can read Discord's official Tweet from [here](https://twitter.com/discordapp/status/908000828690182145).",
+			"Using a modified client is an abuse of Discord's ToS and therefore you run the risk of loosing your account. If you want to keep using Discord, you have to follow them and make sure you're not breaking any of the rules Discord has decided to put. Even using modified clients for theming or other customizations are against Discord's ToS. If you don't believe us, read it yourself [here](https://twitter.com/discordapp/status/908000828690182145).",
 		footer: false
 	},
 	creatingpresence: {
@@ -20,15 +20,15 @@ export default {
 		color: "RANDOM",
 		aliases: ["presence", "howtopresence", "how2presence", "makepresence"],
 		description:
-			"There are two ways of creating a presence for PreMiD. First one is TS (TypeScript), which is way more easier to debug and keep the track of your mistakes than JavaScript. And the second one is in pure JavaScript. If you're not familiar with any of them, we recommend starting with JavaScript as TypeScript compiles into JavaScript at the end. And then you can read our presence development guide by clicking [here](https://docs.premid.app/en/dev/presence).",
+			"If you wish to add support for a website that does not have a Presence yet, you can either open an [issue on GitHub](https://github.com/PreMiD/Presences/issues/new?template=service_request.md) for it so that others may create it for you or you create it yourself. If you wish to create a Presence for PreMiD you need to have basic knowledge of TypeScript. For more information and docs on how to create a Presence follow our [documentation](https://docs.premid.app/dev/presence).",
 		footer: false
 	},
 	docs: {
 		title: "Read the Docs!",
 		color: "RANDOM",
-		aliases: ["documentation", "readthedocs"],
+		aliases: ["docs", "documentation", "readthedocs"],
 		description:
-			"If you have any questions regarding to PreMiD, PreMiD API, presence development or how to do **x** with PreMiD, please read our documentation before creating a ticket by clicking [here](https://docs.premid.app).",
+			"If you have any questions regarding PreMiD, its API, Presence development or how to do ... with PreMiD, please read our [documentation](https://docs.premid.app) before creating a ticket.",
 		footer: false
 	},
 	website: {
@@ -44,7 +44,7 @@ export default {
 		color: "RANDOM",
 		aliases: ["addpresence", "presencestore", "presences"],
 		description:
-			"We have launched a presence store where people can create their own services and put them onto the PreMiD website! There are over than 300 supported services by PreMiD but there's only ~5 or more you have by default. You can always visit [our store](https://premid.app/store) to check out other services! _It's free_.",
+			"Since 2.0 we have added our so called Presence Store which is used to add more Presences for more websites other than the default ones added by PreMiD. These Presences are created by our staff or PreMiD's community. You don't have to worry about security/privacy issues tho as our staff reviews every presence added to the store. If you wish to add more Presences to PreMiD visit [our store](https://premid.app/store)! *Oh and btw, its free.*",
 		footer: false
 	},
 	downloads: {
@@ -52,15 +52,22 @@ export default {
 		color: "RANDOM",
 		aliases: ["download", "premiddownload", "app", "extensionlink"],
 		description:
-			"You can download PreMiD and PreMiD extension for your browser from [here](https://premid.app/downloads), but don't forget that **you need both application and extension** to make PreMiD function.",
+			"You can download PreMiD and its extension for your browser [here](https://premid.app/downloads), but don't forget that **you need both application and extension** to get PreMiD to work (**NOTE: We do not support the web version of Discord**).",
 		footer: false
 	},
 	donate: {
 		title: "Donate to PreMiD's Development",
 		color: "RANDOM",
-		aliases: ["maketimeraarich", "gaytim", "serverboost", "boost", "nitroboost", "adsensewasntenough", "dontskipads", "adblockisasin"],
+		aliases: [
+			"donate",
+			"patreon",
+			"serverboost",
+			"boost",
+			"nitroboost",
+			"dontskipads"
+		],
 		description:
-			"Want to support PreMiD's Development? Great! You can do so by boosting our Discord server, which will get you a special role, or you can support our [Patreon](https://patreon.com/Timeraa) or donate via [PayPal](https://www.paypal.com/paypalme2/TimeraaDEV)!",
+			"Want to support PreMiD's Development? Great! You can do so by boosting our Discord server, which will get you a special role, or you can support us on [Patreon](https://patreon.com/Timeraa)!",
 		footer: false
 	},
 	ticket: {
@@ -68,30 +75,31 @@ export default {
 		color: "RANDOM",
 		aliases: ["support", "createticket", "properticket"],
 		description:
-			"We have a <#566738846650335232> channel where you can create a ticket and let support agents/moderators help you, but sometimes people just abuse it by typing nonsense in there. Please make sure you've tried everything in our [troubleshooting](https://docs.premid.app/en/troubleshooting) page before creating a ticket.\n\nIncluding screenshots in tickets, such as console output, any error you got on the extension will speed up processing your ticket.",
+			"We built our own support system which you can use by writing a message into <#566738846650335232>. These tickets are being handled by our support agents/moderators. But please don't abuse this channel by writing nonsense into it.\n\n**You can help us speed up the process of handling your ticket if you provide us with basic information like:**\n• Your problem\n• Your OS (Operating System)\n• Your browser\n• Assets of your problem (images, files, logs...).\n\n**Before you create a ticket make sure to read our [documentation](https://docs.premid.app/) as it may already have the answer to your question/problem**",
 		footer: false
 	},
 	suggest: {
-		title: "Suggesting a presence",
+		title: "Suggesting a Presence",
 		color: "RANDOM",
 		aliases: ["suggestpresence"],
 		description:
-			"If you would like to suggest a presence, you can head over to our [GitHub repository](https://github.com/PreMID/Presences) and create a new issue with the [Presence Request](https://github.com/PreMiD/Presences/issues/new?template=service_request.md) template! If you would like to make a presence yourself, you can find more information on [Development Docs](https://docs.premid.app/dev/presence)",
+			"If you'd like to suggest a presence, you can do this on our [GitHub repository](https://github.com/PreMID/Presences) by creating a new issue with the [Presence Request](https://github.com/PreMiD/Presences/issues/new?template=service_request.md) template! If want to create a Presence yourself, you can find more information on our [documentation](https://docs.premid.app/dev/presence)",
 		footer: false
 	},
 	allowed: {
 		title: "PreMiD and Discord",
 		color: "RANDOM",
 		aliases: ["legit", "legal", "legality"],
-		description: 
-			"We are fully allowed by Discord and they themselves confirmed that [here.](https://twitter.com/discord/status/1233704070390669312)",
+		description:
+			"PreMiD is compliant to Discord's ToS and therefore you can use it without any risk of loosing your Discord account. Proof of this confirmation can be found [here](https://twitter.com/discord/status/1233704070390669312).",
 		footer: false
 	},
 	unidentifieddev: {
-		title: "Allow apps from unidentified developer",
+		title: "Allow apps from unidentified developers",
 		color: "RANDOM",
-		aliases: [ "macdev", "unidentifieddeveloper", "undev", "ud"],
-		description: "1. Open System Preferences.\n2. Go to the Security & Privacy tab.\n3. Click on the lock and enter your password or scan your fingerprint so you can make changes.\n4. Change the setting for 'Allow apps downloaded from' to 'App Store and identified developers' from just 'App Store'.",
+		aliases: ["macdev", "unidentifieddeveloper", "undev", "ud"],
+		description:
+			"1. Open System Preferences.\n2. Go to the Security & Privacy tab.\n3. Click on the lock and enter your password or scan your fingerprint so you can make changes.\n4. Change the setting for 'Allow apps downloaded from' to 'App Store and identified developers' from just 'App Store'.",
 		footer: false
 	}
 };
