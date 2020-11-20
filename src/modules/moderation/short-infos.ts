@@ -12,7 +12,7 @@ export default {
 		color: "FF0000",
 		aliases: ["bd", "bdiscord", "pc", "powercord", "modified", "betterdiscord"],
 		description:
-			"Using a modified client is an abuse of Discord's ToS and therefore you run the risk of loosing your account. If you want to keep using Discord, you have to follow them and make sure you're not breaking any of the rules Discord has decided to put. Even using modified clients for theming or other customizations are against Discord's ToS. If you don't believe us, read it yourself [here](https://twitter.com/discordapp/status/908000828690182145).",
+			"Using a modified client is an abuse of Discord's ToS and therefore you run the risk of losing your account. If you want to keep using Discord, you have to follow them and make sure you're not breaking any of the rules Discord has decided to put. Even using modified clients for theming or other customizations are against Discord's ToS. If you don't believe us, read it yourself [here](https://twitter.com/discordapp/status/908000828690182145).",
 		footer: false
 	},
 	creatingpresence: {
@@ -91,7 +91,7 @@ export default {
 		color: "RANDOM",
 		aliases: ["legit", "legal", "legality"],
 		description:
-			"PreMiD is compliant to Discord's ToS and therefore you can use it without any risk of loosing your Discord account. Proof of this confirmation can be found [here](https://twitter.com/discord/status/1233704070390669312).",
+			"PreMiD is compliant to Discord's ToS and therefore you can use it without any risk of losing your Discord account. Proof of this confirmation can be found [here](https://twitter.com/discord/status/1233704070390669312).",
 		footer: false
 	},
 	unidentifieddev: {
