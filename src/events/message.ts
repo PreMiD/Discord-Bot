@@ -28,7 +28,7 @@ module.exports = (message: Discord.Message) => {
 
 		//* Run the command
 		cmd.run(message, params, perms);
-	} else message.react("❌"), message.delete({ timeout: 5000 });
+	} else message.react("❌"), message.delete({ timeout: 5000 }); // 5*1000
 };
 
 function sendFancyMessage(message, cmd) {
@@ -39,7 +39,7 @@ function sendFancyMessage(message, cmd) {
 			footer: `${message.author.tag} | ${cmd.config.name}`
 		}
 	}).then(msg => {
-		message.delete({ timeout: 5000 });
-		msg.delete({ timeout: 5000 });
+		message.delete({ timeout: 5000 }); // 5*1000
+		msg.delete({ timeout: 5000 }); // 5*1000
 	});
 }
