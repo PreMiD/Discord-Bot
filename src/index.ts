@@ -17,16 +17,16 @@ export let client = new Discord.Client({
 					status: "dnd",
 					activity: {
 						name: "devs code",
-						type: "WATCHING"
-					}
-			}
+						type: "WATCHING",
+					},
+			  }
 			: {
 					status: "online",
 					activity: {
 						name: "p!help",
-						type: "LISTENING"
-					}
-			}
+						type: "LISTENING",
+					},
+			  },
 });
 
 //* Commands, Command aliases, Command permission levels
@@ -35,31 +35,32 @@ client.aliases = new Discord.Collection();
 client.infos = new Discord.Collection();
 client.infoAliases = new Discord.Collection();
 
-client.elevation = (userId: string) => {
+client.elevation = async (userId: string) => {
 	//* Permission level checker
 	let permlvl: Number = 0;
 
-	const member = client.guilds.cache.first().members.cache.get(userId);
+	const member = await client.guilds.cache
+		.get("493130730549805057")
+		.members.fetch(userId);
 
 	if (!member) return 0;
 
 	const memberRoles = member.roles.cache;
 
 	//* Ticket Manager
-	if (memberRoles.has(roles.ticketManager)) 
-		permlvl = 1;
+	if (memberRoles.has(roles.ticketManager)) permlvl = 1;
 	//* Mod
-	if (memberRoles.has(roles.moderator))
-		permlvl = 3;
+	if (memberRoles.has(roles.moderator)) permlvl = 3;
 	//* Jr Mod
-	if (memberRoles.has(roles.jrModerator)) 
-		permlvl = 2;
+	if (memberRoles.has(roles.jrModerator)) permlvl = 2;
 	//* Admin
-	if (memberRoles.has(roles.administrator) || member.permissions.has("ADMINISTRATOR"))
+	if (
+		memberRoles.has(roles.administrator) ||
+		member.permissions.has("ADMINISTRATOR")
+	)
 		permlvl = 4;
 	//* Dev
-	if (memberRoles.has(roles.developer)) 
-		permlvl = 5;
+	if (memberRoles.has(roles.developer)) permlvl = 5;
 
 	//* Return permlvl
 	return permlvl;
@@ -71,7 +72,7 @@ run();
 async function run() {
 	//* Connect to Mongo DB
 	connect()
-		.then(_ => {
+		.then((_) => {
 			success("Connected to the database");
 			client.login(process.env.TOKEN).then(async () => moduleLoader(client));
 		})
@@ -88,7 +89,12 @@ process.on("SIGINT", async () => {
 });
 
 process.on("unhandledRejection", (err: any) => {
-	const ignoredErrors = ["Error [GUILD_MEMBERS_TIMEOUT]: Members didn't arrive in time.", "DiscordAPIError: Missing Access", "DiscordAPIError: Missing Permissions"]
-	if(ignoredErrors.map(x => err.toString().includes(x)).includes(true)) return;
-	error(err.stack.toString())
-})
+	const ignoredErrors = [
+		"Error [GUILD_MEMBERS_TIMEOUT]: Members didn't arrive in time.",
+		"DiscordAPIError: Missing Access",
+		"DiscordAPIError: Missing Permissions",
+	];
+	if (ignoredErrors.map((x) => err.toString().includes(x)).includes(true))
+		return;
+	error(err.stack.toString());
+});

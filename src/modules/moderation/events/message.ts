@@ -7,12 +7,21 @@ module.exports = async (message: Discord.Message) => {
 	//* Ignore bots
 	if (message.author.bot) return;
 
-	if (client.elevation(message.author.id) === 0 && blacklistedWords.find(w => message.content.includes(` ${w} `))) message.delete();
+	if (
+		(await client.elevation(message.author.id)) === 0 &&
+		blacklistedWords.find((w) => message.content.includes(` ${w} `))
+	)
+		message.delete();
 
-	if (await checkInvite(message.content) && !(message.member as Discord.GuildMember).roles.cache.map(x => x.id).includes(roles.administrator)) {
+	if (
+		(await checkInvite(message.content)) &&
+		!(message.member as Discord.GuildMember).roles.cache
+			.map((x) => x.id)
+			.includes(roles.administrator)
+	) {
 		message
 			.reply("**Invite links are not allowed**")
-			.then(msg => msg.delete({ timeout: 10 * 1000 }));
+			.then((msg) => msg.delete({ timeout: 10 * 1000 }));
 		message.delete();
 	}
 };
@@ -20,7 +29,9 @@ module.exports = async (message: Discord.Message) => {
 module.exports.config = {};
 
 export async function checkInvite(string: string) {
-	let invites = (await client.guilds.cache.first().fetchInvites()).map(invite => invite.url),
+	let invites = (await client.guilds.cache.first().fetchInvites()).map(
+			(invite) => invite.url
+		),
 		disallowedPatterns = [
 			/(discord.gg\/[\s\S]+)/g,
 			/(discord.me\/[\s\S]+)/g,
@@ -31,14 +42,17 @@ export async function checkInvite(string: string) {
 			/(discordservers.com\/join\/[\s\S]+)/g,
 			/(discordbee.com\/invite\?server=[\s\S]+)/g,
 			/(invite.gg\/[\s\S]+)/g,
-			/(dyno.gg\/servers\/[\s\S]+)/g
+			/(dyno.gg\/servers\/[\s\S]+)/g,
 		];
 
 	invites.push("discord.gg/premid");
 
-	let ownInvite = invites.filter(iURL => string.toLowerCase().includes(iURL.toLowerCase()));
+	let ownInvite = invites.filter((iURL) =>
+		string.toLowerCase().includes(iURL.toLowerCase())
+	);
 
-	if (ownInvite.length > 0) invites.map(i => (string = string.replace(i, "")));
+	if (ownInvite.length > 0)
+		invites.map((i) => (string = string.replace(i, "")));
 
-	return disallowedPatterns.some(pattern => string.match(pattern));
+	return disallowedPatterns.some((pattern) => string.match(pattern));
 }

@@ -12,7 +12,6 @@ const coll = pmdDB.collection("tickets");
 let users: Array<string> = [];
 
 module.exports = async (message: Discord.Message) => {
-	
 	const args = message.content
 		.split(" ")
 		.slice(1, message.content.split(" ").length);
@@ -32,7 +31,9 @@ module.exports = async (message: Discord.Message) => {
 	if (
 		!ticketFound &&
 		message.channel.id !== ch.supportChannel &&
-		[ch.chatCategory, ch.offtopicCategory].includes((message.channel as Discord.TextChannel).parentID)
+		[ch.chatCategory, ch.offtopicCategory].includes(
+			(message.channel as Discord.TextChannel).parentID
+		)
 	) {
 		if (
 			!message.content.startsWith(config.prefix) &&
@@ -40,12 +41,14 @@ module.exports = async (message: Discord.Message) => {
 				message.content.includes("anyone here?") ||
 				message.content.includes("premid isnt working") ||
 				message.content.includes("premid isn't working")) &&
-			client.elevation(message.author.id) === 0
+			(await client.elevation(message.author.id)) === 0
 		) {
 			if (!users.includes(message.author.id)) {
 				message.channel
-					.send(`Need help? Feel free to create a ticket on <#${channels.supportChannel}>!`)
-					.then(msg => msg.delete({ timeout: 15000 }));
+					.send(
+						`Need help? Feel free to create a ticket on <#${channels.supportChannel}>!`
+					)
+					.then((msg) => msg.delete({ timeout: 15000 }));
 				users.push(message.author.id);
 				setTimeout(() => {
 					const uI = users.indexOf(message.author.id);
@@ -57,7 +60,11 @@ module.exports = async (message: Discord.Message) => {
 
 	if (!ticketFound && message.channel.id === channels.supportChannel) {
 		if (message.cleanContent.length > 25) t.create(message);
-		else message.delete() && (await message.reply("please write a minimum of 25 characters.")).delete({timeout: 10 * 1000});
+		else
+			message.delete() &&
+				(
+					await message.reply("please write a minimum of 25 characters.")
+				).delete({ timeout: 10 * 1000 });
 		return;
 	}
 
@@ -72,21 +79,29 @@ module.exports = async (message: Discord.Message) => {
 			{ ticketId: t.id },
 			{ $set: { lastUserMessage: Date.now() } }
 		);
-		if(message.content.toLowerCase().startsWith("p!")) return t.addLog(`[COMMAND ISSUED] ${message.author.tag} issued command: ${message.cleanContent}`);
+		if (message.content.toLowerCase().startsWith("p!"))
+			return t.addLog(
+				`[COMMAND ISSUED] ${message.author.tag} issued command: ${message.cleanContent}`
+			);
 		t.addLog(`[MESSAGE] ${message.member.user.tag} - ${message.cleanContent}`);
 	}
 
 	if (
 		ticketFound &&
 		message.content.startsWith("<<") &&
-		(message.member.roles.cache.has(roles.ticketManager) || message.member.permissions.has("ADMINISTRATOR"))
+		(message.member.roles.cache.has(roles.ticketManager) ||
+			message.member.permissions.has("ADMINISTRATOR"))
 	) {
-		if(args.length > 0) {
+		if (args.length > 0) {
 			const userToRemove = message.guild.members.cache.find(
-				m => (m.id === args.join(" ") || m.displayName.toLowerCase() === args.join(" ").toLowerCase())
+				(m) =>
+					m.id === args.join(" ") ||
+					m.displayName.toLowerCase() === args.join(" ").toLowerCase()
 			);
 			t.removeSupporter(userToRemove);
-			t.addLog(`[USER REMOVED] ${message.member.user.tag} removed ${userToRemove.user.tag}`);
+			t.addLog(
+				`[USER REMOVED] ${message.member.user.tag} removed ${userToRemove.user.tag}`
+			);
 		} else {
 			t.removeSupporter(message.member);
 			t.addLog(`[USER LEFT] ${message.member.user.tag}`);
@@ -96,23 +111,31 @@ module.exports = async (message: Discord.Message) => {
 		return;
 	}
 
-	if ( 
-		ticketFound && message.content.startsWith(">>") &&
-		(message.member.roles.cache.has(roles.ticketManager) || message.member.permissions.has("ADMINISTRATOR"))) 
-	{
+	if (
+		ticketFound &&
+		message.content.startsWith(">>") &&
+		(message.member.roles.cache.has(roles.ticketManager) ||
+			message.member.permissions.has("ADMINISTRATOR"))
+	) {
 		if (args.length === 0) return;
 		const userToAdd = message.guild.members.cache.find(
-			m => (m.id === args.join(" ") || m.displayName.toLowerCase() === args.join(" ").toLowerCase()) 
+			(m) =>
+				m.id === args.join(" ") ||
+				m.displayName.toLowerCase() === args.join(" ").toLowerCase()
 		);
 		t.addSupporter(userToAdd);
-		t.addLog(`[USER ADDED] ${message.member.user.tag} added ${userToAdd.user.tag}`);
+		t.addLog(
+			`[USER ADDED] ${message.member.user.tag} added ${userToAdd.user.tag}`
+		);
 		message.delete();
 		return;
 	}
 
 	if (
-		ticketFound && !message.content.startsWith("<<") &&
-		(message.member.roles.cache.has(roles.ticketManager) || message.member.permissions.has("ADMINISTRATOR"))
+		ticketFound &&
+		!message.content.startsWith("<<") &&
+		(message.member.roles.cache.has(roles.ticketManager) ||
+			message.member.permissions.has("ADMINISTRATOR"))
 	) {
 		t.addSupporter(message.member);
 		return;

@@ -5,32 +5,33 @@ import config from "../../../config";
 module.exports.run = async (message: Discord.Message) => {
 	message.delete();
 
-	let userElevation = client.elevation(message.author.id),
+	let userElevation = await client.elevation(message.author.id),
 		cmds = client.commands
 			// @ts-ignore
-			.filter(cmd => !cmd.config.hidden)
-			.map(cmd => [
+			.filter((cmd) => !cmd.config.hidden)
+			.map((cmd) => [
 				// @ts-ignore
 				cmd.config.name,
 				// @ts-ignore
 				cmd.config.description,
 				// @ts-ignore
-				cmd.config.permLevel ? cmd.config.permLevel : 0
+				cmd.config.permLevel ? cmd.config.permLevel : 0,
 			])
-			.filter(cmd => userElevation >= cmd[2]);
+			.filter((cmd) => userElevation >= cmd[2]);
 
 	let embed = new Discord.MessageEmbed({
 		title: "Help",
 		description: cmds
-			.map(cmd => `**${config.prefix}${cmd[0]}**\n\`\`${cmd[1]}\`\``)
+			.map((cmd) => `**${config.prefix}${cmd[0]}**\n\`\`${cmd[1]}\`\``)
 			.join("\n"),
 		fields: [
 			{
 				name: "\u200b",
-				value: "*These are the commands you can execute with your permission level.*"
-			}
+				value:
+					"*These are the commands you can execute with your permission level.*",
+			},
 		],
-		color: "#7289DA"
+		color: "#7289DA",
 	});
 
 	message.channel
@@ -40,5 +41,5 @@ module.exports.run = async (message: Discord.Message) => {
 
 module.exports.config = {
 	name: "help",
-	description: "Shows this menu."
+	description: "Shows this menu.",
 };
