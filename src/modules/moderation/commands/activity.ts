@@ -50,9 +50,11 @@ module.exports.run = async (
 
 	let ticketStats = new TicketStats();
 
-	message.channel.send({
-		files: [await ticketStats.getUserActivity(userActivity.id)],
-	});
+	message.channel
+		.send({
+			files: [await ticketStats.getUserActivity(userActivity.id)],
+		})
+		.then((msg) => msg.delete({ timeout: 10000 }));
 };
 
 module.exports.config = {
