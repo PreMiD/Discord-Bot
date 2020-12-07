@@ -1,6 +1,7 @@
 import * as Discord from "discord.js";
-import roles from "../../../roles";
+
 import { pmdDB } from "../../../database/client";
+import roles from "../../../roles";
 
 const betaUsers = pmdDB.collection("betaUsers"),
 	alphaUsers = pmdDB.collection("alphaUsers");
@@ -36,13 +37,15 @@ module.exports = async (
 	if (
 		oldMember.roles.cache.has(roles.beta) &&
 		!newMember.roles.cache.has(roles.beta)
-	) betaUsers.findOneAndDelete({ userId: newMember.id });
+	)
+		betaUsers.findOneAndDelete({ userId: newMember.id });
 
 	//* Remove alpha access when the alpha role is removed.
 	if (
 		oldMember.roles.cache.has(roles.alpha) &&
 		!newMember.roles.cache.has(roles.alpha)
-	) alphaUsers.findOneAndDelete({ userId: newMember.id });
+	)
+		alphaUsers.findOneAndDelete({ userId: newMember.id });
 
 	//* Give old patron beta if he stops supporting
 	if (
@@ -59,7 +62,8 @@ module.exports = async (
 		newMember.roles.cache.has(roles.patron) &&
 		!newMember.roles.cache.has(roles.alpha)
 	) {
-		if (newMember.roles.cache.has(roles.donator)) newMember.roles.remove([roles.donator, roles.beta]);
+		if (newMember.roles.cache.has(roles.donator))
+			newMember.roles.remove([roles.donator, roles.beta]);
 		newMember.roles.add(roles.alpha);
 		return;
 	}
@@ -69,21 +73,24 @@ module.exports = async (
 		newMember.roles.cache.has(roles.donator) &&
 		!newMember.roles.cache.has(roles.alpha) &&
 		!newMember.roles.cache.has(roles.beta)
-	) newMember.roles.add(roles.beta);
+	)
+		newMember.roles.add(roles.beta);
 
 	//* If user is donator and get's alpha role remove beta role
 	if (
 		newMember.roles.cache.has(roles.donator) &&
 		newMember.roles.cache.has(roles.alpha) &&
 		newMember.roles.cache.has(roles.beta)
-	) newMember.roles.remove(roles.beta);
+	)
+		newMember.roles.remove(roles.beta);
 
 	//* If user boosts and doesn't have beta role, give it to them.
 	if (
 		newMember.roles.cache.has(roles.booster) &&
 		!newMember.roles.cache.has(roles.beta) &&
-            	!newMember.roles.cache.has(roles.alpha)
-	) newMember.roles.add(roles.beta);
+		!newMember.roles.cache.has(roles.alpha)
+	)
+		newMember.roles.add(roles.beta);
 
 	//* Remove beta access when boost expires.
 	if (
@@ -92,6 +99,7 @@ module.exports = async (
 	)
 		return;
 
+	//* Remove beta access if they didn't boost for longer then 3 months.
 	if (
 		oldMember.roles.cache.has(roles.booster) &&
 		!newMember.roles.cache.has(roles.booster) &&
@@ -99,6 +107,19 @@ module.exports = async (
 		!newMember.roles.cache.has(roles.donator)
 	) {
 		newMember.roles.remove(roles.beta);
+		return;
+	}
+
+	//* Remove alpha and add back beta if they boosted over 3 monhts.
+	if (
+		oldMember.roles.cache.has(roles.booster) &&
+		!newMember.roles.cache.has(roles.booster) &&
+		!newMember.roles.cache.has(roles.patron) &&
+		newMember.roles.cache.has(roles.donator) &&
+		newMember.roles.cache.has(roles.alpha)
+	) {
+		newMember.roles.remove(roles.alpha);
+		newMember.roles.add(roles.beta);
 		return;
 	}
 };
