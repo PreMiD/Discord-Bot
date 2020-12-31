@@ -15,8 +15,8 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.MAIN_HOST}}
-          username: ${{ secrets.SSHUSERNAME }}
-          password: ${{ secrets.SSHPASSWORD }}
+          username: ${{ secrets.SSH_USERNAME }}
+          sshkey: ${{ secrets.SSH_KEY }}
           script: |
             cd /home/Discord-Bot
             git reset --hard
