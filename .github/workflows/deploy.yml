@@ -16,7 +16,7 @@ jobs:
         with:
           host: ${{secrets.MAIN_HOST}}
           username: ${{ secrets.SSH_USERNAME }}
-          sshkey: ${{ secrets.SSH_KEY }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
             cd /home/Discord-Bot
             git reset --hard
