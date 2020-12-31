@@ -1,10 +1,12 @@
-import * as Discord from "discord.js";
-import moduleLoader from "./util/moduleLoader";
-import roles from "./roles";
-import { connect, MongoClient } from "./database/client";
-import { error, success } from "./util/debug";
-import { config } from "dotenv";
 import "source-map-support/register";
+
+import * as Discord from "discord.js";
+import { config } from "dotenv";
+
+import { connect, MongoClient } from "./database/client";
+import roles from "./roles";
+import { error, success } from "./util/debug";
+import moduleLoader from "./util/moduleLoader";
 
 //* Load .env file
 config();
@@ -17,16 +19,16 @@ export let client = new Discord.Client({
 					status: "dnd",
 					activity: {
 						name: "devs code",
-						type: "WATCHING",
-					},
+						type: "WATCHING"
+					}
 			  }
 			: {
 					status: "online",
 					activity: {
 						name: "p!help",
-						type: "LISTENING",
-					},
-			  },
+						type: "LISTENING"
+					}
+			  }
 });
 
 //* Commands, Command aliases, Command permission levels
@@ -72,7 +74,7 @@ run();
 async function run() {
 	//* Connect to Mongo DB
 	connect()
-		.then((_) => {
+		.then(_ => {
 			success("Connected to the database");
 			client.login(process.env.TOKEN).then(async () => moduleLoader(client));
 		})
@@ -89,12 +91,16 @@ process.on("SIGINT", async () => {
 });
 
 process.on("unhandledRejection", (err: any) => {
-	const ignoredErrors = [
-		"Error [GUILD_MEMBERS_TIMEOUT]: Members didn't arrive in time.",
-		"DiscordAPIError: Missing Access",
-		"DiscordAPIError: Missing Permissions",
-	];
-	if (ignoredErrors.map((x) => err.toString().includes(x)).includes(true))
-		return;
 	error(err.stack.toString());
+
+	const wh = process.env.ERRORSWEBHOOK.split(","),
+		hook = new Discord.WebhookClient(wh[0], wh[1]);
+
+	hook.send(
+		new Discord.MessageEmbed({
+			title: "Discord-Bot",
+			color: "#ff5050",
+			description: `\`\`\`${err.stack.toString()}\`\`\``
+		})
+	);
 });

@@ -1,5 +1,6 @@
 import * as Discord from "discord.js";
 import fs from "fs";
+import { ensureDirSync } from "fs-extra";
 import moment from "moment";
 import rimraf from "rimraf";
 
@@ -7,6 +8,7 @@ import { sortTickets } from "../";
 import { client } from "../../..";
 import channels from "../../../channels";
 import { pmdDB } from "../../../database/client";
+import { error } from "../../../util/debug";
 
 let coll = pmdDB.collection("tickets"),
 	circleFolder = "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/",
@@ -74,7 +76,18 @@ export class Ticket {
 			);
 			this.embed = this.ticketMessage.embeds[0];
 		} catch (e) {
-			console.log(e);
+			//* Check if ticket exists in category if not update status
+			if (!ticketsCategory.children.find(c => c.name === ticket.ticketId)) {
+				error(`Outdated ticket ${ticket.ticketId}, closing in db`);
+				await coll.findOneAndUpdate(
+					{ ticketId: ticket.ticketId, status: 1 },
+					{
+						$set: {
+							status: 2
+						}
+					}
+				);
+			}
 		}
 
 		if (this.status === 1) {
@@ -91,10 +104,14 @@ export class Ticket {
 			);
 		}
 
-		if (ticket.attachmentMessage)
-			this.attachmentsMessage = await ticketsChannel.messages.fetch(
-				ticket.attachmentMessage
-			);
+		try {
+			if (ticket.attachmentMessage)
+				this.attachmentsMessage = await ticketsChannel.messages.fetch(
+					ticket.attachmentMessage
+				);
+		} catch (e) {
+			error(`Unable to fetch attachments message for ${ticket.ticketId}`);
+		}
 
 		try {
 			this.user = await ticketsChannel.guild.members.fetch(ticket.userId);
@@ -313,6 +330,7 @@ export class Ticket {
 		if (this.channel.deletable) this.channel.delete();
 
 		let logs = await coll.findOne({ supportChannel: this.channel.id });
+		ensureDirSync(`${process.cwd()}/../TicketLogs`);
 		fs.writeFile(
 			`${process.cwd()}/../TicketLogs/${this.id}.txt`,
 			logs.logs.join("\n"),
@@ -341,7 +359,7 @@ export class Ticket {
 									]
 								}
 							)
-							.catch(null);
+							.catch(() => {});
 
 						const getVars = url => {
 								let regexp = /^https:\/\/discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/;
@@ -410,7 +428,6 @@ export class Ticket {
 						if (this.embed.thumbnail) delete this.embed.thumbnail;
 						if (this.attachmentsMessage && this.attachmentsMessage.deletable)
 							this.attachmentsMessage.delete();
-						//! DEBUG - I shall find the cause!!!!
 						this.ticketMessage
 							.delete()
 							.catch(e =>

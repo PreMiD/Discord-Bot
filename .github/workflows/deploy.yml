@@ -14,13 +14,13 @@ jobs:
       - name: Deploying...
         uses: appleboy/ssh-action@master
         with:
-          host: 1.premid.app
+          host: ${{secrets.MAIN_HOST}}
           username: ${{ secrets.SSHUSERNAME }}
           password: ${{ secrets.SSHPASSWORD }}
           script: |
-            cd /home/PreMiD/Discord-Bot
+            cd /home/Discord-Bot
             git reset --hard
             git pull
             yarn
             yarn run compile
-            pm2 reload /home/PreMiD/ecosystem.config.js --only Discord-Bot
+            pm2 reload /home/ecosystem.config.js --only Discord-Bot
