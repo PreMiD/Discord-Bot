@@ -323,7 +323,7 @@ export class Ticket {
 	async close(closer?: any, reason?: string) {
 		this.addLog(
 			`[TICKET CLOSED] ${
-				closer.tag ? closer.tag : closer.user.tag
+				closer ? closer.tag : closer.user.tag
 			} has closed the ticket`
 		);
 
