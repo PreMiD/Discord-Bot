@@ -323,8 +323,8 @@ export class Ticket {
 	async close(closer?: any, reason?: string) {
 		this.addLog(
 			`[TICKET CLOSED] ${
-				closer ? closer.tag : closer.user.tag
-			} has closed the ticket`
+				closer ? `${closer.tag} has closed the ticket` : "User left."
+			}`
 		);
 
 		if (this.channel.deletable) this.channel.delete();
