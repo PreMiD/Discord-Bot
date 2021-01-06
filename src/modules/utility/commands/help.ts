@@ -1,45 +1,43 @@
 import * as Discord from "discord.js";
+
 import { client } from "../../..";
+import { InteractionResponse } from "../../../../@types/djs-extender";
 import config from "../../../config";
+import UniformEmbed from "../../../util/UniformEmbed";
 
-module.exports.run = async (message: Discord.Message) => {
-	message.delete();
+module.exports.run = async (data: InteractionResponse, permLevel: number) => {
+	let cmds = client.commands.filter(
+		cmd =>
+			!cmd.config.hidden &&
+			permLevel >= (cmd.config.permLevel ? cmd.config.permLevel : 0)
+	);
 
-	let userElevation = await client.elevation(message.author.id),
-		cmds = client.commands
-			// @ts-ignore
-			.filter((cmd) => !cmd.config.hidden)
-			.map((cmd) => [
-				// @ts-ignore
-				cmd.config.name,
-				// @ts-ignore
-				cmd.config.description,
-				// @ts-ignore
-				cmd.config.permLevel ? cmd.config.permLevel : 0,
-			])
-			.filter((cmd) => userElevation >= cmd[2]);
+	let embed = new UniformEmbed(
+		{
+			description:
+				cmds
+					.map(
+						cmd =>
+							`**\`${cmd.config.discordCommand ? "/" : config.prefix}${
+								cmd.config.name
+							}\`** - *${
+								cmd.config.discordCommand
+									? client.discordCommands.get(cmd.config.name).description
+									: cmd.config.description
+							}*`
+					)
+					.join("\n") +
+				"\n\n*These are the commands you can execute with your permission level.*"
+		},
+		":book: Help"
+	);
 
-	let embed = new Discord.MessageEmbed({
-		title: "Help",
-		description: cmds
-			.map((cmd) => `**${config.prefix}${cmd[0]}**\n\`\`${cmd[1]}\`\``)
-			.join("\n"),
-		fields: [
-			{
-				name: "\u200b",
-				value:
-					"*These are the commands you can execute with your permission level.*",
-			},
-		],
-		color: "#7289DA",
-	});
-
-	message.channel
-		.send(embed)
+	data.channel
+		.send(data.member.toString(), embed)
 		.then((msg: Discord.Message) => msg.delete({ timeout: 30 * 1000 }));
 };
 
 module.exports.config = {
 	name: "help",
-	description: "Shows this menu.",
+	discordCommand: true
 };

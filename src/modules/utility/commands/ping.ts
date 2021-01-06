@@ -1,34 +1,30 @@
-import * as Discord from "discord.js";
+import { MessageEmbed } from "discord.js";
 
-let embed: Discord.MessageEmbed, ping: number;
+import { client } from "../../..";
+import { InteractionResponse } from "../../../../@types/djs-extender";
+import UniformEmbed from "../../../util/UniformEmbed";
 
-module.exports.run = async (message: Discord.Message) => {
-	embed = new Discord.MessageEmbed({
-		title: "Ping",
-		description: "<a:loading:521018476480167937> Pinging..."
-	});
-
-	message.channel.send(embed).then(msg => {
-		msg = msg as Discord.Message;
-
-		ping = msg.createdTimestamp - message.createdTimestamp;
-		let color = 
-			ping < 250 ? "#00ff00" : 
-			ping > 250 && ping < 500 ? 
-		    	"#ffaa00" : "#ff0000";
-
-		embed.setDescription(
-			`**You** > **Discord** (\`\`${Math.floor(ping)}ms\`\`)
-			 **We** > **Discord API** (\`\`${Math.floor(message.client.ws.ping)}ms\`\`)`
-		).setColor(color);
-
-		msg.edit(embed).then(msg => msg.delete({ timeout: 15 * 1000 }));
-	});
-
-	if (!message.deleted) message.delete();
+module.exports.run = async (data: InteractionResponse, perms: number) => {
+	data.channel
+		.send(
+			new UniformEmbed(
+				{
+					description: `**We** to **Discord** (\`\`${Math.floor(
+						client.ws.ping
+					)}ms\`\`)`
+				},
+				":ping_pong: Ping",
+				client.ws.ping < 250
+					? "#50ff50"
+					: client.ws.ping > 250 && client.ws.ping < 500
+					? "#ffff50"
+					: "#ff5050"
+			)
+		)
+		.then(msg => msg.delete({ timeout: 15 * 1000 }));
 };
 
 module.exports.config = {
 	name: "ping",
-	description: "Shows ping information."
+	discordCommand: true
 };

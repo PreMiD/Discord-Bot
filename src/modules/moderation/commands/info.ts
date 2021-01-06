@@ -1,55 +1,69 @@
 import * as Discord from "discord.js";
+
 import { client } from "../../..";
+import { InteractionResponse } from "../../../../@types/djs-extender";
+import UniformEmbed from "../../../util/UniformEmbed";
 
-module.exports.run = async (
-	message: Discord.Message,
-	params: Array<string>
-) => {
-	message.delete();
-
-if (params[0] == undefined || params[0].length == 0 || params[0].toLowerCase() == "list") {
-		const embed = new Discord.MessageEmbed({
-			title: "All possible options for this command:",
-			color: "RANDOM",
-			description: client.infos
-				.keyArray()
-				.map(k => `**${client.infos.get(k).title}**:\n\`\`${k}\`\`, \`\`${client.infos.get(k).aliases.join("\`\`, \`\`")}\`\``)
-				.join("\n\n "),
-			footer: {
-				text: message.author.tag,
-				iconURL: message.author.avatarURL()
-			}
-		})
-		message.reply(embed);
+module.exports.run = async (data: InteractionResponse, perms: number) => {
+	if (data.data.options[0].name === "list") {
+		const embed = new UniformEmbed(
+			{
+				description: client.infos
+					.keyArray()
+					.map(
+						k =>
+							`**${client.infos.get(k).title}**\n\`${k}\`, \`${client.infos
+								.get(k)
+								.aliases.join("`, `")}\``
+					)
+					.join("\n\n")
+			},
+			":bookmark: Info • List"
+		);
+		data.channel.send(`${data.member.toString()}`, embed);
 		return;
 	}
+
+	let shortcutArg = data.data.options[0].options[0];
+	shortcutArg.value = shortcutArg.value as string;
 
 	if (
 		!(
-			client.infos.has(params[0].toLowerCase()) ||
-			client.infoAliases.has(params[0].toLowerCase()) ||
-			client.infos.has(client.infoAliases.get(params[0].toLowerCase()))
+			client.infos.has(shortcutArg.value.toLowerCase()) ||
+			client.infoAliases.has(shortcutArg.value.toLowerCase()) ||
+			client.infos.has(client.infoAliases.get(shortcutArg.value.toLowerCase()))
 		)
 	) {
-		(await message.reply("please enter a valid name!")).delete({timeout: 5 * 1000});
+		(
+			await data.channel.send(
+				data.member.toString(),
+				new UniformEmbed(
+					{ description: "Please enter a valid shortcut." },
+					":bookmark: Info • Error",
+					"#ff5050"
+				)
+			)
+		).delete({
+			timeout: 10 * 1000
+		});
 		return;
 	}
 
-	const info = client.infos.get(params[0].toLowerCase()) || client.infos.get(client.infoAliases.get(params[0].toLowerCase())),
-		embed = new Discord.MessageEmbed({
-			title: info.title || "No Title",
-			description: info.description || "No description provided.",
-			color: info.color || "36393F",
-			footer: {
-				text: info.footer || `by ${message.author.tag}`,
-				iconURL: message.author.avatarURL()
-			}
-		});
+	const info =
+			client.infos.get(shortcutArg.value.toLowerCase()) ||
+			client.infos.get(client.infoAliases.get(shortcutArg.value.toLowerCase())),
+		embed = new UniformEmbed(
+			{
+				description: info.description || "No description providen."
+			},
+			`:bookmark: Info • ${info.title || "No Title"}`,
+			info.color || undefined
+		);
 
-	message.channel.send(embed);
+	data.channel.send(embed);
 };
 
 module.exports.config = {
 	name: "info",
-	description: "Shortcuts to get things done faster."
+	discordCommand: true
 };

@@ -53,7 +53,7 @@ export class Ticket {
 			type === "ticket"
 				? arg
 				: type === "author"
-				? await coll.findOne({ userId: arg })
+				? await coll.findOne({ userId: arg, status: 1 })
 				: await coll.findOne(
 						type === "message"
 							? { ticketMessage: arg }
@@ -260,7 +260,7 @@ export class Ticket {
 				(
 					await pmdDB
 						.collection("userSettings")
-						.find({ seeAllTickets: true })
+						.find({ showAllTickets: true })
 						.toArray()
 				).map(uSett => {
 					return {

@@ -1,22 +1,40 @@
-import creditRoles from "./creditRoles";
 import schedule from "node-schedule";
+
+import { pmdDB } from "../../database/client";
 import { client } from "../../index";
 import { info } from "../../util/debug";
-import { pmdDB } from "../../database/client";
+import { updateBetaUsers, updateDiscordUsers } from "../betaAlpha";
+import creditRoles from "./creditRoles";
 
-const creditsColl = pmdDB.collection("credits");
+const creditsColl = pmdDB.collection("credits"),
+	userSettingsColl = pmdDB.collection("userSettings");
 
 async function updateCredits() {
 	info("Updating credits...");
 
-	const creditUsers = (await client.guilds.cache.first().members.fetch()).filter(m =>
-		Object.values(creditRoles).find(cR => m.roles.cache.keyArray().includes(cR)) ? true : false
-	);
+	const settings = await userSettingsColl.find().toArray(),
+		creditRolesValues = Object.values(creditRoles);
+
+	let creditUsers = client.guilds.cache.first().members.cache;
+	creditUsers.sweep(m => {
+		const s = settings.find(s => s.userId === m.id);
+		if (typeof s !== "undefined" && !s.showContributor) return true;
+
+		return !creditRolesValues.some(cR => m.roles.cache.has(cR));
+	});
 
 	let credits = creditUsers.map(m => {
-		const highestRole = m.roles.cache.get(containsAny(Object.values(creditRoles), m.roles.cache.keyArray())[0]),
-			colorRole = m.roles.cache.filter(x => x.hexColor !== "#000000").sort((a, b) => a.position - b.position).map(x => x).reverse()[0],
-			staff = ["656913616100130816", "672175812102979605"].map(x => m.roles.cache.map(x => x.id).includes(x)).includes(true);
+		const highestRole = m.roles.cache.get(
+				containsAny(Object.values(creditRoles), m.roles.cache.keyArray())[0]
+			),
+			colorRole = m.roles.cache
+				.filter(x => x.hexColor !== "#000000")
+				.sort((a, b) => a.position - b.position)
+				.map(x => x)
+				.reverse()[0],
+			staff = ["656913616100130816", "672175812102979605"]
+				.map(x => m.roles.cache.map(x => x.id).includes(x))
+				.includes(true);
 
 		return {
 			userId: m.id,
@@ -35,7 +53,7 @@ async function updateCredits() {
 			rolePosition: highestRole.position,
 			status: m.user.presence.status
 		};
-	})
+	});
 
 	await creditsColl.bulkWrite(
 		credits.map(cU => {
@@ -52,7 +70,9 @@ async function updateCredits() {
 	const dbCredits = await creditsColl
 			.find({}, { projection: { _id: false, userId: true } })
 			.toArray(),
-		usersToRemove = dbCredits.filter(mC => !credits.find(cU => cU.userId === mC.userId));
+		usersToRemove = dbCredits.filter(
+			mC => !credits.find(cU => cU.userId === mC.userId)
+		);
 
 	if (usersToRemove.length > 0)
 		await creditsColl.bulkWrite(
@@ -111,11 +131,16 @@ async function updateFlags() {
 
 //* create the task for every 6th hour and immediately execute it
 //* https://crontab.guru/#0_*/6_*_*_*
-schedule.scheduleJob("flag updater", "0 */6 * * *", updateFlags);
-//* create the task for every 15th minute and immediately execute it
-//* https://crontab.guru/#*/15_*_*_*_*
-schedule.scheduleJob("credits updater", "*/15 * * * *", updateCredits).invoke();
+
+if (process.env.NODE_ENV === "production") {
+	schedule.scheduleJob("flag updater", "0 */6 * * *", updateFlags);
+	updateCredits();
+	setInterval(updateCredits, 15 * 1000);
+	updateBetaUsers();
+	setInterval(updateBetaUsers, 60 * 1000);
+	updateDiscordUsers();
+}
 
 function containsAny(source: Array<string>, target: Array<string>) {
-	return source.filter((item) => target.indexOf(item) > -1);;
+	return source.filter(item => target.indexOf(item) > -1);
 }

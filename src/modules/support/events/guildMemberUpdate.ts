@@ -1,8 +1,9 @@
 import * as Discord from "discord.js";
-import { Ticket } from "../classes/Ticket";
-import roles from "../../../roles";
+
 import channels from "../../../channels";
 import { pmdDB } from "../../../database/client";
+import roles from "../../../roles";
+import { Ticket } from "../classes/Ticket";
 
 let coll = pmdDB.collection("userSettings"),
 	tcoll = pmdDB.collection("tickets");
@@ -17,7 +18,7 @@ module.exports = async (
 	) {
 		coll.findOneAndUpdate(
 			{ userId: oldMember.id },
-			{ $unset: { seeAllTickets: true } }
+			{ $unset: { showAllTickets: true } }
 		);
 
 		const tickets = await tcoll.find({ supporters: oldMember.id }).toArray();

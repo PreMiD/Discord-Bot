@@ -1,7 +1,10 @@
 import axios from "axios";
+import { TextChannel } from "discord.js";
+
 import { client } from "../..";
 import channels from "../../channels";
-import { TextChannel } from "discord.js";
+
+//TODO Rewrite?
 
 //* Cache that stores the incident data
 let cache = {
@@ -18,10 +21,12 @@ const colors = {
 		critical: 0xdd2e44,
 		incidentResolved: 0x77ff77
 	},
-	statusUpdateURL = "https://status.premid.app/api/v2/incidents/unresolved.json",
+	statusUpdateURL =
+		"https://status.premid.app/api/v2/incidents/unresolved.json",
 	statusUpdateChannel = channels.statusUpdates,
 	time = 3 * 1000 * 60,
-	toTitleCase = (str) => str
+	toTitleCase = str =>
+		str
 			.toLowerCase()
 			.split(" ")
 			.map(word => word.charAt(0).toUpperCase() + word.slice(1))
@@ -34,7 +39,9 @@ setInterval(async () => {
 
 		//* Check returned true
 		if (res && res.send === true) {
-			const channel = (await client.channels.cache.get(statusUpdateChannel)) as TextChannel;
+			const channel = (await client.channels.cache.get(
+				statusUpdateChannel
+			)) as TextChannel;
 
 			//* Type 0 = new incident
 			if (res.type === 0) {
@@ -129,7 +136,8 @@ export async function checkStatus() {
 					const incidentUpdate = incident.incident_updates[0];
 
 					//* Make sure this isn't the same incident
-					if (cache.lastIncident.id === incidentUpdate.id) return { send: false, type: null };
+					if (cache.lastIncident.id === incidentUpdate.id)
+						return { send: false, type: null };
 
 					cache.lastUpdate = {
 						id: incidentUpdate.id,
@@ -150,7 +158,8 @@ export async function checkStatus() {
 
 			//* Bot doesn't know about this incident yet
 			else {
-				let incidentCurr = incident.incident_updates[incident.incident_updates.length - 1];
+				let incidentCurr =
+					incident.incident_updates[incident.incident_updates.length - 1];
 
 				//* Store the parts of the incident needed
 				cache.lastIncident = {

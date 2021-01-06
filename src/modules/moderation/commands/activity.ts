@@ -1,64 +1,109 @@
 import * as Discord from "discord.js";
+
+import { client } from "../../..";
+import { InteractionResponse } from "../../../../@types/djs-extender";
+import UniformEmbed from "../../../util/UniformEmbed";
 import TicketStats from "../classes/TicketStats";
 
-module.exports.run = async (
-	message: Discord.Message,
-	params: string[],
-	perms: number
-) => {
-	message.delete();
+export default async (res: InteractionResponse, perms: number) => {
+	const args = res.data.options[0];
 
 	let userActivity: Discord.GuildMember;
+	if (!args.options || !args.options.find(a => a.name === "user"))
+		userActivity = res.member;
+	else if (args.options.find(a => a.name === "user"))
+		userActivity = res.guild.members.resolve(
+			args.options.find(a => a.name === "user").value as string
+		);
 
-	if (params[0] == undefined && message.mentions.users.size == 0)
-		userActivity = await message.guild.members.fetch(message.author.id);
-	else if (params[0].length)
-		userActivity =
-			message.mentions.members.first() !== undefined
-				? message.mentions.members.first()
-				: await message.guild.members.fetch(params[0]).catch(() => {
-						return undefined;
-				  });
-
-	if (userActivity === undefined)
-		return message.channel
-			.send(
-				new Discord.MessageEmbed({
-					title: "Error",
-					description: "Could not find user.",
-					color: "#7289DA",
-				})
+	if (args.options?.length > 1 && args.options.find(a => a.name === "user")) {
+		return (
+			await res.channel.send(
+				res.member.toString(),
+				new UniformEmbed(
+					{
+						description: `\`user\` argument can not be combined with \`average\` and \`perday\` argument.`
+					},
+					":bar_chart: Activity • Error",
+					"#ff5050"
+				)
 			)
-			.then((msg) => msg.delete({ timeout: 2500 }));
+		).delete({ timeout: 10 * 1000 });
+	}
+
+	if (
+		args.options &&
+		args.options.find(a => a.name === "perday") &&
+		args.options.find(a => a.name === "average")
+	) {
+		return (
+			await res.channel.send(
+				res.member.toString(),
+				new UniformEmbed(
+					{
+						description: `Argument \`average\` and \`perday\` can not be combined.`
+					},
+					":bar_chart: Activity • Error",
+					"#ff5050"
+				)
+			)
+		).delete({ timeout: 10 * 1000 });
+	}
+
+	if (
+		userActivity === undefined ||
+		userActivity.user.bot ||
+		client.elevation(userActivity.user) < 1
+	)
+		return (
+			await res.channel.send(
+				res.member.toString(),
+				new UniformEmbed(
+					{
+						description: `User not found.`
+					},
+					":bar_chart: Activity • Error",
+					"#ff5050"
+				)
+			)
+		).delete({ timeout: 10 * 1000 });
 
 	//* Management only.
 	if (
 		perms < 4 &&
-		params[0] !== undefined &&
-		params[0].length &&
-		userActivity.id !== message.author.id
+		args.options &&
+		args.options.find(a => a.name === "user" && a.value !== userActivity.id)
 	)
-		return message.channel
-			.send(
-				new Discord.MessageEmbed({
-					title: "Error",
-					description: "No permissions.",
-					color: "#7289DA",
-				})
+		return (
+			await res.channel.send(
+				res.member.toString(),
+				new UniformEmbed(
+					{
+						description: `No permission.`
+					},
+					":bar_chart: Activity • Error",
+					"#ff5050"
+				)
 			)
-			.then((msg) => msg.delete({ timeout: 2500 }));
+		).delete({ timeout: 10 * 1000 });
 
 	let ticketStats = new TicketStats();
 
-	message.channel
-		.send({
-			files: [await ticketStats.getUserActivity(userActivity.id)],
+	res.channel
+		.send(res.member.toString(), {
+			files: [
+				args.options?.find(a => a.name === "average")?.value
+					? await ticketStats.getAvgTickets()
+					: args.options?.find(a => a.name === "perday")?.value
+					? await ticketStats.getTicketsPerDay()
+					: await ticketStats.getUserActivity(userActivity.id)
+			]
 		})
-		.then((msg) => msg.delete({ timeout: 10000 }));
+		.then(msg => msg.delete({ timeout: 30 * 1000 }));
 };
 
 module.exports.config = {
 	name: "activity",
-	description: "Check the activity of a staff member.",
 	permLevel: 1,
+	enabled: false
 };
