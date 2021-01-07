@@ -31,12 +31,11 @@ module.exports.run = async (res: InteractionResponse, perms: number) => {
 
 	switch (res.data.options[0].name) {
 		case "search":
-			return (
+			return 
 				await res.channel.send(
 					res.member.toString(),
 					await searchPresence(res.data.options[0].value as string)
 				)
-			).delete({ timeout: 30 * 1000 });
 	}
 };
 
