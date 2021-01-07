@@ -320,14 +320,17 @@ export class Ticket {
 		sortTickets();
 	}
 
-	async close(closer?: any, reason?: string) {
+	async close(closer?: Discord.User, reason?: string) {
 		this.addLog(
 			`[TICKET CLOSED] ${
 				closer ? `${closer.tag} has closed the ticket` : "User left."
 			}`
 		);
 
-		if (this.channel.deletable) this.channel.delete();
+		if (this.channel.deletable) this.channel.delete().catch(e => {});
+		if (this.attachmentsMessage && this.attachmentsMessage.deletable)
+			this.attachmentsMessage.delete().catch(e => {});
+		this.ticketMessage.delete().catch(e => {});
 
 		let logs = await coll.findOne({ supportChannel: this.channel.id });
 		ensureDirSync(`${process.cwd()}/../TicketLogs`);
@@ -346,7 +349,7 @@ export class Ticket {
 						this.user
 							.send(
 								`Your ticket \`\`#${this.id}\`\` has been closed by **${
-									closer.tag ? closer.tag : closer.user.tag
+									closer.tag
 								}**. Reason: \`\`${reason || "Not Specified"}\`\``,
 								{
 									files: [
@@ -426,15 +429,7 @@ export class Ticket {
 
 						delete this.embed.fields;
 						if (this.embed.thumbnail) delete this.embed.thumbnail;
-						if (this.attachmentsMessage && this.attachmentsMessage.deletable)
-							this.attachmentsMessage.delete();
-						this.ticketMessage
-							.delete()
-							.catch(e =>
-								client.users.cache
-									.get("506899274748133376")
-									.send(`Error deleting message in #tickets:\n\n**${e}**`)
-							);
+
 						supportChannel.permissionOverwrites.get(this.user.id).delete();
 						rimraf(`${process.cwd()}/../TicketLogs/${this.id}.txt`, () => {});
 

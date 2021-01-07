@@ -1,7 +1,8 @@
 import * as Discord from "discord.js";
+
 import channels from "../../../channels";
-import { Ticket } from "../classes/Ticket";
 import { pmdDB } from "../../../database/client";
+import { Ticket } from "../classes/Ticket";
 
 let coll = pmdDB.collection("tickets");
 
@@ -19,7 +20,7 @@ module.exports = async (user: Discord.GuildMember) => {
 			} catch {}
 		} else if (ticket.status === 1) {
 			const t = new Ticket();
-			if (await t.fetch("ticket", ticket)) t.close({tag: "PreMiD"}, "Ticket creator left the Discord.");
+			if (await t.fetch("ticket", ticket)) t.close(user.user, "hi");
 		}
 	});
 };
