@@ -8,7 +8,7 @@ module.exports = async packet => {
 	if (!["MESSAGE_REACTION_ADD"].includes(packet.t)) return;
 
 	let guild = await client.guilds.fetch(packet.d.guild_id),
-		member = guild.members.cache.fetch(packet.d.user_id);
+		member = await guild.members.fetch(packet.d.user_id);
 
 	if (!member || member.user.bot) return;
 
