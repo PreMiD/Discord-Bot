@@ -342,7 +342,7 @@ export class Ticket {
 				fs.readFile(
 					`${process.cwd()}/../TicketLogs/${this.id}.txt`,
 					{ encoding: "utf-8" },
-					err => {
+					async err => {
 						if (err) return console.log(err);
 						//@ts-ignore
 						this.user = await client.users.fetch(this.userId);
