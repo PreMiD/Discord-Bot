@@ -7,8 +7,8 @@ import { Ticket } from "../classes/Ticket";
 module.exports = async packet => {
 	if (!["MESSAGE_REACTION_ADD"].includes(packet.t)) return;
 
-	let guild = client.guilds.cache.get(packet.d.guild_id),
-		member = guild.members.cache.get(packet.d.user_id);
+	let guild = await client.guilds.fetch(packet.d.guild_id),
+		member = guild.members.cache.fetch(packet.d.user_id);
 
 	if (!member || member.user.bot) return;
 
@@ -19,7 +19,7 @@ module.exports = async packet => {
 		packet.d.emoji.id === "521018476870107156" &&
 		typeof ticket.status === "undefined"
 	)
-		return ticket.accept(await member.fetch());
+		return ticket.accept(member);
 
 	if (
 		packet.d.emoji.name === "🚫" &&
