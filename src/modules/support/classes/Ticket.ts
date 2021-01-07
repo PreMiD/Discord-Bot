@@ -295,7 +295,7 @@ export class Ticket {
 
 		//@ts-ignore False types...
 		this.embed.fields = this.embed.fields.filter(x => x.name != "Channel");
-		this.embed.footer = { text: "p!close - Closes this ticket." };
+		this.embed.footer = { text: "/ticket close - Closes this ticket." };
 		this.channelMessage = await this.channel.send({ embed: this.embed });
 		this.channel.send(
 			`${this.user}, Your ticket \`\`#${this.id}\`\` has been accepted by **${supporter.displayName}**.`
@@ -470,7 +470,7 @@ export class Ticket {
 		//@ts-ignore False types...
 		supportEmbed.fields.pop();
 		supportEmbed.footer = {
-			text: "p!close - Closes this ticket."
+			text: "/ticket close - Closes this ticket."
 		};
 		this.channelMessage.edit({ embed: supportEmbed });
 
@@ -504,7 +504,7 @@ export class Ticket {
 			// @ts-ignore False types...
 			supportEmbed.fields.pop();
 			supportEmbed.footer = {
-				text: "p!close - Closes this ticket."
+				text: "/ticket close - Closes this ticket."
 			};
 			this.channelMessage.edit({ embed: supportEmbed });
 
