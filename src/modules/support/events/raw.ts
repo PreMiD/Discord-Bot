@@ -19,7 +19,7 @@ module.exports = async packet => {
 		packet.d.emoji.id === "521018476870107156" &&
 		typeof ticket.status === "undefined"
 	)
-		return ticket.accept(member);
+		return ticket.accept(await member.fetch());
 
 	if (
 		packet.d.emoji.name === "🚫" &&
