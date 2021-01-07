@@ -345,7 +345,7 @@ export class Ticket {
 					err => {
 						if (err) return console.log(err);
 						//@ts-ignore
-						this.user = client.users.cache.get(this.userId);
+						this.user = await client.users.fetch(this.userId);
 						this.user
 							.send(
 								`Your ticket \`\`#${this.id}\`\` has been closed by **${
