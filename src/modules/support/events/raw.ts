@@ -30,7 +30,7 @@ module.exports = async packet => {
 				.members.cache.get(packet.d.user_id)
 				.hasPermission("ADMINISTRATOR"))
 	)
-		return ticket.close(client.users.cache.get(packet.d.user_id));
+		return ticket.close(await client.users.fetch(packet.d.user_id));
 
 	if (packet.d.emoji.name === "🚫" && typeof ticket.status === "undefined") {
 		ticket.ticketMessage.reactions.removeAll().then(() => {
