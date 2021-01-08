@@ -20,7 +20,7 @@ module.exports = async (user: Discord.GuildMember) => {
 			} catch {}
 		} else if (ticket.status === 1) {
 			const t = new Ticket();
-			if (await t.fetch("ticket", ticket)) t.close(user.user, "hi");
+			if (await t.fetch("ticket", ticket)) t.close(user.user);
 		}
 	});
 };
