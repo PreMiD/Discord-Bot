@@ -26,7 +26,7 @@ export class Ticket {
 	attachments: Array<string>;
 
 	ticketMessage: Discord.Message;
-	user: Discord.GuildMember;
+	user: Discord.GuildMember | undefined;
 
 	channel: Discord.TextChannel;
 	channelMessage: Discord.Message;
@@ -39,15 +39,15 @@ export class Ticket {
 	constructor() {}
 
 	async fetch(type: "ticket" | "message" | "channel" | "author", arg: any) {
-		ticketsChannel = client.channels.cache.get(
+		ticketsChannel = (await client.channels.fetch(
 			channels.ticketChannel
-		) as Discord.TextChannel;
-		ticketsCategory = client.channels.cache.get(
+		)) as Discord.TextChannel;
+		ticketsCategory = (await client.channels.fetch(
 			channels.ticketCategory
-		) as Discord.CategoryChannel;
-		supportChannel = client.channels.cache.get(
+		)) as Discord.CategoryChannel;
+		supportChannel = (await client.channels.fetch(
 			channels.supportChannel
-		) as Discord.TextChannel;
+		)) as Discord.TextChannel;
 
 		const ticket =
 			type === "ticket"
@@ -104,18 +104,16 @@ export class Ticket {
 			);
 		}
 
-		try {
-			if (ticket.attachmentMessage)
-				this.attachmentsMessage = await ticketsChannel.messages.fetch(
-					ticket.attachmentMessage
-				);
-		} catch (e) {
-			error(`Unable to fetch attachments message for ${ticket.ticketId}`);
-		}
+		if (ticket.attachmentMessage)
+			this.attachmentsMessage = await ticketsChannel.messages.fetch(
+				ticket.attachmentMessage
+			);
 
 		try {
 			this.user = await ticketsChannel.guild.members.fetch(ticket.userId);
-		} catch {}
+		} catch {
+			return false;
+		}
 		return true;
 	}
 
