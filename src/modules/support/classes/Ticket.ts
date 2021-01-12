@@ -112,6 +112,7 @@ export class Ticket {
 		try {
 			this.user = await ticketsChannel.guild.members.fetch(ticket.userId);
 		} catch {
+			await this.close();
 			return false;
 		}
 		return true;
@@ -347,7 +348,7 @@ export class Ticket {
 						this.user
 							.send(
 								`Your ticket \`\`#${this.id}\`\` has been closed by **${
-									closer.tag
+									closer ? closer.tag : "system"
 								}**. Reason: \`\`${reason || "Not Specified"}\`\``,
 								{
 									files: [
@@ -378,12 +379,12 @@ export class Ticket {
 								.addFields([
 									{
 										name: `Opened By`,
-										value: `<@${this.userId}>`,
+										value: this.user.toString(),
 										inline: true
 									},
 									{
 										name: `Closed By`,
-										value: `<@${closer.id}>`,
+										value: closer ? closer.toString() : "system",
 										inline: true
 									},
 									{
@@ -435,7 +436,7 @@ export class Ticket {
 							{ supportChannel: this.channel ? this.channel.id : 0 },
 							{
 								$unset: { supportChannel: "", supportEmbed: "" },
-								$set: { status: 2, closer: closer.id }
+								$set: { status: 2, closer: closer ? closer.id : "system" }
 							}
 						);
 					}

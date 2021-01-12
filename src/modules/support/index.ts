@@ -1,25 +1,24 @@
-import channels from "../../channels";
-import { Ticket } from "./classes/Ticket";
-import { client } from "../..";
-import { info, success } from "../../util/debug";
-import { pmdDB } from "../../database/client";
 import { CategoryChannel } from "discord.js";
+
+import { client } from "../..";
+import channels from "../../channels";
+import { pmdDB } from "../../database/client";
+import { info, success } from "../../util/debug";
+import { Ticket } from "./classes/Ticket";
 
 export async function sortTickets() {
 	info("Sorting ticket channels...");
 	const ticketCat = client.guilds.cache
-			.first()
-			.channels.cache.get(channels.ticketCategory) as CategoryChannel;
+		.first()
+		.channels.cache.get(channels.ticketCategory) as CategoryChannel;
 
-	if(!ticketCat) return;
+	if (!ticketCat) return;
 
 	const positions = ticketCat.children
-			.filter(ch => ch.name !== "tickets")
-			.sort((fC, sC) => {
-				return parseInt(fC.name as string) > parseInt(sC.name as string)
-					? 1
-					: -1;
-			});
+		.filter(ch => ch.name !== "tickets")
+		.sort((fC, sC) => {
+			return parseInt(fC.name as string) > parseInt(sC.name as string) ? 1 : -1;
+		});
 
 	for (let i = 0; i < positions.size; i++) {
 		const channel = positions.array()[i];
@@ -37,10 +36,10 @@ client.once("ready", () => {
 //* Check old tickets, send a warning if 5 days old, close when 7 days old
 async function checkOldTickets() {
 	const ticketCat = client.guilds.cache
-			.first()
-			.channels.cache.get(channels.ticketCategory) as CategoryChannel;
+		.first()
+		.channels.cache.get(channels.ticketCategory) as CategoryChannel;
 
-	if(!ticketCat) return;
+	if (!ticketCat) return;
 
 	const ticketsWithoutNotification = await pmdDB
 			.collection("tickets")
@@ -69,14 +68,19 @@ async function checkOldTickets() {
 	if (ticketsWithoutNotification.length > 0)
 		for (let i = 0; i < ticketsWithoutNotification.length; i++) {
 			const ticket = new Ticket();
-			await ticket.fetch("channel", ticketsWithoutNotification[i].supportChannel);
-			ticket.sendCloseWarning();
+			if (
+				await ticket.fetch(
+					"channel",
+					ticketsWithoutNotification[i].supportChannel
+				)
+			)
+				ticket.sendCloseWarning();
 		}
 
 	if (ticketsToClose.length > 0)
 		for (let i = 0; i < ticketsToClose.length; i++) {
 			const ticket = new Ticket();
-			await ticket.fetch("channel", ticketsToClose[i].supportChannel);
-			ticket.close();
+			if (await ticket.fetch("channel", ticketsToClose[i].supportChannel))
+				ticket.close();
 		}
 }
