@@ -326,12 +326,12 @@ export class Ticket {
 			}`
 		);
 
-		if (this.channel.deletable) this.channel.delete().catch(e => {});
+		if (this.channel && this.channel.deletable) this.channel.delete();
 		if (this.attachmentsMessage && this.attachmentsMessage.deletable)
-			this.attachmentsMessage.delete().catch(e => {});
+			this.attachmentsMessage.delete();
 		this.ticketMessage.delete().catch(e => {});
 
-		let logs = await coll.findOne({ supportChannel: this.channel.id });
+		let logs = await coll.findOne({ supportChannel: this.channel?.id });
 		ensureDirSync(`${process.cwd()}/../TicketLogs`);
 		fs.writeFile(
 			`${process.cwd()}/../TicketLogs/${this.id}.txt`,
@@ -429,7 +429,7 @@ export class Ticket {
 						delete this.embed.fields;
 						if (this.embed.thumbnail) delete this.embed.thumbnail;
 
-						supportChannel.permissionOverwrites.get(this.user.id).delete();
+						supportChannel.permissionOverwrites.get(this.user.id)?.delete();
 						rimraf(`${process.cwd()}/../TicketLogs/${this.id}.txt`, () => {});
 
 						coll.findOneAndUpdate(
