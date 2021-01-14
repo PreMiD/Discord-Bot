@@ -97,11 +97,12 @@ export class Ticket {
 			this.channelMessage = await this.channel?.messages.fetch(
 				ticket.supportEmbed
 			);
-			this.supporters = await Promise.all(
-				ticket.supporters.map((s: string) =>
-					ticketsChannel.guild.members.fetch(s)
-				)
-			);
+			this.supporters =
+				(await Promise.all(
+					ticket.supporters.map((s: string) =>
+						ticketsChannel.guild.members.fetch(s)
+					)
+				)) || [];
 		}
 
 		if (ticket.attachmentMessage)
