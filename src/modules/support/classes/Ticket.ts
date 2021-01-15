@@ -31,7 +31,7 @@ export class Ticket {
 	channel: Discord.TextChannel;
 	channelMessage: Discord.Message;
 
-	supporters: Array<Discord.GuildMember>;
+	supporters: Array<Discord.GuildMember> = [];
 
 	embed: Discord.MessageEmbedOptions;
 
@@ -91,18 +91,17 @@ export class Ticket {
 		}
 
 		if (this.status === 1) {
-			this.channel = client.channels.cache.get(
+			this.channel = (await client.channels.fetch(
 				ticket.supportChannel
-			) as Discord.TextChannel;
+			)) as Discord.TextChannel;
 			this.channelMessage = await this.channel?.messages.fetch(
 				ticket.supportEmbed
 			);
-			this.supporters =
-				(await Promise.all(
-					ticket.supporters.map((s: string) =>
-						ticketsChannel.guild.members.fetch(s)
-					)
-				)) || [];
+			this.supporters = await Promise.all(
+				ticket.supporters.map((s: string) =>
+					ticketsChannel.guild.members.fetch(s)
+				)
+			);
 		}
 
 		if (ticket.attachmentMessage)
@@ -120,91 +119,82 @@ export class Ticket {
 	}
 
 	async create(message: Discord.Message) {
-		try {
-			if (!ticketCount) ticketCount = await coll.countDocuments({});
+		if (!ticketCount) ticketCount = await coll.countDocuments({});
 
-			ticketCount++;
+		ticketCount++;
 
-			this.id = ticketCount.toString().padStart(5, "0");
+		this.id = ticketCount.toString().padStart(5, "0");
 
-			this.ticketContent = message.cleanContent;
+		this.ticketContent = message.cleanContent;
 
-			this.attachments = [];
+		this.attachments = [];
 
-			this.embed = {
-				author: {
-					name: `Ticket#${this.id} [OPEN]`,
-					iconURL: `${circleFolder}green_circle.png?raw=true`
-				},
-				description: message.cleanContent,
-				footer: {
-					text: message.author.tag,
-					iconURL: message.author.displayAvatarURL({ size: 128 })
-				},
-				color: "#77ff77"
-			};
+		this.embed = {
+			author: {
+				name: `Ticket#${this.id} [OPEN]`,
+				iconURL: `${circleFolder}green_circle.png?raw=true`
+			},
+			description: message.cleanContent,
+			footer: {
+				text: message.author.tag,
+				iconURL: message.author.displayAvatarURL({ size: 128 })
+			},
+			color: "#77ff77"
+		};
 
-			if (message.attachments.size > 0) {
-				this.attachments.push(
-					`[${message.attachments.first().name}](${
-						message.attachments.first().proxyURL
-					})`
-				);
-				this.embed.fields = [
-					{
-						name: "Attachments",
-						value: this.attachments.join(", "),
-						inline: false
-					}
-				];
-			}
-
-			this.ticketMessage = await ticketsChannel.send({
-				embed: this.embed
-			});
-
-			this.ticketMessage
-				.react("🚫")
-				.then(() =>
-					this.ticketMessage.react(
-						client.guilds.cache
-							.get("493130730549805057")
-							.emojis.cache.get("521018476870107156")
-					)
-				);
-
-			message.author
-				.send(
-					`Your ticket \`\`#${this.id}\`\` has been submitted and will be answered shortly.`
-				)
-				.catch(() => {});
-
-			coll.insertOne({
-				ticketId: this.id,
-				userId: message.author.id,
-				ticketMessage: this.ticketMessage.id,
-				timestamp: Date.now(),
-				attachments: this.attachments,
-				created: Date.now(),
-				logs: [
-					`[${moment(new Date()).format("DD/MM/YY LT")} (${Date()
-						.split("(")[1]
-						.replace(")", "")})] [TICKET CREATED] Awaiting supporter!`
-				]
-			});
-
-			message.delete().catch(() => {});
-			supportChannel.updateOverwrite(message.author.id, {
-				SEND_MESSAGES: false
-			});
-		} catch (err) {
-			(client.channels.cache.get(channels.dev) as Discord.TextChannel).send(
-				new Discord.MessageEmbed({
-					title: "Error: " + err.name,
-					description: err.message
-				})
+		if (message.attachments.size > 0) {
+			this.attachments.push(
+				`[${message.attachments.first().name}](${
+					message.attachments.first().proxyURL
+				})`
 			);
+			this.embed.fields = [
+				{
+					name: "Attachments",
+					value: this.attachments.join(", "),
+					inline: false
+				}
+			];
 		}
+
+		this.ticketMessage = await ticketsChannel.send({
+			embed: this.embed
+		});
+
+		this.ticketMessage
+			.react("🚫")
+			.then(() =>
+				this.ticketMessage.react(
+					client.guilds.cache
+						.get("493130730549805057")
+						.emojis.cache.get("521018476870107156")
+				)
+			);
+
+		message.author
+			.send(
+				`Your ticket \`\`#${this.id}\`\` has been submitted and will be answered shortly.`
+			)
+			.catch(() => {});
+
+		coll.insertOne({
+			ticketId: this.id,
+			userId: message.author.id,
+			ticketMessage: this.ticketMessage.id,
+			timestamp: Date.now(),
+			attachments: this.attachments,
+			created: Date.now(),
+			logs: [
+				`[${moment(new Date()).format("DD/MM/YY LT")} (${Date()
+					.split("(")[1]
+					.replace(")", "")})] [TICKET CREATED] Awaiting supporter!`
+			]
+		});
+
+		message.delete().catch(() => {});
+		supportChannel.updateOverwrite(message.author.id, {
+			SEND_MESSAGES: false
+		});
 	}
 
 	async accept(supporter: Discord.GuildMember) {
