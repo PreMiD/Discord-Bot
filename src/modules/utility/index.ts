@@ -35,11 +35,8 @@ async function updateTranslators() {
 			await guild.roles.fetch(roles.translator)
 		).members.filter(m => !users.find(u => u.userId === m.id));
 
-	/*
-	TODO Uncomment
 	for (const member of translatorsNotInDB.array())
 		await removeAllTranslatorRoles(member);
- */
 
 	for (const user of users) {
 		const crowdinUser = crowdinMembers.find(u => u.data.id === user.user.id)
