@@ -1,4 +1,6 @@
 export default {
+	translator: "502148045991968788",
+	proofreader: "522755339448483840",
 	jrModerator: "526734093560315925",
 	moderator: "514546359865442304",
 	administrator: "573138894271283210",
