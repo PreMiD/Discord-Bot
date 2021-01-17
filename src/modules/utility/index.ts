@@ -23,14 +23,7 @@ async function updateTranslators() {
 				{ projection: { _id: false } }
 			)
 			.toArray(),
-		crowdinMembers = (
-			await axios(
-				"https://api.crowdin.com/api/v2/projects/369101/members?limit=500",
-				{
-					headers: { Authorization: `Bearer ${process.env.CROWDINTOKEN}` }
-				}
-			)
-		).data.data,
+		crowdinMembers = await fetchMembers(),
 		translatorsNotInDB = (
 			await guild.roles.fetch(roles.translator)
 		).members.filter(m => !users.find(u => u.userId === m.id));
@@ -74,10 +67,9 @@ async function updateTranslators() {
 					await discordUser.roles.remove(langName);
 		}
 
+		const rolesCache = (await guild.roles.fetch()).cache;
 		for (const proofreader of proofreaderIn) {
-			let role = (await guild.roles.fetch()).cache.find(
-				r => r.name === langNames.get(proofreader)
-			);
+			let role = rolesCache.find(r => r.name === langNames.get(proofreader));
 
 			if (!role)
 				role = await guild.roles.create({
@@ -110,4 +102,26 @@ export async function removeAllTranslatorRoles(member: GuildMember) {
 	);
 
 	await member.roles.remove(rolesToRemove);
+}
+
+async function fetchMembers() {
+	let moreThan500 = true,
+		members = [];
+
+	while (moreThan500) {
+		const m = (
+			await axios(
+				`https://api.crowdin.com/api/v2/projects/369101/members?limit=500&offset=${members.length}`,
+				{
+					headers: { Authorization: `Bearer ${process.env.CROWDINTOKEN}` }
+				}
+			)
+		).data.data;
+
+		members = members.concat(m);
+
+		moreThan500 = m.length === 500;
+	}
+
+	return members;
 }
