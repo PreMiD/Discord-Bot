@@ -21,19 +21,17 @@ module.exports = async ev => {
 		//* Send Embed if user does not have permissions to run the command
 		return sendFancyMessage(
 			{
-				channel: (await client.guilds.fetch(ev.d.guild_id)).channels.resolve(
-					ev.d.channel_id
-				) as TextChannel,
-				author: await client.users.fetch(ev.d.member.user.id)
+				channel: client.guilds
+					.resolve(ev.d.guild_id)
+					.channels.resolve(ev.d.channel_id) as TextChannel,
+				author: client.users.resolve(ev.d.member.user.id)
 			},
 			cmd
 		);
 
 	let data = ev.d;
-	data.guild = await client.guilds.fetch(data.guild_id);
-	data.channel = (await data.guild.channels.resolve(
-		data.channel_id
-	)) as TextChannel;
+	data.guild = client.guilds.resolve(data.guild_id);
+	data.channel = data.guild.channels.resolve(data.channel_id) as TextChannel;
 	data.member = new GuildMember(client, data.member, data.guild);
 	delete data.guild_id;
 	delete data.channel_id;
