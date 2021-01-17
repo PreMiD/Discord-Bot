@@ -91,12 +91,21 @@ export class Ticket {
 		}
 
 		if (this.status === 1) {
-			this.channel = (await client.channels.fetch(
-				ticket.supportChannel
-			)) as Discord.TextChannel;
-			this.channelMessage = await this.channel?.messages.fetch(
-				ticket.supportEmbed
-			);
+			try {
+				this.channel = (await client.channels.fetch(
+					ticket.supportChannel
+				)) as Discord.TextChannel;
+
+				this.channelMessage = await this.channel?.messages.fetch(
+					ticket.supportEmbed
+				);
+			} catch (err) {
+				await coll.findOneAndUpdate(
+					{ ticketId: ticket.ticketId },
+					{ $set: { status: 2 } }
+				);
+			}
+
 			this.supporters = await Promise.all(
 				ticket.supporters.map((s: string) =>
 					ticketsChannel.guild.members.fetch(s)
@@ -320,7 +329,7 @@ export class Ticket {
 		if (this.channel && this.channel.deletable) this.channel.delete();
 		if (this.attachmentsMessage && this.attachmentsMessage.deletable)
 			this.attachmentsMessage.delete();
-		this.ticketMessage.delete().catch(e => {});
+		if (this.ticketMessage) this.ticketMessage.delete().catch(e => {});
 
 		let logs = await coll.findOne({ supportChannel: this.channel?.id });
 		ensureDirSync(`${process.cwd()}/../TicketLogs`);

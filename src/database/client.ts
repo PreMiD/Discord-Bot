@@ -1,4 +1,4 @@
-import { MongoClient as mongoClient, Db } from "mongodb";
+import { Db, MongoClient as mongoClient } from "mongodb";
 
 export let MongoClient: mongoClient;
 export let pmdDB: Db;
@@ -7,7 +7,9 @@ export function connect() {
 	return new Promise<mongoClient>((resolve, reject) => {
 		mongoClient
 			.connect(
-				`mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASS}@${process.env.MONGOIP}:${27017}`,
+				`mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASS}@${
+					process.env.MONGOIP
+				}:${27017}`,
 				{
 					useUnifiedTopology: true,
 					useNewUrlParser: true,
@@ -16,7 +18,7 @@ export function connect() {
 			)
 			.then(mongoClient => {
 				MongoClient = mongoClient;
-				pmdDB = MongoClient.db(process.env.NODE_ENV === 'production' ? 'PreMiD' : 'PreMiD-DEV');
+				pmdDB = MongoClient.db("PreMiD");
 				resolve(mongoClient);
 			})
 			.catch(reject);

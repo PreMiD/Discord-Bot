@@ -1,5 +1,3 @@
-import { MessageEmbed } from "discord.js";
-
 import { InteractionResponse } from "../../../../@types/djs-extender";
 import { pmdDB } from "../../../database/client";
 import UniformEmbed from "../../../util/UniformEmbed";
@@ -41,7 +39,8 @@ module.exports.run = async (res: InteractionResponse, perms: number) => {
 	}
 	await coll.findOneAndUpdate(
 		{ userId: res.member.id },
-		{ $set: userSettings }
+		{ $set: userSettings },
+		{ upsert: true }
 	);
 	sendPreferencesMessage(res, userSettings);
 

@@ -58,7 +58,7 @@ async function run(user: GuildMember) {
 			return;
 		}
 
-		if (!task.visible) {
+		if (task.visible) {
 			if (!ticket.channel?.permissionsFor(user.id).has("VIEW_CHANNEL", true)) {
 				await ticket.channel?.updateOverwrite(user.id, {
 					VIEW_CHANNEL: true,

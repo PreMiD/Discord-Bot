@@ -113,8 +113,7 @@ process.on("SIGINT", async () => {
 });
 
 process.on("unhandledRejection", (err: any) => {
-	console.trace(err.stack);
-	if (process.env.NODE_ENV !== "production") return;
+	if (process.env.NODE_ENV !== "production") return console.trace(err.stack);
 
 	const wh = process.env.ERRORSWEBHOOK.split(","),
 		hook = new Discord.WebhookClient(wh[0], wh[1]);

@@ -1,6 +1,5 @@
-import { MessageEmbed } from "discord.js";
 
-import { client } from "../../..";
+
 import { InteractionResponse } from "../../../../@types/djs-extender";
 import { pmdDB } from "../../../database/client";
 import UniformEmbed from "../../../util/UniformEmbed";
@@ -31,11 +30,10 @@ module.exports.run = async (res: InteractionResponse, perms: number) => {
 
 	switch (res.data.options[0].name) {
 		case "search":
-			return 
-				await res.channel.send(
-					res.member.toString(),
-					await searchPresence(res.data.options[0].value as string)
-				)
+			return await res.channel.send(
+				res.member.toString(),
+				await searchPresence(res.data.options[0].value as string)
+			);
 	}
 };
 
