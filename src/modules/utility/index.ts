@@ -75,7 +75,7 @@ async function updateTranslators() {
 		}
 
 		for (const proofreader of proofreaderIn) {
-			let role = guild.roles.cache.find(
+			let role = (await guild.roles.fetch()).cache.find(
 				r => r.name === langNames.get(proofreader)
 			);
 
