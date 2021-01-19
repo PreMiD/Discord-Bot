@@ -88,7 +88,7 @@ export default {
 		title: "Allow apps from unidentified developers",
 		aliases: ["macdev", "unidentifieddeveloper", "undev", "ud"],
 		description:
-			"1. Open System Preferences.\n2. Go to the Security & Privacy tab.\n3. Click on the lock and enter your password or scan your fingerprint so you can make changes.\n4. Change the setting for 'Allow apps downloaded from' to 'App Store and identified developers' from just 'App Store'.",
+			"Steps for **macOS BigSur (11.0^)**:\n1. Right click on our installer.\n2. Click open in the dropdown menu. 3. Click open in popup.\n\nSteps for **older macOS versions**:\n1. Open System Preferences.\n2. Go to the Security & Privacy tab.\n3. Click on the lock and enter your password or scan your fingerprint so you can make changes.\n4. Change the setting for 'Allow apps downloaded from' to 'App Store and identified developers' from just 'App Store'.",
 		footer: false
 	}
 };
