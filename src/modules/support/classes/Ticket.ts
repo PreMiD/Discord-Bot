@@ -468,9 +468,7 @@ export class Ticket {
 		};
 		this.channelMessage.edit({ embed: supportEmbed });
 
-		if (sendMessage) await this.channel.send(`**>** ${member}`);
-
-		this.channel.updateOverwrite(member, {
+		await this.channel.updateOverwrite(member, {
 			VIEW_CHANNEL: true,
 			SEND_MESSAGES: true,
 			EMBED_LINKS: true,
@@ -487,6 +485,8 @@ export class Ticket {
 				}
 			}
 		);
+
+		if (sendMessage) await this.channel.send(`**>** ${member}`);
 	}
 
 	async removeSupporter(member: Discord.GuildMember, sendMessage = true) {
