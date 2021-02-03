@@ -375,11 +375,11 @@ export class Ticket {
 									"https://github.com/PreMiD/Discord-Bot/blob/main/.discord/red_circle.png?raw=true"
 								)
 								.setColor("#b52222")
-								.setDescription(this.embed.description)
+								.setDescription(this.embed.description || "Not Specified")
 								.addFields([
 									{
 										name: `Opened By`,
-										value: this.user.toString(),
+										value: this.user.toString() || this.userId,
 										inline: true
 									},
 									{
