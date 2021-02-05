@@ -375,7 +375,7 @@ export class Ticket {
 									"https://github.com/PreMiD/Discord-Bot/blob/main/.discord/red_circle.png?raw=true"
 								)
 								.setColor("#b52222")
-								.setDescription(this.embed.description || "Not Specified")
+								.setDescription(this.embed?.description || "Not Specified")
 								.addFields([
 									{
 										name: `Opened By`,
@@ -394,7 +394,10 @@ export class Ticket {
 									},
 									{
 										name: `Supporter(s)`,
-										value: this.supporters.join(", "),
+										value:
+											this.supporters.length > 0
+												? this.supporters.join(", ")
+												: "None",
 										inline: true
 									},
 									{
