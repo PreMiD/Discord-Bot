@@ -37,6 +37,13 @@ export async function updateBetaUsers() {
 		.find({}, { projection: { _id: false } })
 		.toArray();
 
+	(await client.guilds.cache.get("493130730549805057").members.fetch({ limit: 0 })).filter(
+		m => m.roles.cache.has(roles.beta) &&
+		m => m.roles.cache.has(roles.alpha)
+	).forEach(m => 
+		m.roles.remove(r => r.id == roles.beta)
+	);
+	
 	let guildMembers = (
 		await client.guilds.cache
 			.get("493130730549805057")
