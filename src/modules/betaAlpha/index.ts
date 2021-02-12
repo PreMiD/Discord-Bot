@@ -39,7 +39,7 @@ export async function updateBetaUsers() {
 
 	(await client.guilds.cache.get("493130730549805057").members.fetch({ limit: 0 })).filter(
 		m => m.roles.cache.has(roles.beta) &&
-		m => m.roles.cache.has(roles.alpha)
+		m.roles.cache.has(roles.alpha)
 	).forEach(m => 
 		m.roles.remove(r => r.id == roles.beta)
 	);
