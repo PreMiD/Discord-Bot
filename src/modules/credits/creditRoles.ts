@@ -4,6 +4,7 @@ export default {
     marketingDirector: "673681900476432387",
     administrator: "685969048399249459",
     reviewer: "630445337143935009",
+    localizationManager: "811262682408943616",
     developer: "691396820236107837",
     designer: "691386502566903850",
     moderator: "514546359865442304",
