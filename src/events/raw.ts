@@ -30,7 +30,7 @@ module.exports = async ev => {
 		);
 
 	let data = ev.d;
-	data.guild = client.guilds.resolve(data.guild_id);
+	data.guild = await client.guilds.fetch(data.guild_id);
 	data.channel = data.guild.channels.resolve(data.channel_id) as TextChannel;
 	data.member = new GuildMember(client, data.member, data.guild);
 	delete data.guild_id;
