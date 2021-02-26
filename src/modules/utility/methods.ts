@@ -2,10 +2,10 @@ import axios from "axios";
 import { Collection } from "discord.js";
 import { client } from "../..";
 
-let langNames = new Collection<string, string>();
+const langNames = new Collection<string, string>();
 
 export const updateTranslators = async() => {
-    let coll = client.db.collection("crowdin"),
+    const coll = client.db.collection("crowdin"),
         guild = await client.guilds.cache.get(client.config.main_guild).fetch(),
         users = await coll.find(
             { user: { $exists: true }, code: { $exists: false }},
@@ -19,7 +19,7 @@ export const updateTranslators = async() => {
     for(const member of translatorsNotInDB) await removeAllTranslatorRoles(member);
 
     for(const user of users) {
-        let crowdinUser = crowdinMembers.find(u => u.data.id == user.user.id);
+        const crowdinUser = crowdinMembers.find(u => u.data.id == user.user.id);
 
         if(!crowdinUser) return;
 
@@ -34,7 +34,7 @@ export const updateTranslators = async() => {
         if(!discordUser.roles.cache.has(client.config.roles.translator)) await discordUser.roles.add(client.config.roles.translator);
         if(!crowdinUser.permissions) continue;
 
-        let proofreaderIn = Object.keys(crowdinUser.permissions).filter((_, index) => Object.values(crowdinUser.permissions)[index] === "proofreader"),
+        const proofreaderIn = Object.keys(crowdinUser.permissions).filter((_, index) => Object.values(crowdinUser.permissions)[index] === "proofreader"),
             rolesCache = (await guild.roles.fetch()).cache;
 
 		if(proofreaderIn.length > 0) {
@@ -59,10 +59,11 @@ export const updateTranslators = async() => {
     }
 
     async function fetchMembers() {
-        let moreThan500 = true, members = [];
+        let moreThan500 = true,
+            members = [];
         
         while(moreThan500) {
-            let m = (await axios(`https://api.crowdin.com/api/v2/projects/369101/members?limit=500&offset=${members.length}`, {
+            const m = (await axios(`https://api.crowdin.com/api/v2/projects/369101/members?limit=500&offset=${members.length}`, {
                 headers: {
                     Authorization: `Bearer ${process.env.CROWDINTOKEN}`
                 }
@@ -77,7 +78,7 @@ export const updateTranslators = async() => {
 }
 
 async function removeAllTranslatorRoles(member) {
-    let langRoles = member.guild.roles.cache.array().filter(r => langNames.find(ln => ln === r.name)),
+    const langRoles = member.guild.roles.cache.array().filter(r => langNames.find(ln => ln === r.name)),
         rolesToRemove = member.roles.cache.filter(r =>
             typeof langRoles
                 .concat(member.guild.roles.resolve(client.config.roles.translator), member.guild.roles.resolve(client.config.roles.proofreader))

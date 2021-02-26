@@ -8,7 +8,7 @@ module.exports = {
         slashCommand: true
     },
     run: async (data, perms) => {
-        let commands = client.commands.filter(c => !c.config.hidden && perms >= (c.config.permLevel ?? 0)), 
+        const commands = client.commands.filter(c => !c.config.hidden && perms >= (c.config.permLevel ?? 0)), 
             embed = new UniformEmbed({
                 description: commands.map(cmd => 
                     `**\`${cmd.config.slashCommand ? "/" : "p!"}${cmd.config.name}\`** - ${cmd.config.description}`    

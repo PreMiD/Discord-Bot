@@ -2,7 +2,7 @@ import { Collection, Snowflake } from "discord.js"
 import { client } from "../..";
 import { Ticket } from "../support/classes/ticket";
 
-let coll = client.db.collection("tickets"),
+const coll = client.db.collection("tickets"),
     tasksRunningFor = new Collection<Snowflake, {
 		visible: boolean;
 		interval: NodeJS.Timeout;
@@ -14,7 +14,7 @@ export default async (user, visible) => {
     if(tasksRunningFor.has(user.id) && tasksRunningFor.get(user.id).visible == visible) return;
     clearInterval(tasksRunningFor.get(user.id).interval);
 
-	let tickets = await coll.find({ status: 1 }).toArray();
+	const tickets = await coll.find({ status: 1 }).toArray();
 	tasksRunningFor.set(user.id, {
 		visible,
 		interval: setInterval(() => run(user), 50),
@@ -24,7 +24,7 @@ export default async (user, visible) => {
 }
 
 async function run(user) {
-	let task = tasksRunningFor.get(user.id);
+	const task = tasksRunningFor.get(user.id);
 
 	if(!task.itStatus) {
 		if(task.tickets.length == 0) {
@@ -35,7 +35,7 @@ async function run(user) {
 
 		task.itStatus = true;
 
-		let ticket = new Ticket(),
+		const ticket = new Ticket(),
 			ticketFound = await ticket.fetch("channel", task.tickets.shift().supportChannel);
 		
 		if(!ticketFound) return task.itStatus = false;

@@ -6,7 +6,7 @@ module.exports = {
         slashCommand: true
     },
     run: (data, _, client) => {
-        let embed = {
+        const embed = {
             description: `**We** to **Discord** (\`\`${client.ws.ping}\`\`)`,
             color: client.ws.ping < 250
                 ? "#50ff50"

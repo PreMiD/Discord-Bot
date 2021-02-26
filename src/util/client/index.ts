@@ -42,7 +42,7 @@ export class PreMiD extends Client {
 
     async initDatabase() {
         this.debug("Database... connecting");
-		let db = await connect(process.env.MONGO_URI as string, {
+		const db = await connect(process.env.MONGO_URI as string, {
 			useUnifiedTopology: true,
 			useNewUrlParser: true,
         })

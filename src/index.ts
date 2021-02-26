@@ -1,15 +1,13 @@
-import env from "dotenv";;
-
+import env from "dotenv";
 import { PreMiD } from "./util/client";
 
 env.config();
 
 const client = new PreMiD({
-	token: process.env.TOKEN,
-})
+		token: process.env.TOKEN,
+	}),  
+	db = client.db;
 
 client.login();
-
-let db = client.db;
 
 export {client, db};

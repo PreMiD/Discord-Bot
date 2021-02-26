@@ -3,7 +3,7 @@ import { client } from "../../.."
 import UniformEmbed from "../../../util/UniformEmbed";
 import { removeAllTranslatorRoles } from "../methods";
 
-let coll = client.db.collection("crowdin");
+const coll = client.db.collection("crowdin");
 
 module.exports = {
     config: {
@@ -13,12 +13,12 @@ module.exports = {
         slashCommand: true
     },
     run: async (data) => {
-        let user = await coll.findOne({ userId: data.member.id });
+        const user = await coll.findOne({ userId: data.member.id });
         
         if(data.data.options[0].name == "link")
             if(!user)
                 try {
-                    let code = nanoid(5);
+                    const code = nanoid(5);
 
                     await data.member.send(`Use this link to link your **Crowdin** account to your **Discord** account: ${encodeURI(
 						`https://accounts.crowdin.com/oauth/authorize?client_id=mBK6QkfUXegOexHpp8hz&redirect_uri=http${
