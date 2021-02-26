@@ -7,7 +7,7 @@ module.exports = {
     run: async (client, user) => {
         let tickets = await coll.find({ userId: user.id }).toArray();
 
-        tickets.map(x => {
+        tickets.forEach(x => {
             if(x.status != 3) x.close(client.user, "Creator left server.");
         });
     }

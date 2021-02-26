@@ -10,7 +10,7 @@ module.exports = {
         if (oldM.roles.cache.has(client.config.roles.ticketManager) && !newM.roles.cache.has(client.config.roles.ticketManager)) {
             let tickets = await coll.find({ supporters: oldM.id }).toArray();
 
-            tickets.map(async x => {
+            tickets.forEach(async x => {
                 let t = new Ticket();
                 if(await t.fetch("channel", x.supportChannel)) {
                     let channel = (client.channels.cache.get(t.supportChannel) as TextChannel);
