@@ -1,7 +1,5 @@
 <div align="center">
-    <img src="https://avatars3.githubusercontent.com/u/46326568?s=400&amp;u=15e4a4988014780288d30ffb969fd1569fec23e6&amp;v=4" width="128px" style="max-width:100%;">
-    <h1>PreMiD • Discord Bot</h1>
+  <img src="https://premid.app/_nuxt/img/logo-wordmark-blue.5694d23.png">
+  <br><br>
+  <h2>This repository contains the code that helps us within our discord server, including role managemant, moderation and our support system!</h2>
 </div>
-
-#### This  repository contains the code for our discord bot which helps us with support tickets and passing data through discord and our website!
-#### For support or any questions, you can head to our [Discord Server](https://discord.premid.app)!

@@ -1,143 +1,69 @@
-import * as Discord from "discord.js";
-import ch from "../../../channels";
-import channels from "../../../channels";
-import config from "../../../config";
-import roles from "../../../roles";
-import { client } from "../../..";
-import { pmdDB } from "../../../database/client";
-import { Ticket } from "../classes/Ticket";
+import { Ticket } from "../classes/ticket";
 
-const coll = pmdDB.collection("tickets");
+module.exports = {
+    name: "message",
+    run: async (client, msg) => {
+        if(msg.author.bot) return;
+        if(msg.channel.id == client.config.channels.supportChannel) {
+            if(msg.content.length < 20) {msg.delete();(await msg.reply("please specify atleast 20 characters when creating a ticket.")).delete({timeout: 10000});return;};
+            if(msg.content.toLowerCase().includes("discord.gg")) {msg.delete();(await msg.reply("invite links are not allowed in tickets!")).delete({timeout: 10000});return;};
+            if(msg.content.toLowerCase().includes("chromebook")) {msg.delete();msg.author.send("We noticed you mentioned the phrase \`chromebook\` in your ticket. We do not currently support chromebooks! Your ticket has been automatically closed.");return;};
 
-let users: Array<string> = [];
+            let attachments = [], caught = false, mAttachments = msg.attachments.map(x => x), ticket = new Ticket(), ticketCount = await client.db.collection("tickets").countDocuments({}), ticketId = (ticketCount++).toString().padStart(5, "0");
+            
+            try {
+                await (await msg.author.send("Creating ticket...")).delete()
+            } catch {
+                caught = true;
+                (await msg.channel.send(`${msg.author}, please ensure you have DMs enabled to be able to create a ticket.`)).delete({timeout: 10000});
+            };
 
-module.exports = async (message: Discord.Message) => {
-	const args = message.content
-		.split(" ")
-		.slice(1, message.content.split(" ").length);
+            if(caught) return;
 
-	if (
-		message.author.bot ||
-		(message.channel.id !== channels.supportChannel &&
-			(message.channel as Discord.TextChannel).parent?.id !==
-				channels.ticketCategory)
-	)
-		return;
+            client.db.collection("tickets").insertOne({ticketId: ticketId});
 
-	let t = new Ticket();
+            ticket.id = ticketId;
 
-	const ticketFound = await t.fetch("channel", message.channel.id);
+            for await (const attachment of mAttachments) attachments.push(await ticket.attachImage(attachment));
 
-	if (
-		!ticketFound &&
-		message.channel.id !== ch.supportChannel &&
-		[ch.chatCategory, ch.offtopicCategory].includes(
-			(message.channel as Discord.TextChannel).parentID
-		)
-	) {
-		if (
-			!message.content.startsWith(config.prefix) &&
-			(message.content.includes("help me") ||
-				message.content.includes("anyone here?") ||
-				message.content.includes("premid isnt working") ||
-				message.content.includes("premid isn't working")) &&
-			(await client.elevation(message.author.id)) === 0
-		) {
-			if (!users.includes(message.author.id)) {
-				message.channel
-					.send(
-						`Need help? Feel free to create a ticket on <#${channels.supportChannel}>!`
-					)
-					.then((msg) => msg.delete({ timeout: 15000 }));
-				users.push(message.author.id);
-				setTimeout(() => {
-					const uI = users.indexOf(message.author.id);
-					if (uI > -1) users.splice(uI, 1);
-				}, 60 * 1000);
-			} else return;
-		}
-	}
+            ticket.create(msg, false, attachments, ticketId);
+            msg.delete();
+        }
+        let ticket = new Ticket();
+        if (!(await ticket.fetch("channel", msg.channel.id))) return;
 
-	if (!ticketFound && message.channel.id === channels.supportChannel) {
-		if (message.cleanContent.length > 25) t.create(message);
-		else
-			message.delete() &&
-				(
-					await message.reply("please write a minimum of 25 characters.")
-				).delete({ timeout: 10 * 1000 });
-		return;
-	}
+        ticket.addLog(`[MESSAGE] ${msg.author.tag}: ${msg.content}`);
 
-	if (ticketFound && message.content.toLowerCase().includes("p!close"))
-		coll.findOneAndUpdate(
-			{ supportChannel: t.channel.id },
-			{ $unset: { ticketCloseWarning: true } }
-		);
+        if(!ticket) return; 
 
-	if (ticketFound && !message.author.bot) {
-		coll.findOneAndUpdate(
-			{ ticketId: t.id },
-			{ $set: { lastUserMessage: Date.now() } }
-		);
-		if (message.content.toLowerCase().startsWith("p!"))
-			return t.addLog(
-				`[COMMAND ISSUED] ${message.author.tag} issued command: ${message.cleanContent}`
-			);
-		t.addLog(`[MESSAGE] ${message.member.user.tag} - ${message.cleanContent}`);
-	}
+        if(!ticket.supporters.includes(msg.author.id) && !msg.content.startsWith(">>") && ticket.userId != msg.author.id) ticket.addSupporter(msg, [""], true);
 
-	if (
-		ticketFound &&
-		message.content.startsWith("<<") &&
-		(message.member.roles.cache.has(roles.ticketManager) ||
-			message.member.permissions.has("ADMINISTRATOR"))
-	) {
-		if (args.length > 0) {
-			const userToRemove = message.guild.members.cache.find(
-				(m) =>
-					m.id === args.join(" ") ||
-					m.displayName.toLowerCase() === args.join(" ").toLowerCase()
-			);
-			t.removeSupporter(userToRemove);
-			t.addLog(
-				`[USER REMOVED] ${message.member.user.tag} removed ${userToRemove.user.tag}`
-			);
-		} else {
-			t.removeSupporter(message.member);
-			t.addLog(`[USER LEFT] ${message.member.user.tag}`);
-		}
+        if(msg.content.toLowerCase().startsWith(">>help")) return msg.channel.send({
+            embed: {
+                author: {
+                    name: "PreMiD Support",
+                    iconURL: client.user.avatarURL()
+                },
+                color: "BLUE",
+                description: `\`>> userId\` - Add a member to the ticket.\n\`<< userId\` -  Remove a member from the ticket. (Supporters only)\n\`>>attach imageUrl/Message attachment\` - Attach an image to the ticket.\n\`>>close reason\` - Close the ticket.`,
+                footer: {
+                    text: `Requested by ${msg.author.tag}`,
+                    iconURL: msg.author.avatarURL()
+                } 
+            }
+        })
 
-		message.delete();
-		return;
-	}
+        let args = msg.content.replace(">>", "").replace("<<", "").split(" ");
 
-	if (
-		ticketFound &&
-		message.content.startsWith(">>") &&
-		(message.member.roles.cache.has(roles.ticketManager) ||
-			message.member.permissions.has("ADMINISTRATOR"))
-	) {
-		if (args.length === 0) return;
-		const userToAdd = message.guild.members.cache.find(
-			(m) =>
-				m.id === args.join(" ") ||
-				m.displayName.toLowerCase() === args.join(" ").toLowerCase()
-		);
-		t.addSupporter(userToAdd);
-		t.addLog(
-			`[USER ADDED] ${message.member.user.tag} added ${userToAdd.user.tag}`
-		);
-		message.delete();
-		return;
-	}
-
-	if (
-		ticketFound &&
-		!message.content.startsWith("<<") &&
-		(message.member.roles.cache.has(roles.ticketManager) ||
-			message.member.permissions.has("ADMINISTRATOR"))
-	) {
-		t.addSupporter(message.member);
-		return;
-	}
-};
+        if(msg.content.startsWith(">>")) {
+            if(msg.content.toLowerCase().includes("image") || msg.content.toLowerCase().includes("attach"))
+                if(msg.attachments.first()) for await(const attachment of msg.attachments.map(x => x))
+                    ticket.attachImage(attachment, msg);
+                else return msg.reply("please attach an image to your message when using that syntax!");
+            else if(msg.content.toLowerCase().replace(">>", "").startsWith("close"))
+                ticket.close(msg.author, args.slice(1).join(" "));
+            else ticket.addSupporter(msg, args);
+        }
+        if(msg.content.startsWith("<<")) ticket.removeSupporter(msg, args);
+    }
+}

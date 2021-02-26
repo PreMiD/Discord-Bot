@@ -1,58 +1,19 @@
+//@ts-nocheck
 import * as Canvas from "canvas";
 import { ChartConfiguration } from "chart.js";
 import { CanvasRenderService } from "chartjs-node-canvas";
 import * as Discord from "discord.js";
 import path from "path";
-import { pmdDB } from "../../../database/client";
-import roles from "../../../roles";
+import { client } from "../../../";
 
-interface Ticket {
-	_id: unknown;
-	ticketId: string;
-	userId: string;
-	ticketMessage: string;
-	timestamp: any;
-	attachementMessage: string;
-	created: any;
-	accepter: string;
-	status: number;
-	supportChannel: string;
-	supportEmbed: string;
-	supporters: string[];
-	lastUserMessage: any;
-	messages: any[];
-}
-
-interface User {
-	_id: unknown;
-	userId: string;
-	avatar: string;
-	name: string;
-	tag: string;
-	role: string;
-	roleId: string;
-	roles: string[];
-	roleIds: string[];
-	roleColor: string;
-	rolePosition: string;
-	status: string;
-	flags: string[];
-	premium_since: any;
-}
-
-let ticketsColl = pmdDB.collection("tickets"),
-	creditsColl = pmdDB.collection("credits");
+let ticketsColl = client.db.collection("tickets"), creditsColl = client.db.collection("credits");
 
 export default class TicketStats {
 	user: Discord.User;
 
 	constructor() {}
 
-	/**
-	 * Get the number of tickets per day from the last 14 days.
-	 */
 	async getTicketsPerDay() {
-		//* Get all the accepted tickets of a user in the last 14 days.
 		let dbTickets = (await ticketsColl
 				.find(
 					{
@@ -64,18 +25,14 @@ export default class TicketStats {
 					},
 					{ projection: { _id: false } }
 				)
-				.toArray()) as Ticket[],
+				.toArray()),
 			allDates = [],
 			counts = {},
 			tickets = [];
 
-		//* Get all the dates of the tickets.
-		dbTickets.forEach((t: Ticket) => {
-			allDates.push(this.formatDate(new Date(t.timestamp)));
-		});
+		dbTickets.forEach(t => allDates.push(this.formatDate(new Date(t.timestamp))));
 
-		//* Get the number of tickets per day.
-		allDates.forEach((d) => (counts[d] = (counts[d] || 0) + 1));
+		allDates.forEach(d => (counts[d] = (counts[d] || 0) + 1));
 
 		this.last14Days().forEach((d: any) => {
 			if (counts[d]) tickets.push(counts[d]);
@@ -146,19 +103,13 @@ export default class TicketStats {
 		return canvas.toBuffer();
 	}
 
-	/**
-	 * Get someone's ticket activity.
-	 * @param userId Discord User ID
-	 */
 	async getUserActivity(userId: string) {
 		const dbData = await Promise.all([
-			//* Get the user from the credits collection.
 			await creditsColl.findOne(
 				{ userId: userId },
 				{ projection: { _id: false } }
 			),
 
-			//* Get all the accepted tickets of a user in the last 10 days.
 			await ticketsColl
 				.find(
 					{
@@ -173,7 +124,6 @@ export default class TicketStats {
 				)
 				.toArray(),
 
-			//* Get all the joined tickets of a user in the last 10 days.
 			await ticketsColl
 				.find(
 					{
@@ -189,7 +139,6 @@ export default class TicketStats {
 				)
 				.toArray(),
 
-			//* Get all the tickets from the last 10 days.
 			await ticketsColl
 				.find(
 					{
@@ -213,23 +162,13 @@ export default class TicketStats {
 			accepted = [],
 			joined = [];
 
-		(userTickets.acceptedTickets = dbData[1]),
-			(userTickets.joinedTickets = dbData[2]);
+		(userTickets.acceptedTickets = dbData[1]), (userTickets.joinedTickets = dbData[2]);
 
-		userTickets.acceptedTickets.forEach((t: Ticket) =>
-			userTickets.a.allDates.push(this.formatDate(new Date(t.timestamp)))
-		);
+		userTickets.acceptedTickets.forEach(t => userTickets.a.allDates.push(this.formatDate(new Date(t.timestamp))));
+		userTickets.joinedTickets.forEach(t => userTickets.j.allDates.push(this.formatDate(new Date(t.timestamp))));
 
-		userTickets.joinedTickets.forEach((t: Ticket) =>
-			userTickets.j.allDates.push(this.formatDate(new Date(t.timestamp)))
-		);
-
-		userTickets.a.allDates.forEach(
-			(d) => (userTickets.a.counts[d] = (userTickets.a.counts[d] || 0) + 1)
-		);
-		userTickets.j.allDates.forEach(
-			(d) => (userTickets.j.counts[d] = (userTickets.j.counts[d] || 0) + 1)
-		);
+		userTickets.a.allDates.forEach(d => (userTickets.a.counts[d] = (userTickets.a.counts[d] || 0) + 1));
+		userTickets.j.allDates.forEach(d => (userTickets.j.counts[d] = (userTickets.j.counts[d] || 0) + 1));
 
 		this.last14Days().forEach((d: any) => {
 			if (userTickets.a.counts[d]) accepted.push(userTickets.a.counts[d]);
@@ -293,7 +232,7 @@ export default class TicketStats {
 			ctx = canvas.getContext("2d"),
 			canvasRender = new CanvasRenderService(620, 300),
 			chartDataURL = await canvasRender.renderToDataURL(chartData),
-			user: User = dbData[0] as User;
+			user = dbData[0]
 
 		ctx.font = "28px 'Inter Bold'";
 		ctx.fillStyle = "#ffffff";
@@ -312,7 +251,6 @@ export default class TicketStats {
 		avatar.src = chartDataURL;
 
 		ctx.drawImage(avatar, 0, canvas.height / 4);
-
 		ctx.beginPath();
 		ctx.arc(canvas.width / 2.55, 50, 40, 0, Math.PI * 2, true);
 		ctx.closePath();
@@ -321,28 +259,21 @@ export default class TicketStats {
 		ctx.drawImage(
 			await Canvas.loadImage(user.avatar),
 			canvas.width / 3.05,
-			10,
-			80,
-			80
+			10, 80, 80
 		);
 
 		return canvas.toBuffer();
 	}
 
-	/**
-	 * Get the average number of tickets per support agent.
-	 */
 	async getAvgTickets() {
 		const dbData = await Promise.all([
-			//* Get all the support agents.
 			await creditsColl
 				.find(
-					{ roleIds: { $in: [roles.ticketManager] } },
+					{ roleIds: { $in: [client.config.roles.ticketManager] } },
 					{ projection: { _id: false, userId: true, name: true } }
 				)
 				.toArray(),
 
-			//* Get all the tickets from the last 14 days.
 			await ticketsColl
 				.find(
 					{
@@ -369,10 +300,10 @@ export default class TicketStats {
 			userTickets = [],
 			resultsPerDay = [];
 
-		sAgents.forEach((sA: User) => {
+		sAgents.forEach(sA => {
 			userTickets[sA.userId] = { allDates: [], counts: {} };
 
-			tickets.forEach((t: Ticket) => {
+			tickets.forEach(t => {
 				if (sA.userId === t.accepter) {
 					userTickets[sA.userId].allDates.push(
 						this.formatDate(new Date(t.timestamp))
@@ -380,11 +311,7 @@ export default class TicketStats {
 				}
 			});
 
-			userTickets[sA.userId].allDates.forEach(
-				(d) =>
-					(userTickets[sA.userId].counts[d] =
-						(userTickets[sA.userId].counts[d] || 0) + 1)
-			);
+			userTickets[sA.userId].allDates.forEach(d => (userTickets[sA.userId].counts[d] = (userTickets[sA.userId].counts[d] || 0) + 1));
 
 			this.last14Days().forEach((d: any, i) => {
 				if (!resultsPerDay[i]) resultsPerDay[i] = 0;
@@ -393,9 +320,7 @@ export default class TicketStats {
 			});
 		});
 
-		resultsPerDay.forEach((no, i) => {
-			resultsPerDay[i] = no / sAgents.length;
-		});
+		resultsPerDay.forEach((no, i) => resultsPerDay[i] = no / sAgents.length);
 
 		let chartData: ChartConfiguration = {
 				type: "line",
@@ -460,57 +385,28 @@ export default class TicketStats {
 		return canvas.toBuffer();
 	}
 
-	/**
-	 * Create a canvas with PreMiD theme.
-	 * @param background Name of the background image. Optional.
-	 */
 	async createCanvas(background?: string) {
-		const canvas = Canvas.createCanvas(620, 400),
-			ctx = canvas.getContext("2d");
+		const canvas = Canvas.createCanvas(620, 400), ctx = canvas.getContext("2d");
 
-		//* Add the Awesome PreMiD Pattern.
 		ctx.drawImage(
-			await Canvas.loadImage(
-				path.join(__dirname, background ? background : "../img/stats.png")
-			),
-			0,
-			0,
+			await Canvas.loadImage(path.join(__dirname, background ? background : "../img/stats.png")), 0, 0,
 			canvas.width,
 			canvas.height
 		);
 
-		//* Use the Inter fonts
-		Canvas.registerFont(path.join(__dirname, "../fonts/Inter.ttf"), {
-			family: "Inter Bold",
-		});
-
-		Canvas.registerFont(path.join(__dirname, "../fonts/InterRegular.ttf"), {
-			family: "Inter Regular",
-		});
+		Canvas.registerFont(path.join(__dirname, "../fonts/Inter.ttf"), {family: "Inter Bold"});
+		Canvas.registerFont(path.join(__dirname, "../fonts/InterRegular.ttf"), {family: "Inter Regular"});
 
 		return canvas;
 	}
 
-	/**
-	 * Format a date.
-	 * @param date
-	 */
 	formatDate(date) {
-		var dd = date.getDate();
-		var mm = date.getMonth() + 1;
-		if (dd < 10) {
-			dd = "0" + dd;
-		}
-		if (mm < 10) {
-			mm = "0" + mm;
-		}
-		date = dd + "/" + mm;
-		return date;
+		var dd = date.getDate(), mm = date.getMonth() + 1;
+		if (dd < 10) dd = "0" + dd;
+		if (mm < 10) mm = "0" + mm;
+		return date = dd + "/" + mm;
 	}
 
-	/**
-	 * Returns an array containing the last 14 days.
-	 */
 	last14Days() {
 		var result = [];
 		for (var i = 0; i < 14; i++) {

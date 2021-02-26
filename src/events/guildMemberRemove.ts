@@ -1,14 +1,17 @@
-import * as Discord from "discord.js";
-import { pmdDB } from "../database/client";
+import { GuildMember } from "discord.js";
+import { client } from ".."
 
-const coll = pmdDB.collection("userSettings"),
-	betaUsers = pmdDB.collection("betaUsers"),
-	alphaUsers = pmdDB.collection("alphaUsers"),
-	discordUsers = pmdDB.collection("discordUsers");
+let coll = client.db.collection("userSettings"),
+	betaUsers = client.db.collection("betaUsers"),
+	alphaUsers = client.db.collection("alphaUsers"),
+	discordUsers = client.db.collection("discordUsers");
 
-module.exports = (member: Discord.GuildMember) => {
-	coll.findOneAndDelete({ userId: member.id });
-	betaUsers.findOneAndDelete({ userId: member.id });
-	alphaUsers.findOneAndDelete({ userId: member.id });
-	discordUsers.findOneAndDelete({ userId: member.id });
-};
+module.exports = {
+    name: "guildMemberAdd",
+    run: (client, member: GuildMember) => {
+        coll.findOneAndDelete({ userId: member.id });
+        betaUsers.findOneAndDelete({ userId: member.id });
+        alphaUsers.findOneAndDelete({ userId: member.id });
+        discordUsers.findOneAndDelete({ userId: member.id });
+    }
+}

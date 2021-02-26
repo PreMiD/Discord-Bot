@@ -1,25 +1,25 @@
-import * as Discord from "discord.js";
-import roles from "../roles";
-import { pmdDB } from "../database/client";
+import { GuildMember } from "discord.js";
+import { client } from ".."
 
-const col = pmdDB.collection("presences"),
-	discordUsers = pmdDB.collection("discordUsers");
-	
-module.exports = async (member: Discord.GuildMember) => {
-	const doc = await col.findOne({ "metadata.author.id": member.id });
-	if (doc && !member.roles.cache.has(roles.presence)) member.roles.add(roles.presence);
+let coll = client.db.collection("presences"), discordUsers = client.db.collection("discordUsers");
 
-	discordUsers.findOneAndUpdate(
-		{ userId: member.id },
-		{
-			$set: {
-				userId: member.id,
-				created: member.user.createdTimestamp,
-				username: member.user.username,
-				discriminator: member.user.discriminator,
-				avatar: member.user.displayAvatarURL()
-			}
-		},
-		{ upsert: true }
-	);
-};
+module.exports = {
+    name: "guildMemberAdd",
+    run: async (client, member: GuildMember) => {
+        let role = client.guilds.cache.get(client.config.main_guild).roles.find(r => r.id == client.config.roles.presence);
+        if(await coll.findOne({ "metadata.author.id": member.id })) member.roles.add(role);
+    
+        discordUsers.findOneAndUpdate(
+            { userId: member.id },
+            { $set: {
+                userId: member.id,
+                created: member.user.createdTimestamp,
+                username: member.user.username,
+                discriminator: member.user.discriminator,
+                avatar: member.user.displayAvatarURL(),
+                flags: member.user.flags.toArray()
+            } },
+            { upsert: true }
+        );
+    }
+}

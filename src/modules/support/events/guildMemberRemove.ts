@@ -1,26 +1,14 @@
-import * as Discord from "discord.js";
+import {client} from "../../../";
 
-import channels from "../../../channels";
-import { pmdDB } from "../../../database/client";
-import { Ticket } from "../classes/Ticket";
+let coll = client.db.collection("tickets");
 
-let coll = pmdDB.collection("tickets");
+module.exports = {
+    name: "guildMemberRemove",
+    run: async (client, user) => {
+        let tickets = await coll.find({ userId: user.id }).toArray();
 
-module.exports = async (user: Discord.GuildMember) => {
-	let tickets = await coll.find({ userId: user.id }).toArray();
-
-	tickets.map(async ticket => {
-		if (typeof ticket.status === "undefined") {
-			try {
-				(
-					await (user.guild.channels.cache.get(
-						channels.ticketChannel
-					) as Discord.TextChannel).messages.fetch(ticket.ticketMessage)
-				).delete();
-			} catch {}
-		} else if (ticket.status === 1) {
-			const t = new Ticket();
-			if (await t.fetch("ticket", ticket)) t.close(user.user);
-		}
-	});
-};
+        tickets.map(x => {
+            if(x.status != 3) x.close(client.user, "Creator left server.");
+        });
+    }
+}

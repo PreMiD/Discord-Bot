@@ -1,71 +1,48 @@
-import { TextChannel } from "discord.js";
+import { GuildMember, TextChannel } from "discord.js";
+import { Ticket } from "../classes/ticket";
 
-import { client } from "../../..";
-import channels from "../../../channels";
-import { Ticket } from "../classes/Ticket";
+module.exports = {
+    name: "raw",
+    run: async (client, out) => {
+        if(!["MESSAGE_REACTION_ADD"].includes(out.t) || !out.d.guild_id) return;
 
-module.exports = async packet => {
-	if (!["MESSAGE_REACTION_ADD"].includes(packet.t)) return;
+        let guild = client.guilds.cache.get(out.d.guild_id),
+            member = await guild.members.fetch(out.d.user_id);
+        
+        if(!member || member.user.bot) return;
 
-	let guild = await client.guilds.fetch(packet.d.guild_id),
-		member = await guild.members.fetch(packet.d.user_id);
+        let ticket = new Ticket();
+        if (!(await ticket.fetch("message", out.d.message_id))) return;
 
-	if (!member || member.user.bot) return;
+        let tMsg;
+        try {
+            tMsg = await (client.channels.cache.get(client.config.channels.ticketChannel) as TextChannel).messages.fetch(out.d.message_id);
+        } catch { 
+            tMsg = null;
+        }
 
-	let ticket = new Ticket();
-	if (!(await ticket.fetch("message", packet.d.message_id))) return;
+        if(!tMsg) return;
 
-	if (
-		packet.d.emoji.id === "521018476870107156" &&
-		typeof ticket.status === "undefined"
-	)
-		return ticket.accept(member);
+        if(out.d.emoji.id == "521018476870107156" && ticket.status == 2) ticket.accept(member);
+        if(out.d.emoji.name == "🚫") {
+            tMsg.reactions.removeAll();
+            tMsg.react("❤");
+            tMsg.awaitReactions((r, u) => r.emoji.name === "❤" && u.id === out.d.user_id, { max: 1, time: 5 * 1000, errors: ["time"] })
+                .then(_ => {
+                    if(ticket.status == 2) return ticket.close(member.user, tMsg);
+                    else return ticket.delete(member.user, tMsg);
+                })
+                .catch(_ => {
+                    tMsg.reactions.removeAll();
+                    if(ticket.status == 1) tMsg.react("521018476870107156");
+                    tMsg.react("🚫");
+                })
+        };
 
-	if (
-		packet.d.emoji.name === "🚫" &&
-		ticket.status === 1 &&
-		(ticket.supporters.includes(packet.d.user_id) ||
-			client.guilds.cache
-				.get(packet.d.guild_id)
-				.members.cache.get(packet.d.user_id)
-				.hasPermission("ADMINISTRATOR"))
-	)
-		return ticket.close(await client.users.fetch(packet.d.user_id));
-
-	if (packet.d.emoji.name === "🚫" && typeof ticket.status === "undefined") {
-		ticket.ticketMessage.reactions.removeAll().then(() => {
-			ticket.ticketMessage.react("💔");
-			ticket.ticketMessage
-				.awaitReactions(
-					(r, u) => r.emoji.name === "💔" && u.id === packet.d.user_id,
-					{ max: 1, time: 5 * 1000, errors: ["time"] }
-				)
-				.then(() => {
-					ticket.ticketMessage.delete();
-					ticket.user.user.send(
-						`<${packet.d.user_id}> has closed your ticket \`#${ticket.id}\``
-					);
-					(client.channels.cache.get(
-						channels.supportChannel
-					) as TextChannel).permissionOverwrites
-						.get(ticket.user.id)
-						.delete();
-					if (typeof ticket.attachmentsMessage !== "undefined")
-						ticket.attachmentsMessage.delete();
-				})
-				.catch(() => {
-					ticket.ticketMessage.reactions
-						.removeAll()
-						.then(() =>
-							ticket.ticketMessage
-								.react("🚫")
-								.then(() =>
-									ticket.ticketMessage.react(
-										guild.emojis.cache.get("521018476870107156")
-									)
-								)
-						);
-				});
-		});
-	}
-};
+        if(out.d.emoji.name == "success" && ticket.status != 2) {
+            ticket.accept(member);
+            tMsg.reactions.removeAll();
+            tMsg.react("🚫");
+        }
+    }
+}

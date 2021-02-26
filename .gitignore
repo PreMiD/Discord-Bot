@@ -1,11 +1,6 @@
-node_modules
-dist
-
-TicketLogs/*
-
-src/package.json
-
-.vscode
+package-lock.json
+yarn.lock
+node_modules/
 .env
-
-*.js
+dist/
+TicketLogs/

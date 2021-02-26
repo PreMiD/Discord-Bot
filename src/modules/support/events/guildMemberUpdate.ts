@@ -1,44 +1,31 @@
-import * as Discord from "discord.js";
+import { TextChannel } from "discord.js";
+import {client} from "../../../";
+import { Ticket } from "../classes/ticket";
 
-import channels from "../../../channels";
-import { pmdDB } from "../../../database/client";
-import roles from "../../../roles";
-import { Ticket } from "../classes/Ticket";
+let coll = client.db.collection("tickets");
 
-let coll = pmdDB.collection("userSettings"),
-	tcoll = pmdDB.collection("tickets");
+module.exports = {
+    name: "guildMemberUpdate",
+    run: async (client, oldM, newM) => {
+        if (oldM.roles.cache.has(client.config.roles.ticketManager) && !newM.roles.cache.has(client.config.roles.ticketManager)) {
+            let tickets = await coll.find({ supporters: oldM.id }).toArray();
 
-module.exports = async (
-	oldMember: Discord.GuildMember,
-	newMember: Discord.GuildMember
-) => {
-	if (
-		oldMember.roles.cache.has(roles.ticketManager) &&
-		!newMember.roles.cache.has(roles.ticketManager)
-	) {
-		coll.findOneAndUpdate(
-			{ userId: oldMember.id },
-			{ $unset: { showAllTickets: true } }
-		);
-
-		const tickets = await tcoll.find({ supporters: oldMember.id }).toArray();
-
-		tickets.map(async t => {
-			const ticket = new Ticket(),
-				ticketFound = await ticket.fetch("channel", t.supportChannel);
-
-			if (!ticketFound) return;
-
-			ticket.removeSupporter(oldMember, false);
-		});
-
-		const channelsToHide = oldMember.guild.channels.cache.filter(
-			c => c.parentID === channels.ticketCategory
-		);
-		channelsToHide.map(u =>
-			u.updateOverwrite(oldMember, {
-				VIEW_CHANNEL: false
-			})
-		);
-	}
-};
+            tickets.map(async x => {
+                let t = new Ticket();
+                if(await t.fetch("channel", x.supportChannel)) {
+                    let channel = (client.channels.cache.get(t.supportChannel) as TextChannel);
+    
+                    channel.updateOverwrite(oldM.id, {
+                        VIEW_CHANNEL: false,
+                        SEND_MESSAGES: false,
+                        EMBED_LINKS: false,
+                        ATTACH_FILES: false,
+                        USE_EXTERNAL_EMOJIS: false
+                    });
+    
+                    channel.send("**>>** Awaiting new supporter...");
+                }
+            });
+        }
+    }
+}
