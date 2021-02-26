@@ -7,7 +7,7 @@ module.exports = {
         slashCommand: false
     },
     run: async (client, msg, args) => {
-        if(msg.author.id != "506899274748133376") return;
+        if(msg.author.id !== "506899274748133376") return;
         
         msg.react("521018476480167937");
         

@@ -38,7 +38,7 @@ setInterval(async _ => {
                         { name: "Components Affected", value: x.components.join(", ") }
                     ];
 
-                if (x.impact != "none") fields.push({ name: "Impact", value: toTitleCase(x.impact) });
+                if (x.impact !== "none") fields.push({ name: "Impact", value: toTitleCase(x.impact) });
 
                 return await (channel as TextChannel).send({
                     embed: {

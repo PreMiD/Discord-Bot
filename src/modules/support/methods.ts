@@ -11,7 +11,7 @@ export const sortTickets = async () => {
 
     if(!category) return;
 
-    let positions = category.children.filter(c => c.name !== "tickets").sort((a, b) => parseInt(a.name as string) > parseInt(b.name as string) ? 1 : -1);
+    let positions = category.children.filter(c => c.name !== "tickets").sort((a, b) => parseInt(a.name as string) > parseInt(b.name as string) ? 1 : 0);
 
     for(let i = 0; i< positions.size; i++) {
         let channel = positions.array()[i];

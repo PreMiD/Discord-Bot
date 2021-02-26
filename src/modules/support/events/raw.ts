@@ -39,7 +39,7 @@ module.exports = {
                 })
         };
 
-        if(out.d.emoji.name == "success" && ticket.status != 2) {
+        if(out.d.emoji.name == "success" && ticket.status !== 2) {
             ticket.accept(member);
             tMsg.reactions.removeAll();
             tMsg.react("🚫");

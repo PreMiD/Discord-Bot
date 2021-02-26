@@ -20,7 +20,7 @@ module.exports = {
                 perms = await msg.client.elevation(client, msg.author.id);
 
             if (!cmd || cmd.config.slashCommand || (client.user.id == "574233163660918784" && msg.guild.id == "493130730549805057")) return;
-            if (typeof cmd.config.permLevel != "undefined" && perms < cmd.config.permLevel) return msg.react("⚠");
+            if (typeof cmd.config.permLevel !== "undefined" && perms < cmd.config.permLevel) return msg.react("⚠");
 
             try {
                 await cmd.run(client as Client, msg as Message, args as string[]);

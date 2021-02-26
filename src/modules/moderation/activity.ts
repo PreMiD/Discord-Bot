@@ -16,7 +16,7 @@ export default async(res, perms) => {
     if(userActivity == undefined || userActivity.user.bot || perms < 1)
         return res.channel.send(new UniformEmbed({description: `User not found.`}, ":bar_chart: Activity • Error", "#ff5050")).delete({ timeout: 10 * 1000 });
 
-    if(perms < 4 && args.options && args.options.find(a => a.name === "user" && a.value != userActivity.id))
+    if(perms < 4 && args.options && args.options.find(a => a.name === "user" && a.value !== userActivity.id))
         return res.channel.send(new UniformEmbed({description: `No permission.`}, ":bar_chart: Activity • Error", "#ff5050")).delete({ timeout: 10 * 1000 });
 
     let ticketStats = new TicketStats();

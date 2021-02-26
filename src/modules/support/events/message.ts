@@ -9,13 +9,14 @@ module.exports = {
             if(msg.content.toLowerCase().includes("discord.gg")) {msg.delete();(await msg.reply("invite links are not allowed in tickets!")).delete({timeout: 10000});return;};
             if(msg.content.toLowerCase().includes("chromebook")) {msg.delete();msg.author.send("We noticed you mentioned the phrase \`chromebook\` in your ticket. We do not currently support chromebooks! Your ticket has been automatically closed.");return;};
 
-            let attachments = [],
-                caught = false,
+            const attachments = [],
                 mAttachments = msg.attachments.map(x => x),
                 ticket = new Ticket(),
                 ticketCount = await client.db.collection("tickets").countDocuments({}),
                 ticketId = (ticketCount + 1).toString().padStart(5, "0");
             
+            let caught = false;
+        
             try {
                 await (await msg.author.send("Creating ticket...")).delete()
             } catch {
@@ -40,7 +41,7 @@ module.exports = {
 
         ticket.addLog(`[MESSAGE] ${msg.author.tag}: ${msg.content}`);
 
-        if(!ticket.supporters.includes(msg.author.id) && !msg.content.startsWith(">>") && ticket.userId != msg.author.id) ticket.addSupporter(msg, [""], true);
+        if(!ticket.supporters.includes(msg.author.id) && !msg.content.startsWith(">>") && ticket.userId !== msg.author.id) ticket.addSupporter(msg, [""], true);
 
         if(msg.content.toLowerCase().startsWith(">>help")) return msg.channel.send({
             embed: {

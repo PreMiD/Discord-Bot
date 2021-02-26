@@ -1,7 +1,7 @@
 import { client } from "../../..";
 import UniformEmbed from "../../../util/UniformEmbed";
 
-let coll = client.db.collection("presences");
+const coll = client.db.collection("presences");
 
 module.exports = {
     config: {

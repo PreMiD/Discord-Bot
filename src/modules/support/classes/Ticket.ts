@@ -8,7 +8,9 @@ import { writeFileSync } from "fs";
 import { client } from "../../../";
 import { getVars, sortTickets } from "../methods";
 
-let db = client.db, coll = db.collection("tickets"), circleFolder = "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/";
+const db = client.db,
+    coll = db.collection("tickets"),
+    circleFolder = "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/";
 
 
 export class Ticket {
@@ -55,7 +57,7 @@ export class Ticket {
         });
 
         if(!confirmed) {
-            let msg = await message.author.send({
+            const msg = await message.author.send({
                 embed: {
                     author: {
                         name: "PreMiD Support",
@@ -206,7 +208,7 @@ export class Ticket {
 
         (await (client.channels.cache.get(client.config.channels.ticketChannel) as TextChannel).messages.fetch(this.ticketMessage as string)).edit({embed});
 
-        embed.fields = embed.fields.filter(x => x.name != "Channel");
+        embed.fields = embed.fields.filter(x => x.name !== "Channel");
         embed.footer = { text: ">>help - View ticket commands.", iconURL: this.user.user.displayAvatarURL({ size: 128 }) };
         
         let msg = await channel.send({embed});

@@ -2,13 +2,13 @@ import { TextChannel } from "discord.js";
 import {client} from "../../../";
 import { Ticket } from "../classes/ticket";
 
-let coll = client.db.collection("tickets");
+const coll = client.db.collection("tickets");
 
 module.exports = {
     name: "guildMemberUpdate",
     run: async (client, oldM, newM) => {
         if (oldM.roles.cache.has(client.config.roles.ticketManager) && !newM.roles.cache.has(client.config.roles.ticketManager)) {
-            let tickets = await coll.find({ supporters: oldM.id }).toArray();
+            const tickets = await coll.find({ supporters: oldM.id }).toArray();
 
             tickets.forEach(async x => {
                 let t = new Ticket();
