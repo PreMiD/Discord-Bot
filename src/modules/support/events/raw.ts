@@ -1,4 +1,4 @@
-import { GuildMember, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 import { Ticket } from "../classes/ticket";
 
 module.exports = {

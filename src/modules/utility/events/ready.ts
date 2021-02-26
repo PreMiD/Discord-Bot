@@ -1,4 +1,4 @@
-import { updateTranslators } from "../methods"
+// import { updateTranslators } from "../methods"
 
 module.exports = {
     name: "ready",

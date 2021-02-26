@@ -9,7 +9,12 @@ module.exports = {
             if(msg.content.toLowerCase().includes("discord.gg")) {msg.delete();(await msg.reply("invite links are not allowed in tickets!")).delete({timeout: 10000});return;};
             if(msg.content.toLowerCase().includes("chromebook")) {msg.delete();msg.author.send("We noticed you mentioned the phrase \`chromebook\` in your ticket. We do not currently support chromebooks! Your ticket has been automatically closed.");return;};
 
-            let attachments = [], caught = false, mAttachments = msg.attachments.map(x => x), ticket = new Ticket(), ticketCount = await client.db.collection("tickets").countDocuments({}), ticketId = (ticketCount++).toString().padStart(5, "0");
+            let attachments = [],
+                caught = false,
+                mAttachments = msg.attachments.map(x => x),
+                ticket = new Ticket(),
+                ticketCount = await client.db.collection("tickets").countDocuments({}),
+                ticketId = (ticketCount + 1).toString().padStart(5, "0");
             
             try {
                 await (await msg.author.send("Creating ticket...")).delete()
@@ -32,9 +37,8 @@ module.exports = {
         let ticket = new Ticket();
         if (!(await ticket.fetch("channel", msg.channel.id))) return;
 
-        ticket.addLog(`[MESSAGE] ${msg.author.tag}: ${msg.content}`);
 
-        if(!ticket) return; 
+        ticket.addLog(`[MESSAGE] ${msg.author.tag}: ${msg.content}`);
 
         if(!ticket.supporters.includes(msg.author.id) && !msg.content.startsWith(">>") && ticket.userId != msg.author.id) ticket.addSupporter(msg, [""], true);
 

@@ -1,5 +1,4 @@
 import { client } from "../../..";
-import UniformEmbed from "../../../util/UniformEmbed";
 import creditRoles from "../../credits/creditRoles";
 import toggleTicketVisibility from "../toggleTicketVisibility";
 

@@ -37,9 +37,9 @@ export const updateTranslators = async() => {
         let proofreaderIn = Object.keys(crowdinUser.permissions).filter((_, index) => Object.values(crowdinUser.permissions)[index] === "proofreader"),
             rolesCache = (await guild.roles.fetch()).cache;
 
-		if(proofreaderIn.length > 0) 
+		if(proofreaderIn.length > 0) {
             if(!discordUser.roles.cache.has(client.config.roles.proofreader)) await discordUser.roles.add(client.config.roles.proofreader);
-		else if(discordUser.roles.cache.has(client.config.roles.proofreader)) await discordUser.roles.remove(client.config.roles.proofreader);
+        } else if(discordUser.roles.cache.has(client.config.roles.proofreader)) await discordUser.roles.remove(client.config.roles.proofreader);
 			for(const langName of langNames.values())
 				if (discordUser.roles.cache.has(langName)) await discordUser.roles.remove(langName);
 
