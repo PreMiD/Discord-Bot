@@ -6,7 +6,7 @@ export const createLogger = () => new class Logger {
 	success = (message: String) => console.log(`${chalk.bgGreen("  ")} ${message}`);
 }
 
-export const elevation = async(client, userId) => {
+export const elevation = async (client, userId) => {
     enum PermLevel {
         DEFAULT = 0,
         SUPPORT = 1,
@@ -16,8 +16,8 @@ export const elevation = async(client, userId) => {
         DEVELOPER = 5
     }
 
-    let permlvl: Number = 0,
-		roles = client.config.roles,
+    let permlvl: Number = 0;
+	const roles = client.config.roles,
 		member = client.guilds.resolve(client.config.main_guild).members.resolve(userId) || (await client.guilds.resolve(client.config.main_guild).members.fetch(userId));
 
 	if (!member) return PermLevel.DEFAULT;

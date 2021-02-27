@@ -71,7 +71,7 @@ export class Ticket {
 
             msg.react("521018476870107156").then(_ => msg.react("❌"));
 
-            let create = msg.createReactionCollector((x, y) => x.emoji.name == "success" && y.id == message.author.id),
+            const create = msg.createReactionCollector((x, y) => x.emoji.name == "success" && y.id == message.author.id),
                 cancel = msg.createReactionCollector((x, y) => x.emoji.name == "❌" && y.id == message.author.id);
 
             create.on("collect", _ => {
@@ -90,7 +90,7 @@ export class Ticket {
 
             this.id = ticketId;
 
-            let embed = {
+            const embed = {
                     author: {
                         name: `#${ticketId}`,
                         iconURL: `${circleFolder}green_circle.png?raw=true`
@@ -106,7 +106,7 @@ export class Ticket {
 
             if(attachments.length > 0) embed.fields = [{name: `Attachments`, value: attachments.map(x => `[${x.name}](${x.link})`)}];
 
-            let tMsg = await (client.channels.cache.get(client.config.channels.ticketChannel) as TextChannel).send({embed});
+            const tMsg = await (client.channels.cache.get(client.config.channels.ticketChannel) as TextChannel).send({embed});
             tMsg.react("521018476870107156");
             tMsg.react("🚫");
 
@@ -138,7 +138,7 @@ export class Ticket {
     }
 
     async accept(member: GuildMember) {
-        let ticketCategory = (await client.channels.fetch(client.config.channels.ticketCategory)) as CategoryChannel;
+        const ticketCategory = (await client.channels.fetch(client.config.channels.ticketCategory)) as CategoryChannel;
         if(ticketCategory.children.size >= 50) return member.send("A maximum of 50 tickets is currently open, try accepting a ticket again in a few minutes!");
 
 		const channelPerms = [
@@ -149,7 +149,7 @@ export class Ticket {
 			"USE_EXTERNAL_EMOJIS"
 		];
 
-        let channel = await ticketCategory.guild.channels.create(this.id, {
+        const channel = await ticketCategory.guild.channels.create(this.id, {
             parent: ticketCategory.id,
             permissionOverwrites: [
                 {
@@ -179,7 +179,7 @@ export class Ticket {
 			) as OverwriteResolvable[]
         });
 
-        let embed = {
+        const embed = {
             author: {
                 name: `#${this.id} [Pending]`,
                 iconURL: `${circleFolder}yellow_circle.png?raw=true`
@@ -211,7 +211,7 @@ export class Ticket {
         embed.fields = embed.fields.filter(x => x.name !== "Channel");
         embed.footer = { text: ">>help - View ticket commands.", iconURL: this.user.user.displayAvatarURL({ size: 128 }) };
         
-        let msg = await channel.send({embed});
+        const msg = await channel.send({embed});
         channel.send(`${this.user.toString()}, your ticket has been accepted by ${member.toString()}`);
 
 		this.addLog(`[ACCEPTED] Ticket accepted by ${this.user.user.tag}`);
@@ -220,12 +220,12 @@ export class Ticket {
     }
 
     async close(closer, reason?) {
-        let logs = (await coll.findOne({ticketId: this.id})).logs;
+        const logs = (await coll.findOne({ticketId: this.id})).logs;
         logs.push(`[${moment(new Date()).format("DD/MM/YY LT")} (${Date().split("(")[1].replace(")", "").match(/[A-Z]/g).join("")})] [CLOSED] Ticket closed by ${closer.tag} (Reason: ${reason.length > 2 ? reason : "Not Specified"})`);
         
         await writeFileSync(`${process.cwd()}/TicketLogs/${this.id}.txt`, logs.join("\n"));
 
-        let user = client.users.cache.get(this.userId);
+        const user = client.users.cache.get(this.userId);
         if(user) user.send(user.id == closer.id ? `You have closed your ticket (\`${this.id}\`)` : `Your ticket (\`${this.id}\`) has been closed by <@${closer.id}>. (Reason: \`${reason.length > 2 ? reason : "Not Specified"}\`)`, {
             files: [
                 {
@@ -241,7 +241,7 @@ export class Ticket {
 
         coll.findOneAndUpdate({ticketId: this.id}, {$set: {status: 3}});
 
-        let vars = getVars(process.env.TICKETLOGSWEBHOOK),
+        const vars = getVars(process.env.TICKETLOGSWEBHOOK),
             webhook = new WebhookClient(vars.id, vars.token),
             embed = new client.Embed()
                 .setAuthor(`#${this.id}`, "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/red_circle.png?raw=true")
@@ -284,7 +284,11 @@ export class Ticket {
     async addSupporter(msg: Message, arg, self?) {
         if(!self) msg.delete();
 
-        let args = [(arg[1] ? arg[1] : arg[0])], user = self ? msg.author : msg.mentions.users.first() || client.users.cache.get(args[0]) || msg.guild.members.cache.find(m => m.user.username.toLowerCase() == args[0].toLowerCase()) || await msg.guild.members.fetch(args[0]);
+        const args = [(arg[1] ? arg[1] : arg[0])],
+            user = self ? msg.author : msg.mentions.users.first() 
+                || client.users.cache.get(args[0]) 
+                || msg.guild.members.cache.find(m => m.user.username.toLowerCase() == args[0].toLowerCase()) 
+                || await msg.guild.members.fetch(args[0]);
 
         if(!user) return msg.reply("I could not find that member.");
         if(!self && user.id == msg.author.id) return;
@@ -312,7 +316,12 @@ export class Ticket {
     async removeSupporter(msg, arg) {
         msg.delete();
 
-        let args = [(arg[1] ?? arg[0])], user = msg.mentions.users.first() || client.users.cache.get(args[0]) || msg.guild.members.cache.find(m => m.user.username.toLowerCase() == args[0].toLowerCase()) || await msg.guild.members.fetch(args[0]) || msg.author;
+        const args = [(arg[1] ?? arg[0])],
+            user = msg.mentions.users.first() 
+            || client.users.cache.get(args[0]) 
+            || msg.guild.members.cache.find(m => m.user.username.toLowerCase() == args[0].toLowerCase()) 
+            || await msg.guild.members.fetch(args[0]) 
+            || msg.author;
 
         if(!user) return msg.reply("I could not find that member.");
         if(this.userId == msg.author.id) return msg.reply("only supporters can remove people from the ticket!");
@@ -339,7 +348,7 @@ export class Ticket {
     }
     
     async updateSupportersEmbed(msg, img?) {
-        let embed = img ? (await msg.channel.messages.fetch(this.supportMessage as string)).embeds[0] : msg.embeds[0], fields = embed.fields.filter(x => !x.name.includes(img ? "Attachment" : "Supporter"));
+        const embed = img ? (await msg.channel.messages.fetch(this.supportMessage as string)).embeds[0] : msg.embeds[0], fields = embed.fields.filter(x => !x.name.includes(img ? "Attachment" : "Supporter"));
         
         if(!img) fields.push({name: "Supporter(s)", value: (await coll.findOne({ticketId: this.id})).supporters.map(x => `<@${x}>`).join(", "), inline: true});
         else fields.push({name: "Attachments", value: (await coll.findOne({ticketId: this.id})).attachments.map(x => `[${x.name}](${x.link})`).join(", "), inline: true});
@@ -352,7 +361,7 @@ export class Ticket {
 
     async attachImage(attachment, msg?) {
         attachment.name = attachment.name.toString();
-        let data = new FormData(), imgId = Math.floor(Math.random() * 99.87) * 103;
+        const data = new FormData(), imgId = Math.floor(Math.random() * 99.87) * 103;
         data.append("file", (await axios({url: attachment.proxyURL, method: "GET", responseType: "stream"})).data);
         await axios.post(`https://cdn.rcd.gg/ticket/${this.id}/${imgId}-${attachment.name}`, data, {
             headers: {

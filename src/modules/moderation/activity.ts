@@ -5,16 +5,16 @@ export default async(res, perms) => {
     const args = res.data.options[0];
     let userActivity;
     
-    if(!args.options || !args.options.find(a => a.name == "user")) userActivity = res.member;
-    else if(args.options.find(a => a.name == "user")) userActivity = res.guild.members.resolve(args.options.find(a => a.name == "user").value);
+    if(!args.options || !args.options.find(a => a.name === "user")) userActivity = res.member;
+    else if(args.options.find(a => a.name === "user")) userActivity = res.guild.members.resolve(args.options.find(a => a.name === "user").value);
 
-    if(args.options?.length > 1 && args.options.find(a => a.name == "user")) 
+    if(args.options?.length > 1 && args.options.find(a => a.name === "user")) 
         return res.channel.send(new UniformEmbed({description: `\`user\` argument can not be combined with \`average\` and \`perday\` argument.`}, ":bar_chart: Activity • Error", "#ff5050")).delete({ timeout: 10 * 1000 });
     
-    if(args.options && args.options.find(a => a.name == "perday") && args.options.find(a => a.name == "average"))
+    if(args.options && args.options.find(a => a.name === "perday") && args.options.find(a => a.name === "average"))
         return res.channel.send(new UniformEmbed({description: `Argument \`average\` and \`perday\` can not be combined.`}, ":bar_chart: Activity • Error", "#ff5050")).delete({ timeout: 10 * 1000 });
 
-    if(userActivity == undefined || userActivity.user.bot || perms < 1)
+    if(userActivity === undefined || userActivity.user.bot || perms < 1)
         return res.channel.send(new UniformEmbed({description: `User not found.`}, ":bar_chart: Activity • Error", "#ff5050")).delete({ timeout: 10 * 1000 });
 
     if(perms < 4 && args.options && args.options.find(a => a.name === "user" && a.value !== userActivity.id))

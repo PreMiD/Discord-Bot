@@ -4,28 +4,29 @@ import { Ticket } from "./classes/ticket";
 
 import moment from "moment";
 
-let db = client.db, ticketData = {};
+const db = client.db;
+let ticketData = {};
 
 export const sortTickets = async () => {
-    let category = client.channels.cache.get(client.config.channels.ticketCat) as CategoryChannel;
+    const category = client.channels.cache.get(client.config.channels.ticketCat) as CategoryChannel;
 
     if(!category) return;
 
-    let positions = category.children.filter(c => c.name !== "tickets").sort((a, b) => parseInt(a.name as string) > parseInt(b.name as string) ? 1 : 0);
+    const positions = category.children.filter(c => c.name !== "tickets").sort((a, b) => parseInt(a.name as string) > parseInt(b.name as string) ? 1 : -1);
 
     for(let i = 0; i< positions.size; i++) {
-        let channel = positions.array()[i];
+        const channel = positions.array()[i];
         if(channel.position == i+1) await channel.setPosition(i + 1)
     }
 }
 
 export const checkOldTickets = async () => {
-    let category = client.channels.cache.get(client.config.channels.ticketCat) as CategoryChannel,
+    const category = client.channels.cache.get(client.config.channels.ticketCat) as CategoryChannel,
         coll = db.collection("tickets");
 
     if(!category) return;
 
-    let ticketsNN = await coll.find({
+    const ticketsNN = await coll.find({
             lastUserMessage: { $lte: Date.now() - 5 * 24 * 60 * 60 * 1000 },
             ticketCloseWarning: { $exists: false },
             supportChannel: { $in: category.children.filter(ch => ch.id !== client.config.channels.ticketChannel).map(ch => ch.id) }
@@ -36,25 +37,25 @@ export const checkOldTickets = async () => {
         }).toArray();
 
     for(let i = 0; i < ticketsNN.length; i++) {
-        let ticket = new Ticket();
+        const ticket = new Ticket();
         if(await ticket.fetch("channel", ticketsNN[i].supportChannel))
             ticket.closeWarning()
     }
 
     for(let i = 0; i < ticketTC.length; i++) {
-        let ticket = new Ticket();
+        const ticket = new Ticket();
         if(await ticket.fetch("channel", ticketsNN[i].supportChannel))
             ticket.close(client.user, "No response for 7 days.")
     }
 }
 
 export const getVars = url => {
-	let regexp = /^https:\/\/discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/;
+	const regexp = /^https:\/\/discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/;
 	return { id: regexp.exec(url)[2], token: regexp.exec(url)[3] };
 }
 
 export const updateTopic = async() => {
-    let coll = client.db.collection("tickets"),
+    const coll = client.db.collection("tickets"),
         total = await coll.countDocuments(),
         ticketCount = {
             unclaimed: (await coll.find({status: 1}).toArray()).length,
