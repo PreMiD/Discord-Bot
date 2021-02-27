@@ -8,7 +8,7 @@ export const updateCredits = async () => {
     const settings = await userSettingsColl.find({}).toArray(),
         creditRolesValues = Object.values(creditRoles);
 
-    let creditUsers = client.guilds.cache.get(client.config.main_guild).members.cache;
+    const creditUsers = client.guilds.cache.get(client.config.main_guild).members.cache;
     creditUsers.sweep(m => {
         const s = settings.find(s => s.userId === m.id);
         if(typeof s !== "undefined" && !s.showContributor) return true;
@@ -45,7 +45,7 @@ export const updateCredits = async () => {
         };
     })
 
-    let arr = credits.map(cU => {
+    const arr = credits.map(cU => {
         return {
             updateOne: {
                 filter: { userId: cU.userId },
@@ -69,7 +69,7 @@ export const updateCredits = async () => {
 }
 
 export const updateFlags = async () => {
-	let flagUsers = [];
+	const flagUsers = [];
 
 	await Promise.all(
 		client.guilds.cache

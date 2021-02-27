@@ -20,10 +20,10 @@ interface Command {
 interface Event {
     name: string;
     type: "process" | "client";
-    run(client: Client, ...args: any[]): void;
+    run(client: Client, ...args: unknown[]): void;
 }
 
-interface shortInfo {
+interface ShortInfo {
     title: string;
 	aliases: string[];
 	description: string;
@@ -31,4 +31,4 @@ interface shortInfo {
 	footer: boolean;
 }
 
-export{Event, Command, Options, shortInfo};
+export{Event, Command, Options, ShortInfo};

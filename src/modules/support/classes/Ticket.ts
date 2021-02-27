@@ -115,7 +115,7 @@ export class Ticket {
 
             message.author.send(`Your ticket (\`${ticketId}\`) has been submitted!`);
                 
-            coll.findOneAndUpdate({ticketId: ticketId}, {
+            coll.findOneAndUpdate({ticketId}, {
                 $set: {
                     status: 1,
                     ticketId: this.id,

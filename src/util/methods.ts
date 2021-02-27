@@ -1,10 +1,10 @@
 import chalk from "chalk";
-export const createLogger = () => new class Logger {
+export const createLogger = () => new (class Logger {
 	info = (message: string) => console.log(`${chalk.bgBlue("  ")} ${message}`);
 	debug = (message: string) => console.log(`${chalk.bgRedBright("  ")} ${message}`);
 	error = (message: string)  => console.log(`${chalk.bgRed("  ")} ${message}`);
 	success = (message: string) => console.log(`${chalk.bgGreen("  ")} ${message}`);
-}
+})
 
 export const elevation = async (client, userId) => {
     enum PermLevel {
@@ -16,7 +16,7 @@ export const elevation = async (client, userId) => {
         DEVELOPER = 5
     }
 
-    let permlvl: number = 0;
+    let permlvl = 0;
 	const roles = client.config.roles,
 		member = client.guilds.resolve(client.config.main_guild).members.resolve(userId) || (await client.guilds.resolve(client.config.main_guild).members.fetch(userId));
 

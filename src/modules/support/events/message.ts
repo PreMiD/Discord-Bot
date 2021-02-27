@@ -26,7 +26,7 @@ module.exports = {
 
             if(caught) return;
 
-            client.db.collection("tickets").insertOne({ticketId: ticketId});
+            client.db.collection("tickets").insertOne({ticketId});
 
             ticket.id = ticketId;
 
