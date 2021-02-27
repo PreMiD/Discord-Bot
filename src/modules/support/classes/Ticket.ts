@@ -24,13 +24,13 @@ export class Ticket {
         link: string;
     }[];
     acceptedAt: string;
+    supporters: string[];
     channel: TextChannel;
     ticketMessage: string;
     supportMessage: string;
     supportChannel: string;
     messageContent: string;
     supportTimestamps: number;
-    supporters: GuildMember[];
 
     async fetch(filter: "author" | "id" | "channel" | "message", input: string | Message | TextChannel) {
         let ticket;
@@ -49,7 +49,7 @@ export class Ticket {
         this.tMsg = await (client.channels.cache.get(client.config.channels.ticketChannel) as TextChannel).messages.fetch(ticket.messageMessage);
         this.user = await client.guilds.cache.get(client.config.main_guild).members.fetch(this.userId);
 
-        if(ticket.channel) this.channel = client.channels.cache.get(ticket.channel) as TextChannel;
+        this.channel = client.channels.cache.get(ticket.supportChannel) as TextChannel;
         
         return true;
     }
@@ -390,7 +390,7 @@ export class Ticket {
     
     closeWarning() {
         this.addLog("Sent close warning (2 days to respond)");
-        this.channel.send(`${this.user.toString()}, ${this.supporters.map(s => s.toString()).join(", ")} You have 2 days to respond to this ticket before it is automatically closed. To keep the ticket open, simply send a message!`);
+        this.channel.send(`${this.user.toString()}, ${this.supporters.filter(x => x !== this.user.id).map(s => `<@${s}>`).join(", ")} You have 2 days to respond to this ticket before it is automatically closed. To keep the ticket open, simply send a message!`);
         coll.findOneAndUpdate({ticketId: this.id}, {$set: {ticketCloseWarning: Date.now()}});
     }
 }

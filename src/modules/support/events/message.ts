@@ -40,6 +40,7 @@ module.exports = {
 
 
         ticket.addLog(`[MESSAGE] ${msg.author.tag}: ${msg.content}`);
+        client.db.collection("tickets").findOneAndUpdate({ ticketId: ticket.id }, { $set: { lastUserMessage: Date.now() } });
 
         if(!ticket.supporters.includes(msg.author.id) && !msg.content.startsWith(">>") && ticket.userId !== msg.author.id) ticket.addSupporter(msg, [""], true);
 

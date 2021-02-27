@@ -20,7 +20,7 @@ export const sortTickets = async () => {
 }
 
 export const checkOldTickets = async () => {
-    const category = client.channels.cache.get(client.config.channels.ticketCat) as CategoryChannel,
+    const category = client.channels.cache.get(client.config.channels.ticketCategory) as CategoryChannel,
         coll = db.collection("tickets");
 
     if(!category) return;
@@ -30,20 +30,20 @@ export const checkOldTickets = async () => {
             ticketCloseWarning: { $exists: false },
             supportChannel: { $in: category.children.filter(ch => ch.id !== client.config.channels.ticketChannel).map(ch => ch.id) }
         }).toArray(),
-        ticketTC = await coll.find({
-            ticketCloseWarning: { $lte: { $lte: Date.now() -2 *24 * 60 * 60 * 1000 }},
+        ticketsTC = await coll.find({
+            ticketCloseWarning: { $lte: Date.now() - 2 * 24 * 60 * 60 * 1000 },
             supportChannel: { $in: category.children.filter(ch => ch.id !== client.config.channels.ticketChannel).map(ch => ch.id) }
         }).toArray();
 
     for(let i = 0; i < ticketsNN.length; i++) {
         const ticket = new Ticket();
         if(await ticket.fetch("channel", ticketsNN[i].supportChannel))
-            ticket.closeWarning()
+            ticket.closeWarning();
     }
 
-    for(let i = 0; i < ticketTC.length; i++) {
+    for(let i = 0; i < ticketsTC.length; i++) {
         const ticket = new Ticket();
-        if(await ticket.fetch("channel", ticketsNN[i].supportChannel))
+        if(await ticket.fetch("channel", ticketsTC[i].supportChannel))
             ticket.close(client.user, "No response for 7 days.")
     }
 }
