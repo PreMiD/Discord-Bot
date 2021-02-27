@@ -14,7 +14,7 @@ module.exports = {
     run: async (data, perms) => {
         const args = data.data.options;
 
-        if(!Object.keys(creditRoles).find(r => data.member.roles.cache.has(creditRoles[r])) || perms == 0)
+        if(!Object.keys(creditRoles).find(r => data.member.roles.cache.has(creditRoles[r])) || perms === 0)
             return (await data.channel.send(`${data.member.toString()}, there are no available settings to change for you at this time.`)).delete({ timeout: 10 * 1000 });
 
         const userSettings = (await coll.findOne(
@@ -27,8 +27,8 @@ module.exports = {
 
         const oldSettings = JSON.parse(JSON.stringify(userSettings));
         for(const arg of args) {
-            if(arg.name == "showalltickets") userSettings.showAllTickets = arg.value;
-            if(arg.name == "showcontributor") userSettings.showContributor = arg.value;
+            if(arg.name === "showalltickets") userSettings.showAllTickets = arg.value;
+            if(arg.name === "showcontributor") userSettings.showContributor = arg.value;
         }
         
         await coll.findOneAndUpdate(

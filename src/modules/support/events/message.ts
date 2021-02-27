@@ -4,7 +4,7 @@ module.exports = {
     name: "message",
     run: async (client, msg) => {
         if(msg.author.bot) return;
-        if(msg.channel.id == client.config.channels.supportChannel) {
+        if(msg.channel.id === client.config.channels.supportChannel) {
             if(msg.content.length < 20) {msg.delete();(await msg.reply("please specify atleast 20 characters when creating a ticket.")).delete({timeout: 10000});return;};
             if(msg.content.toLowerCase().includes("discord.gg")) {msg.delete();(await msg.reply("invite links are not allowed in tickets!")).delete({timeout: 10000});return;};
             if(msg.content.toLowerCase().includes("chromebook")) {msg.delete();msg.author.send("We noticed you mentioned the phrase \`chromebook\` in your ticket. We do not currently support chromebooks! Your ticket has been automatically closed.");return;};

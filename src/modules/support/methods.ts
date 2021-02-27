@@ -12,11 +12,11 @@ export const sortTickets = async () => {
 
     if(!category) return;
 
-    const positions = category.children.filter(c => c.name !== "tickets").sort((a, b) => parseInt(a.name as string) > parseInt(b.name as string) ? 1 : -1);
+    const positions = category.children.filter(c => c.name !== "tickets").sort((a, b) => parseInt(a.name as string) > parseInt(b.name as string) ? 1 : 0);
 
     for(let i = 0; i< positions.size; i++) {
         const channel = positions.array()[i];
-        if(channel.position == i+1) await channel.setPosition(i + 1)
+        if(channel.position === i+1) await channel.setPosition(i + 1)
     }
 }
 
@@ -63,7 +63,7 @@ export const updateTopic = async() => {
             closed: (await coll.find({status: 3}).toArray()).length
         };
 
-    if(ticketCount == ticketData) return;
+    if(ticketCount === ticketData) return;
     ticketData = ticketCount;
 
     (client.channels.cache.get(client.config.channels.ticketChannel) as TextChannel)

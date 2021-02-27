@@ -14,13 +14,13 @@ module.exports = {
         if(!data.data.options) 
             return (await data.channel.send(`${data.member.toString()}, please specify an argument! (Available arguments: \`search\`)`))
                 .delete({ timeout: 10 * 1000 });
-        if(data.data.options.length == 2) 
+        if(data.data.options.length === 2) 
             return (await data.channel.send(`${data.member.toString()}, please specify one argument only! (Available arguments: \`search\`)`))
                 .delete({ timeout: 10 * 1000 });
-        if(data.data[0].value.trim().length == 0) 
+        if(data.data[0].value.trim().length === 0) 
             return (await data.channel.send(`${data.member.toString()}, please specify a search query!`))
                 .delete({ timeout: 10 * 1000 });        
-        if(data.data.options[0].name == "search")
+        if(data.data.options[0].name === "search")
             return await data.channel.send(data.member.toString(), await searchPresence(data.data.options[0].value));
 
         async function searchPresence(query) {

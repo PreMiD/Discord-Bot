@@ -4,7 +4,7 @@ module.exports = {
     name: "message",
     type: "client",
     run: (client, msg) => {
-        if(msg.channel.type == "dm") return;
+        if(msg.channel.type === "dm") return;
         let prefixes = ["p!", "p1", "/"];
         prefixes.forEach(async inp => {
             let prefix = msg.content.match(new RegExp(`^<@!?${client.user.id}> `))
@@ -19,7 +19,7 @@ module.exports = {
                 cmd = client.commands.get(input) || client.aliases.get(input),
                 perms = await msg.client.elevation(client, msg.author.id);
 
-            if (!cmd || cmd.config.slashCommand || (client.user.id == "574233163660918784" && msg.guild.id == "493130730549805057")) return;
+            if (!cmd || cmd.config.slashCommand || (client.user.id === "574233163660918784" && msg.guild.id === "493130730549805057")) return;
             if (typeof cmd.config.permLevel !== "undefined" && perms < cmd.config.permLevel) return msg.react("⚠");
 
             try {

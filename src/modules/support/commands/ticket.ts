@@ -16,7 +16,7 @@ module.exports = {
                 const ticket = new Ticket()
                 let ticketFound: boolean;
     
-                if(data.channel.parent.id == data.supportCategory) ticketFound = await ticket.fetch("channel", data.channel.id);
+                if(data.channel.parent.id === data.supportCategory) ticketFound = await ticket.fetch("channel", data.channel.id);
                 else ticketFound = await ticket.fetch("author", data.member.id);
     
                 if (!ticketFound && data.channel.parent.id !== client.config.supportCategory) return (await data.channel.send(`${data.member.toString()}, you don't have any open tickets.`)).delete({ timeout: 10 * 1000 });

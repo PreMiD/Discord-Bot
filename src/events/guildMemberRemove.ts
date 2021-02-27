@@ -1,7 +1,7 @@
 import { GuildMember } from "discord.js";
 import { client } from ".."
 
-let coll = client.db.collection("userSettings"),
+const coll = client.db.collection("userSettings"),
 	betaUsers = client.db.collection("betaUsers"),
 	alphaUsers = client.db.collection("alphaUsers"),
 	discordUsers = client.db.collection("discordUsers");

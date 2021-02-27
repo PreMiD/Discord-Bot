@@ -10,7 +10,7 @@ export const updateCredits = async () => {
 
     let creditUsers = client.guilds.cache.get(client.config.main_guild).members.cache;
     creditUsers.sweep(m => {
-        const s = settings.find(s => s.userId == m.id);
+        const s = settings.find(s => s.userId === m.id);
         if(typeof s !== "undefined" && !s.showContributor) return true;
         else return !creditRolesValues.some(c => m.roles.cache.has(c));
     });

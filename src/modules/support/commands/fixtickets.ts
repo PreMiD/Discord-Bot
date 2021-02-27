@@ -11,16 +11,16 @@ module.exports = {
         
         msg.react("521018476480167937");
         
-        let coll = client.db.collection("tickets");
+        const coll = client.db.collection("tickets");
 
-        if(args[0] == "step1") {
+        if(args[0] === "step1") {
             await coll.updateMany({ status: { $exists: false } }, { $set: { status: 3 } });
             await coll.updateMany({ status: 2 }, { $set: { status: 3 } });
             msg.reactions.removeAll();
             msg.react("✅");
         }
         
-        if(args[0] == "step2") {
+        if(args[0] === "step2") {
             for await(const channel of client.channels.cache.get(client.config.channels.ticketCategory).children.map(x => x)) {
                 let ticket = await coll.findOne({ supportChannel: channel.id });
                 if(ticket) coll.findOneAndUpdate({ supportChannel: channel.id }, { $set: { status: 2 } });
@@ -29,7 +29,7 @@ module.exports = {
             msg.react("✅")
         }
 
-        if(args[0] == "step3") {
+        if(args[0] === "step3") {
             let embed = new MessageEmbed()
                 .setAuthor("PreMiD Support", client.user.avatarURL())
                 .addField("How does this work?", "To get started, simply send a message in this channel, explain clearly what your error is, and attach images where necessary! Once your message is sent, the bot will first confirm that you want to create this ticket, then our support agents will take over!")

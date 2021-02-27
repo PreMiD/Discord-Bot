@@ -5,7 +5,7 @@ module.exports = {
     run: async (client, out) => {
         if(out.t !== "INTERACTION_CREATE") return;
 
-        let cmd = client.command.find(c => c.config.name == out.d.data.name && c.config.slashCommand),
+        let cmd = client.command.find(c => c.config.name === out.d.data.name && c.config.slashCommand),
             perms = await client.elevation(out.d.member.user.id);
 
         if(!cmd) return;

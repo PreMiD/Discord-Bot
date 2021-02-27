@@ -29,10 +29,10 @@ setInterval(async _ => {
     try {
         const res = await exports.checkStatus();
 
-        if(res && res.send == true) {
+        if(res && res.send === true) {
             const channel = (await client.channels.cache.get(statusUpdateChannel));
 
-            if(res.type == 0) {
+            if(res.type === 0) {
                 const x = cache.lastIncident,
                     u = cache.lastUpdate,
                     fields = [
@@ -53,7 +53,7 @@ setInterval(async _ => {
                 });
             }
 
-            if(res.type == 1) {
+            if(res.type === 1) {
                 const x = cache.lastIncident, u = cache.lastUpdate;
                 return await (channel as TextChannel).send({
                     embed: {
@@ -65,7 +65,7 @@ setInterval(async _ => {
                 })
             }
 
-            if(res.type == 2) {
+            if(res.type === 2) {
                 const x = cache.lastIncident;
 
                 cache.lastIncident = null;

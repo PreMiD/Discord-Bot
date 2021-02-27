@@ -12,14 +12,14 @@ export const updateTranslators = async() => {
             { projection: { _id: false }}
         ).toArray(),
         crowdinMembers = await fetchMembers(),
-        translatorsNotInDB = (await guild.roles.fetch(client.config.roles.translator)).members.filter(m => !users.find(u => u.userId == m.id)).array();
+        translatorsNotInDB = (await guild.roles.fetch(client.config.roles.translator)).members.filter(m => !users.find(u => u.userId === m.id)).array();
 
     (await axios("https://api.crowdin.com/api/v2/languages?limit=500")).data.data.forEach(d => langNames.set(d.data.id, d.data.name));
 
     for(const member of translatorsNotInDB) await removeAllTranslatorRoles(member);
 
     for(const user of users) {
-        const crowdinUser = crowdinMembers.find(u => u.data.id == user.user.id);
+        const crowdinUser = crowdinMembers.find(u => u.data.id === user.user.id);
 
         if(!crowdinUser) return;
 
@@ -44,7 +44,7 @@ export const updateTranslators = async() => {
 				if (discordUser.roles.cache.has(langName)) await discordUser.roles.remove(langName);
 
         for(const proofreader of proofreaderIn) {
-            let role = rolesCache.find(r => r.name == langNames.get(proofreader));
+            let role = rolesCache.find(r => r.name === langNames.get(proofreader));
 
             if(!role) role = await guild.roles.create({
                 data: {
@@ -70,7 +70,7 @@ export const updateTranslators = async() => {
             })).data.data;
 
             members = members.concat(m);
-            moreThan500 = m.length == 500;
+            moreThan500 = m.length === 500;
         }
 
         return members;

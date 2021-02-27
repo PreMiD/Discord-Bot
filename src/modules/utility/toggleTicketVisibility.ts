@@ -11,7 +11,7 @@ const coll = client.db.collection("tickets"),
 	}>();
 
 export default async (user, visible) => {
-    if(tasksRunningFor.has(user.id) && tasksRunningFor.get(user.id).visible == visible) return;
+    if(tasksRunningFor.has(user.id) && tasksRunningFor.get(user.id).visible === visible) return;
     clearInterval(tasksRunningFor.get(user.id).interval);
 
 	const tickets = await coll.find({ status: 1 }).toArray();
@@ -27,7 +27,7 @@ async function run(user) {
 	const task = tasksRunningFor.get(user.id);
 
 	if(!task.itStatus) {
-		if(task.tickets.length == 0) {
+		if(task.tickets.length === 0) {
 			clearInterval(task.interval);
 			tasksRunningFor.delete(user.id);
 			return;

@@ -15,7 +15,7 @@ module.exports = {
     run: async (data) => {
         const user = await coll.findOne({ userId: data.member.id });
         
-        if(data.data.options[0].name == "link")
+        if(data.data.options[0].name === "link")
             if(!user)
                 try {
                     const code = nanoid(5);

@@ -32,10 +32,10 @@ export class Ticket {
     async fetch(filter: "author" | "id" | "channel" | "message", input: string | Message | TextChannel) {
         let ticket: any;
 
-        filter == "channel" ? ticket = await coll.findOne({ supportChannel: input })
-            : filter == "message" ? ticket = await coll.findOne({ ticketMessage: input })
-            : filter == "author" ? ticket = await coll.findOne({ userId: input })
-            : filter == "id" ? ticket = await coll.findOne({ userId: input })
+        filter === "channel" ? ticket = await coll.findOne({ supportChannel: input })
+            : filter === "message" ? ticket = await coll.findOne({ ticketMessage: input })
+            : filter === "author" ? ticket = await coll.findOne({ userId: input })
+            : filter === "id" ? ticket = await coll.findOne({ userId: input })
             : ticket = null;
 
         if(!ticket) return false;
@@ -71,8 +71,8 @@ export class Ticket {
 
             msg.react("521018476870107156").then(_ => msg.react("❌"));
 
-            const create = msg.createReactionCollector((x, y) => x.emoji.name == "success" && y.id == message.author.id),
-                cancel = msg.createReactionCollector((x, y) => x.emoji.name == "❌" && y.id == message.author.id);
+            const create = msg.createReactionCollector((x, y) => x.emoji.name === "success" && y.id === message.author.id),
+                cancel = msg.createReactionCollector((x, y) => x.emoji.name === "❌" && y.id === message.author.id);
 
             create.on("collect", _ => {
                 msg.delete();
@@ -226,7 +226,7 @@ export class Ticket {
         await writeFileSync(`${process.cwd()}/TicketLogs/${this.id}.txt`, logs.join("\n"));
 
         const user = client.users.cache.get(this.userId);
-        if(user) user.send(user.id == closer.id ? `You have closed your ticket (\`${this.id}\`)` : `Your ticket (\`${this.id}\`) has been closed by <@${closer.id}>. (Reason: \`${reason.length > 2 ? reason : "Not Specified"}\`)`, {
+        if(user) user.send(user.id === closer.id ? `You have closed your ticket (\`${this.id}\`)` : `Your ticket (\`${this.id}\`) has been closed by <@${closer.id}>. (Reason: \`${reason.length > 2 ? reason : "Not Specified"}\`)`, {
             files: [
                 {
                     attachment: `${process.cwd()}/TicketLogs/${this.id}.txt`,
@@ -287,11 +287,11 @@ export class Ticket {
         const args = [(arg[1] ? arg[1] : arg[0])],
             user = self ? msg.author : msg.mentions.users.first() 
                 || client.users.cache.get(args[0]) 
-                || msg.guild.members.cache.find(m => m.user.username.toLowerCase() == args[0].toLowerCase()) 
+                || msg.guild.members.cache.find(m => m.user.username.toLowerCase() === args[0].toLowerCase()) 
                 || await msg.guild.members.fetch(args[0]);
 
         if(!user) return msg.reply("I could not find that member.");
-        if(!self && user.id == msg.author.id) return;
+        if(!self && user.id === msg.author.id) return;
         
         if(await coll.findOne({ticketId: this.id, supporters: user.id})) return msg.reply("that member is already added to this ticket.");
 
@@ -319,17 +319,17 @@ export class Ticket {
         const args = [(arg[1] ?? arg[0])],
             user = msg.mentions.users.first() 
             || client.users.cache.get(args[0]) 
-            || msg.guild.members.cache.find(m => m.user.username.toLowerCase() == args[0].toLowerCase()) 
+            || msg.guild.members.cache.find(m => m.user.username.toLowerCase() === args[0].toLowerCase()) 
             || await msg.guild.members.fetch(args[0]) 
             || msg.author;
 
         if(!user) return msg.reply("I could not find that member.");
-        if(this.userId == msg.author.id) return msg.reply("only supporters can remove people from the ticket!");
-        if(user.id == this.userId) return msg.reply("you cannot remove the ticket creator!");
+        if(this.userId === msg.author.id) return msg.reply("only supporters can remove people from the ticket!");
+        if(user.id === this.userId) return msg.reply("you cannot remove the ticket creator!");
         
         if(!await coll.findOne({ticketId: this.id, supporters: user.id})) return msg.reply("that member is not in this ticket.");
 
-        msg.channel.send(`**<<** ${msg.author} has ${msg.author.id == user.id ? "removed themselves from the ticket." : `removed ${user.toString()}`}`);
+        msg.channel.send(`**<<** ${msg.author} has ${msg.author.id === user.id ? "removed themselves from the ticket." : `removed ${user.toString()}`}`);
 
         (msg.channel as TextChannel).updateOverwrite(user.id, {
             VIEW_CHANNEL: false,

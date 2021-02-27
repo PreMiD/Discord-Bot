@@ -9,7 +9,7 @@ module.exports = {
         slashCommand: true
     },
     run: async (data) => {
-        if(data.data.options[0].name == "list") {
+        if(data.data.options[0].name === "list") {
             const embed = new UniformEmbed({description: client.infos.keyArray().map(k =>`**${client.infos.get(k).title}** - \`${k}\`, \`${client.infos.get(k).aliases.join("`, `")}\``).join("\n\n")}, ":bookmark: Info • List");
             data.channel.send(data.member.toString(), embed);
         } else {
