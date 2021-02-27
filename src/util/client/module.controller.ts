@@ -10,7 +10,7 @@ export const loadEvents = async (client) => {
             readdirSync(eventsPath).filter(x => x.endsWith(".js"))
                 .forEach(file => {
                     const event = require(`${eventsPath}${file}`);
-                    client.events.set(event.name, event);
+                    client.events.set(event.name+Math.random(), event);
                     client.on(event.name, (...args) => event.run(client, ...args));
                 });
     })

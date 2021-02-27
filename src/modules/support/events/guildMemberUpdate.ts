@@ -14,7 +14,7 @@ module.exports = {
                 let t = new Ticket();
                 if(await t.fetch("channel", x.supportChannel)) {
                     let channel = (client.channels.cache.get(t.supportChannel) as TextChannel);
-    
+                    console.log(x.ticketId);
                     channel.updateOverwrite(oldM.id, {
                         VIEW_CHANNEL: false,
                         SEND_MESSAGES: false,
@@ -22,8 +22,10 @@ module.exports = {
                         ATTACH_FILES: false,
                         USE_EXTERNAL_EMOJIS: false
                     });
-    
-                    channel.send("**>>** Awaiting new supporter...");
+                    
+                    coll.findOneAndUpdate({ ticketId: x.ticetId }, { $pull: { supporters: oldM.user.id } })
+
+                    if(x.supporters.length <=1) channel.send("**>>** Awaiting new supporter...");
                 }
             });
         }

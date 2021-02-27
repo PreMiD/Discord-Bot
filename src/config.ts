@@ -8,7 +8,7 @@ module.exports = {
         moderator: "514546359865442304",
         administrator: "573138894271283210",
         developer: "493135149274365975",
-        ticketManager: "566417964820070421",
+        ticketManager: "811652268105138186",
         muted: "521413330481446933",
         booster: "585532751663333383",
         alpha: "694481247564595211",
