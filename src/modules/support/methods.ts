@@ -5,7 +5,6 @@ import { Ticket } from "./classes/ticket";
 import moment from "moment";
 
 const db = client.db;
-let ticketData = {};
 
 export const sortTickets = async () => {
     const category = client.channels.cache.get(client.config.channels.ticketCat) as CategoryChannel;
@@ -61,11 +60,11 @@ export const updateTopic = async() => {
             unclaimed: (await coll.find({status: 1}).toArray()).length,
             inProgress: (await coll.find({status: 2}).toArray()).length,
             closed: (await coll.find({status: 3}).toArray()).length
-        };
-
-    if(ticketCount === ticketData) return;
-    ticketData = ticketCount;
-
-    (client.channels.cache.get(client.config.channels.ticketChannel) as TextChannel)
-        .setTopic(`${ticketCount.unclaimed} unclaimed • ${ticketCount.inProgress} in progress • ${ticketCount.closed} closed • ${total} total | Last updated: ${moment(new Date()).format("DD/MM/YY LT")} (${Date().split("(")[1].replace(")", "").match(/[A-Z]/g).join("")})`);
+        },
+        channel = (client.channels.cache.get(client.config.channels.ticketChannel) as TextChannel),
+        content = `${ticketCount.unclaimed} unclaimed • ${ticketCount.inProgress} in progress • ${ticketCount.closed} closed • ${total} total`
+        
+        if(channel.topic.includes(content)) return;
+        
+        channel.setTopic(`${content} | Last updated: ${moment(new Date()).format("DD/MM/YY LT")} (${Date().split("(")[1].replace(")", "").match(/[A-Z]/g).join("")})`);
 }
