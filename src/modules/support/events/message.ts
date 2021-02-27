@@ -14,27 +14,26 @@ module.exports = {
                 ticket = new Ticket(),
                 ticketCount = await client.db.collection("tickets").countDocuments({}),
                 ticketId = (ticketCount + 1).toString().padStart(5, "0");
-            
-            let caught = false;
-        
+
             try {
                 await (await msg.author.send("Creating ticket...")).delete()
+                createTicket(false);
             } catch {
-                caught = true;
-                (await msg.channel.send(`${msg.author}, please ensure you have DMs enabled to be able to create a ticket.`)).delete({timeout: 10000});
+                createTicket(true);
             };
 
-            if(caught) return;
+            async function createTicket(noDM) {
+                client.db.collection("tickets").insertOne({ticketId});
 
-            client.db.collection("tickets").insertOne({ticketId});
+                ticket.id = ticketId;
 
-            ticket.id = ticketId;
+                for await (const attachment of mAttachments) attachments.push(await ticket.attachImage(attachment));
 
-            for await (const attachment of mAttachments) attachments.push(await ticket.attachImage(attachment));
-
-            ticket.create(msg, false, attachments, ticketId);
-            msg.delete();
+                ticket.create(msg, noDM, attachments, ticketId);
+                msg.delete();
+            }
         }
+
         let ticket = new Ticket();
         if (!(await ticket.fetch("channel", msg.channel.id))) return;
 

@@ -89,7 +89,7 @@ export class Ticket {
         } else {
             client.ttCount = client.ttCount ? Number(client.ttCount) + 1 : 1;
             setTimeout(() => client.ttCount = Number(client.ttCount) - 1, 60000);
-            if(client.ttCount > 5) return (await message.reply("we have had more than 5 tickets created in the last minute, please try again in one minute! This is to reduce spam. You have been DMed your message content so you do not need to retype it all out.")).delete({timeout: 20000});            
+            if(client.ttCount > 5) return (await message.reply("we have had more than 5 tickets created in the last minute, please try again in one minute!")).delete({timeout: 20000});            
 
             this.id = ticketId;
 
@@ -113,7 +113,11 @@ export class Ticket {
             tMsg.react("521018476870107156");
             tMsg.react("🚫");
 
-            message.author.send(`Your ticket (\`${ticketId}\`) has been submitted!`);
+            try {
+                await message.author.send(`Your ticket (\`${ticketId}\`) has been submitted!`);
+            } catch {
+                (await (message.channel.send(`${message.author}, your ticket has been submitted!`))).delete({ timeout: 7 * 1000 });
+            };
                 
             coll.findOneAndUpdate({ticketId}, {
                 $set: {
@@ -133,8 +137,10 @@ export class Ticket {
         }
     }
 
-    delete(closer, msg) {
-        client.users.cache.get(this.userId).send(`Your ticket (\`${this.id}\`) has been rejected by <@${closer.id}>`);
+    async delete(closer, msg) {
+        try {
+            await client.users.cache.get(this.userId).send(`Your ticket (\`${this.id}\`) has been rejected by <@${closer.id}>`);
+        } catch {};
         (client.channels.cache.get(client.config.channels.supportChannel) as TextChannel).permissionOverwrites.get(this.userId)?.delete();
         msg.delete();
         coll.findOneAndUpdate({ticketId: this.id}, {$set: {status: 3}});
@@ -229,14 +235,16 @@ export class Ticket {
         await writeFileSync(`${process.cwd()}/TicketLogs/${this.id}.txt`, logs.join("\n"));
 
         const user = client.users.cache.get(this.userId);
-        if(user) user.send(user.id === closer.id ? `You have closed your ticket (\`${this.id}\`)` : `Your ticket (\`${this.id}\`) has been closed by <@${closer.id}>. (Reason: \`${reason.length > 2 ? reason : "Not Specified"}\`)`, {
-            files: [
-                {
-                    attachment: `${process.cwd()}/TicketLogs/${this.id}.txt`,
-                    name: `Ticket-${this.id}.txt`
-                }
-            ]
-        });
+        try {
+            if(user) user.send(user.id === closer.id ? `You have closed your ticket (\`${this.id}\`)` : `Your ticket (\`${this.id}\`) has been closed by <@${closer.id}>. (Reason: \`${reason.length > 2 ? reason : "Not Specified"}\`)`, {
+                files: [
+                    {
+                        attachment: `${process.cwd()}/TicketLogs/${this.id}.txt`,
+                        name: `Ticket-${this.id}.txt`
+                    }
+                ]
+            });
+        } catch {};
 
         (await (client.channels.cache.get(client.config.channels.ticketChannel) as TextChannel).messages.fetch(this.ticketMessage as string)).delete();
         (client.channels.cache.get(client.config.channels.supportChannel) as TextChannel).permissionOverwrites.get(this.userId)?.delete();
