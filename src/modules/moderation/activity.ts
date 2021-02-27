@@ -2,7 +2,8 @@ import UniformEmbed from "../../util/UniformEmbed";
 import TicketStats from "./classes/TicketStats";
 
 export default async(res, perms) => {
-    let args = res.data.options[0], userActivity;
+    const args = res.data.options[0];
+    let userActivity;
     
     if(!args.options || !args.options.find(a => a.name == "user")) userActivity = res.member;
     else if(args.options.find(a => a.name == "user")) userActivity = res.guild.members.resolve(args.options.find(a => a.name == "user").value);
@@ -19,7 +20,7 @@ export default async(res, perms) => {
     if(perms < 4 && args.options && args.options.find(a => a.name === "user" && a.value !== userActivity.id))
         return res.channel.send(new UniformEmbed({description: `No permission.`}, ":bar_chart: Activity • Error", "#ff5050")).delete({ timeout: 10 * 1000 });
 
-    let ticketStats = new TicketStats();
+    const ticketStats = new TicketStats();
     res.channel.send(res.member.toString(), {
         files: [
             args.options?.find(a => a.name === "average")?.value

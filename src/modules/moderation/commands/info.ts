@@ -13,7 +13,7 @@ module.exports = {
             const embed = new UniformEmbed({description: client.infos.keyArray().map(k =>`**${client.infos.get(k).title}** - \`${k}\`, \`${client.infos.get(k).aliases.join("`, `")}\``).join("\n\n")}, ":bookmark: Info • List");
             data.channel.send(data.member.toString(), embed);
         } else {
-            let shortcutArg = data.data.options[0].options[0];
+            const shortcutArg = data.data.options[0].options[0];
         
             if (!(client.infos.has(shortcutArg.value.toLowerCase()) || client.infoAliases.has(shortcutArg.value.toLowerCase()) || client.infos.has(client.infoAliases.get(shortcutArg.value.toLowerCase())))) {
                 (await data.channel.send(data.member.toString(), new UniformEmbed({ description: "Please enter a valid shortcut." }, ":bookmark: Info • Error", "#ff5050"))).delete({timeout: 10 * 1000});

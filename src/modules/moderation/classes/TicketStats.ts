@@ -6,7 +6,7 @@ import * as Discord from "discord.js";
 import path from "path";
 import { client } from "../../../";
 
-let ticketsColl = client.db.collection("tickets"), creditsColl = client.db.collection("credits");
+const ticketsColl = client.db.collection("tickets"), creditsColl = client.db.collection("credits");
 
 export default class TicketStats {
 	user: Discord.User;
@@ -14,7 +14,7 @@ export default class TicketStats {
 	constructor() {}
 
 	async getTicketsPerDay() {
-		let dbTickets = (await ticketsColl
+		const dbTickets = (await ticketsColl
 				.find(
 					{
 						acceptedAt: {
@@ -39,7 +39,7 @@ export default class TicketStats {
 			else tickets.push(0);
 		});
 
-		let chartData: ChartConfiguration = {
+		const chartData: ChartConfiguration = {
 				type: "bar",
 				data: {
 					labels: this.last14Days(),
@@ -153,7 +153,7 @@ export default class TicketStats {
 				.toArray(),
 		]);
 
-		let userTickets = {
+		const userTickets = {
 				acceptedTickets: [],
 				joinedTickets: [],
 				a: { allDates: [], counts: {} },
@@ -178,7 +178,7 @@ export default class TicketStats {
 			else joined.push(0);
 		});
 
-		let chartData: ChartConfiguration = {
+		const chartData: ChartConfiguration = {
 				type: "line",
 				data: {
 					labels: this.last14Days(),
@@ -247,7 +247,7 @@ export default class TicketStats {
 		ctx.fillStyle = user.roleColor;
 		ctx.fillText(user.role, canvas.width / 2.14, canvas.height / 5.7);
 
-		let avatar = new Canvas.Image();
+		const avatar = new Canvas.Image();
 		avatar.src = chartDataURL;
 
 		ctx.drawImage(avatar, 0, canvas.height / 4);
@@ -295,7 +295,7 @@ export default class TicketStats {
 				.toArray(),
 		]);
 
-		let sAgents = dbData[0],
+		const sAgents = dbData[0],
 			tickets = dbData[1],
 			userTickets = [],
 			resultsPerDay = [];
@@ -322,7 +322,7 @@ export default class TicketStats {
 
 		resultsPerDay.forEach((no, i) => resultsPerDay[i] = no / sAgents.length);
 
-		let chartData: ChartConfiguration = {
+		const chartData: ChartConfiguration = {
 				type: "line",
 				data: {
 					labels: this.last14Days(),

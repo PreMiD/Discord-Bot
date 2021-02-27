@@ -2,12 +2,7 @@ import axios from "axios";
 import { TextChannel } from "discord.js";
 import { client } from "../../";
 
-let { channels } = client.config,
-    cache = {
-        lastIncident: null,
-        lastUpdate: null,
-        incidentsSeen: 0
-    },
+const { channels } = client.config,
     colors = {
 		none: null,
 		minor: 0xfc9e43,
@@ -23,6 +18,12 @@ let { channels } = client.config,
         .split(" ")
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
+
+let cache = {
+    lastIncident: null,
+    lastUpdate: null,
+    incidentsSeen: 0
+}
 
 setInterval(async _ => {
     try {
@@ -108,7 +109,7 @@ export async function checkStatus() {
                     return { send: true, type: 1 };
                 } else return { send: false, type: null };
             } else {
-				let incidentCurr = incident.incident_updates[incident.incident_updates.length - 1];
+				const incidentCurr = incident.incident_updates[incident.incident_updates.length - 1];
 
 				cache.lastIncident = {
 					id: incident.id,

@@ -14,7 +14,7 @@ module.exports = {
         let coll = client.db.collection("tickets");
 
         if(args[0] == "step1") {
-            await coll.updateMany({ status: {$exists: false} }, { $set: { status: 3 } });
+            await coll.updateMany({ status: { $exists: false } }, { $set: { status: 3 } });
             await coll.updateMany({ status: 2 }, { $set: { status: 3 } });
             msg.reactions.removeAll();
             msg.react("✅");

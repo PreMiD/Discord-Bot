@@ -21,6 +21,7 @@
     "moment": "^2.29.1",
     "mongodb": "^3.6.3",
     "nanoid": "^3.1.20",
+    "node-schedule": "^2.0.0",
     "request": "^2.88.2"
   },
   "devDependencies": {
