@@ -19,7 +19,9 @@ export class PreMiD extends Client {
     readonly logger = Methods.createLogger();
     readonly config = require("../../config").default;
 
-    fetch       = (url: string, options?: object) => axios(url, options).catch(e => console.log(`${chalk.bgMagenta(` AXIOS `)} ${e}`));
+    fetch = (url: string, options?: object) =>
+        axios(url, options).catch(e => console.log(`${chalk.bgMagenta(` AXIOS `)} ${e}`));
+    
     info        = this.logger.info;
     debug       = this.logger.debug;
     error       = this.logger.error;
@@ -30,7 +32,6 @@ export class PreMiD extends Client {
     commands    = new Collection<string, Interfaces.Command>();
     aliases     = new Collection<string, Interfaces.Command>();
     infos       = new Collection<string, Interfaces.ShortInfo>();
-    
 
     Embed = MessageEmbed;
     
