@@ -1,7 +1,7 @@
 import { client } from "../../.."
 import UniformEmbed from "../../../util/UniformEmbed";
 
-module.exports = {
+export default {
     config: {
         name: "help",
         aliases: ["commands"],

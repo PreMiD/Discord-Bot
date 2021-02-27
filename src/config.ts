@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     main_guild: "493130730549805057",
     supportCategory: "811631193309052939",
     roles: {

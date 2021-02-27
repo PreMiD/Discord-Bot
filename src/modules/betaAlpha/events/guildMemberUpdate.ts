@@ -5,7 +5,7 @@ const betaUsers = client.db.collection("betaUsers"),
 	alphaUsers = client.db.collection("alphaUsers"),
     roles = client.config.roles;
 
-module.exports = {
+export default {
     name: "guildMemberUpdate",
     run: async (_, oldMember, newMember) => {
         //* Add beta access when the beta role is given.

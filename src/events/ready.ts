@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     name: "ready",
     type: "client",
     run: (client) => {

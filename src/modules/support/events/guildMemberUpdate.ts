@@ -4,7 +4,7 @@ import { Ticket } from "../classes/ticket";
 
 const coll = client.db.collection("tickets");
 
-module.exports = {
+export default {
     name: "guildMemberUpdate",
     run: async (client, oldM, newM) => {
         if (oldM.roles.cache.has(client.config.roles.ticketManager) && !newM.roles.cache.has(client.config.roles.ticketManager)) {

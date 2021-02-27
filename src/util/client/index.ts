@@ -17,7 +17,7 @@ export class PreMiD extends Client {
     db: Db;
     
     readonly logger = Methods.createLogger();
-    readonly config = require("../../config");
+    readonly config = require("../../config").default;
 
     fetch       = (url: string, options?: object) => axios(url, options).catch(e => console.log(`${chalk.bgMagenta(` AXIOS `)} ${e}`));
     info        = this.logger.info;

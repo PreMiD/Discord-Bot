@@ -6,7 +6,7 @@ const coll = client.db.collection("userSettings"),
 	alphaUsers = client.db.collection("alphaUsers"),
 	discordUsers = client.db.collection("discordUsers");
 
-module.exports = {
+export default {
     name: "guildMemberAdd",
     run: (client, member: GuildMember) => {
         coll.findOneAndDelete({ userId: member.id });

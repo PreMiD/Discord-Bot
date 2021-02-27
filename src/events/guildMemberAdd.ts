@@ -3,7 +3,7 @@ import { client } from ".."
 
 const coll = client.db.collection("presences"), discordUsers = client.db.collection("discordUsers");
 
-module.exports = {
+export default {
     name: "guildMemberAdd",
     run: async (client, member: GuildMember) => {
         const role = client.guilds.cache.get(client.config.main_guild).roles.find(r => r.id === client.config.roles.presence);

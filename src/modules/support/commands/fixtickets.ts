@@ -1,6 +1,6 @@
 import { MessageEmbed } from "discord.js";
 
-module.exports = {
+export default {
     config: {
         name: "fixtickets",
         aliases: [],

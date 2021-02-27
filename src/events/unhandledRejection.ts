@@ -1,6 +1,6 @@
 import { MessageEmbed, WebhookClient } from "discord.js";
 
-module.exports = {
+export default {
     name: "unhandledRejection",
     type: "process",
     run: (client, err) => {

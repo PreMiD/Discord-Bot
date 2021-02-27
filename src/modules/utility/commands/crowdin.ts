@@ -5,7 +5,7 @@ import { removeAllTranslatorRoles } from "../methods";
 
 const coll = client.db.collection("crowdin");
 
-module.exports = {
+export default {
     config: {
         name: "crowdin",
         aliases: [],

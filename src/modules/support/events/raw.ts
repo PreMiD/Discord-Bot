@@ -1,7 +1,7 @@
 import { TextChannel } from "discord.js";
 import { Ticket } from "../classes/ticket";
 
-module.exports = {
+export default {
     name: "raw",
     run: async (client, out) => {
         if(!["MESSAGE_REACTION_ADD"].includes(out.t) || !out.d.guild_id) return;

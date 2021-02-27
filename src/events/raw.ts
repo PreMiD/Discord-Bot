@@ -1,6 +1,6 @@
 import { GuildMember } from "discord.js";
 
-module.exports = {
+export default {
     name: "raw",
     run: async (client, out) => {
         if(out.t !== "INTERACTION_CREATE") return;

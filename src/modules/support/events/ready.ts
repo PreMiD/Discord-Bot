@@ -1,6 +1,6 @@
 import * as Methods from "../methods";
 
-module.exports = {
+export default {
     name: "ready",
     run: () => {
         Methods.sortTickets();

@@ -1,6 +1,6 @@
 // import { updateTranslators } from "../methods"
 
-module.exports = {
+export default {
     name: "ready",
     run: () => {
         // updateTranslators();

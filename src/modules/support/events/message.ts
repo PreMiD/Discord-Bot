@@ -1,6 +1,6 @@
 import { Ticket } from "../classes/ticket";
 
-module.exports = {
+export default {
     name: "message",
     run: async (client, msg) => {
         if(msg.author.bot) return;

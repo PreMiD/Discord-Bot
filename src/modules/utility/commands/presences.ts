@@ -3,7 +3,7 @@ import UniformEmbed from "../../../util/UniformEmbed";
 
 const coll = client.db.collection("presences");
 
-module.exports = {
+export default {
     config: {
         name: "presences",
         aliases: [],

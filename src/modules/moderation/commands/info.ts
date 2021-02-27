@@ -1,7 +1,7 @@
 import UniformEmbed from "../../../util/UniformEmbed";
 import { client } from "../../../";
 
-module.exports = {
+export default {
     config: {
         name: "info",
         aliases: [],

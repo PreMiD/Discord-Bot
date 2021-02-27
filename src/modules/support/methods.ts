@@ -7,7 +7,7 @@ import moment from "moment";
 const db = client.db;
 
 export const sortTickets = async () => {
-    const category = client.channels.cache.get(client.config.channels.ticketCat) as CategoryChannel;
+    const category = client.channels.cache.get(client.config.channels.ticketCategory) as CategoryChannel;
 
     if(!category) return;
 

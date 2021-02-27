@@ -2,7 +2,7 @@ import { client } from "../../.."
 
 const coll = client.db.collection("credits");
 
-module.exports = {
+export default {
     name: "presenceUpdate",
     run: (_, oldP, newP) => {
         if (!oldP || newP.status === oldP.status) return;

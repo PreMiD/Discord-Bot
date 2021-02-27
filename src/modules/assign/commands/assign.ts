@@ -3,7 +3,7 @@ import {assignRoles as roles, assignee} from "../config";
 
 let embed: Discord.MessageEmbed;
 
-module.exports = {
+export default {
     config: {
         name: "assign",
         aliases: [],

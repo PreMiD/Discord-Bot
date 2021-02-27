@@ -2,7 +2,7 @@ import {client} from "../../../";
 
 const coll = client.db.collection("tickets");
 
-module.exports = {
+export default {
     name: "guildMemberRemove",
     run: async (client, user) => {
         const tickets = await coll.find({ userId: user.id }).toArray();

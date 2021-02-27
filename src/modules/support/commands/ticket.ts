@@ -3,7 +3,7 @@ import { Ticket } from "../classes/ticket";
 
 import activity from "../../moderation/activity";
 
-module.exports = {
+export default {
     config: {
         name: "ticket",
         aliases: [],

@@ -4,7 +4,7 @@ import toggleTicketVisibility from "../toggleTicketVisibility";
 
 const coll = client.db.collection("userSettings");
 
-module.exports = {
+export default {
     config: {
         name: "preferences",
         description: "User settings.",
