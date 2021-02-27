@@ -161,11 +161,11 @@ export class Ticket {
 				},
 				{
 					id: this.user.id,
-					allow: channelPerms as any
+					allow: channelPerms
 				},
 				{
 					id: member.id,
-					allow: channelPerms as any
+					allow: channelPerms
 				}
             ].concat(
 				(

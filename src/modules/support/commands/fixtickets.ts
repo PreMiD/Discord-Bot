@@ -22,7 +22,7 @@ module.exports = {
         
         if(args[0] === "step2") {
             for await(const channel of client.channels.cache.get(client.config.channels.ticketCategory).children.map(x => x)) {
-                let ticket = await coll.findOne({ supportChannel: channel.id });
+                const ticket = await coll.findOne({ supportChannel: channel.id });
                 if(ticket) coll.findOneAndUpdate({ supportChannel: channel.id }, { $set: { status: 2 } });
             }
             msg.reactions.removeAll()
@@ -30,7 +30,7 @@ module.exports = {
         }
 
         if(args[0] === "step3") {
-            let embed = new MessageEmbed()
+            const embed = new MessageEmbed()
                 .setAuthor("PreMiD Support", client.user.avatarURL())
                 .addField("How does this work?", "To get started, simply send a message in this channel, explain clearly what your error is, and attach images where necessary! Once your message is sent, the bot will first confirm that you want to create this ticket, then our support agents will take over!")
                 .addField("How long do I have to wait?", "We have many agents on the team ready to assist, so hopefully not long!")

@@ -5,11 +5,11 @@ const modules = readdirSync(`${process.cwd()}/dist/modules/`, {withFileTypes: tr
 export const loadEvents = async (client) => {
     client.moduleCount = modules.length;
     modules.forEach(module => {
-        let eventsPath = `${module}/events/`;
+        const eventsPath = `${module}/events/`;
         if(existsSync(eventsPath)) 
             readdirSync(eventsPath).filter(x => x.endsWith(".js"))
                 .forEach(file => {
-                    let event = require(`${eventsPath}${file}`);
+                    const event = require(`${eventsPath}${file}`);
                     client.events.set(event.name, event);
                     client.on(event.name, (...args) => event.run(client, ...args));
                 });
@@ -17,7 +17,7 @@ export const loadEvents = async (client) => {
     
     readdirSync(`${process.cwd()}/dist/events/`).filter(x => x.endsWith(".js"))
     .forEach(file => {
-        let event = require(`${process.cwd()}/dist/events/${file}`);
+        const event = require(`${process.cwd()}/dist/events/${file}`);
         client.events.set(event.name+Math.random(), event);
         event.type && event.type !== "process"
             ? client.on(event.name, (...args) => event.run(client, ...args))
@@ -29,11 +29,11 @@ export const loadEvents = async (client) => {
 
 export const loadCommands = async (client) => {
     modules.forEach(async module => {
-        let commandsPath = `${module}/commands/`;
+        const commandsPath = `${module}/commands/`;
         if(existsSync(commandsPath)) 
             readdirSync(commandsPath).filter(x => x.endsWith(".js"))
                 .forEach(file => {
-                    let command = require(`${commandsPath}${file}`);
+                    const command = require(`${commandsPath}${file}`);
                     client.commands.set(command.config.name, command);
                     command.config.aliases.forEach(alias => client.aliases.set(alias, command));
                 })

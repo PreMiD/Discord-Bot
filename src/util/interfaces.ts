@@ -23,4 +23,12 @@ interface Event {
     run(client: Client, ...args: any[]): void;
 }
 
-export{Event, Command, Options};
+interface shortInfo {
+    title: string;
+	aliases: string[];
+	description: string;
+	color: string;
+	footer: boolean;
+}
+
+export{Event, Command, Options, shortInfo};

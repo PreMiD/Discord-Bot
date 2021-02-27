@@ -24,11 +24,13 @@ export class PreMiD extends Client {
     debug       = this.logger.debug;
     error       = this.logger.error;
     success     = this.logger.success;
-    infos       = new Collection<any, any>();
-    infoAliases = new Collection<any, any>();
+    
+    infoAliases = new Collection<string, string>();
+    events      = new Collection<string, Interfaces.Event>();
     commands    = new Collection<string, Interfaces.Command>();
     aliases     = new Collection<string, Interfaces.Command>();
-    events      = new Collection<string, Interfaces.Event>();
+    infos       = new Collection<string, Interfaces.shortInfo>();
+    
 
     Embed = MessageEmbed;
     
