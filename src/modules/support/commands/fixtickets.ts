@@ -4,7 +4,8 @@ module.exports = {
     config: {
         name: "fixtickets",
         aliases: [],
-        slashCommand: false
+        slashCommand: false,
+        hidden: true
     },
     run: async (client, msg, args) => {
         if(msg.author.id !== "506899274748133376") return;
