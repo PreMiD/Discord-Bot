@@ -328,11 +328,10 @@ export class Ticket {
         msg.delete();
 
         const args = [(arg[1] ?? arg[0])],
-            user = msg.mentions.users.first() 
-            || client.users.cache.get(args[0]) 
-            || msg.guild.members.cache.find(m => m.user.username.toLowerCase() === args[0].toLowerCase()) 
-            || await msg.guild.members.fetch(args[0]) 
-            || msg.author;
+            user = args[0] ? msg.mentions.users.first() 
+                : msg.guild.members.cache.find(m => m.user.username.toLowerCase() === args[0].toLowerCase()) 
+                ? await msg.guild.members.fetch(args[0]) 
+                :msg.author;
 
         if(!user) return msg.reply("I could not find that member.");
         if(this.userId === msg.author.id) return msg.reply("only supporters can remove people from the ticket!");

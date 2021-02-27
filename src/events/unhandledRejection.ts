@@ -4,6 +4,8 @@ module.exports = {
     name: "unhandledRejection",
     type: "process",
     run: (client, err) => {
+        client.error(err)
+
         const wh = process.env.ERRORSWEBHOOK.split(","),
 		hook = new WebhookClient(wh[0], wh[1]);
 

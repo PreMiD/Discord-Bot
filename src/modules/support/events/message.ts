@@ -70,6 +70,9 @@ module.exports = {
                 ticket.close(msg.author, args.slice(1).join(" "));
             else ticket.addSupporter(msg, args);
         }
-        if(msg.content.startsWith("<<")) ticket.removeSupporter(msg, args);
+        if(msg.content.startsWith("<<")) {
+            console.log(69)
+            ticket.removeSupporter(msg, args);
+        }
     }
 }
