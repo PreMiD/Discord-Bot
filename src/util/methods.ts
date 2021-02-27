@@ -4,7 +4,7 @@ export const createLogger = () => new (class Logger {
 	debug = (message: string) => console.log(`${chalk.bgRedBright("  ")} ${message}`);
 	error = (message: string)  => console.log(`${chalk.bgRed("  ")} ${message}`);
 	success = (message: string) => console.log(`${chalk.bgGreen("  ")} ${message}`);
-})
+})();
 
 export const elevation = async (client, userId) => {
     enum PermLevel {
