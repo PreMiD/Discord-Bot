@@ -236,7 +236,7 @@ export class Ticket {
 
         const user = client.users.cache.get(this.userId);
         try {
-            if(user) user.send(user.id === closer.id ? `You have closed your ticket (\`${this.id}\`)` : `Your ticket (\`${this.id}\`) has been closed by <@${closer.id}>. (Reason: \`${reason.length > 2 ? reason : "Not Specified"}\`)`, {
+            if(user) await user.send(user.id === closer.id ? `You have closed your ticket (\`${this.id}\`)` : `Your ticket (\`${this.id}\`) has been closed by <@${closer.id}>. (Reason: \`${reason.length > 2 ? reason : "Not Specified"}\`)`, {
                 files: [
                     {
                         attachment: `${process.cwd()}/TicketLogs/${this.id}.txt`,
