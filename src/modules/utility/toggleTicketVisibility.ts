@@ -6,7 +6,7 @@ const coll = client.db.collection("tickets"),
     tasksRunningFor = new Collection<Snowflake, {
 		visible: boolean;
 		interval: NodeJS.Timeout;
-		tickets: any[];
+		tickets: Ticket[];
 		itStatus: boolean;
 	}>();
 

@@ -5,16 +5,16 @@ module.exports = {
     type: "client",
     run: (client, msg) => {
         if(msg.channel.type === "dm") return;
-        let prefixes = ["p!", "p1", "/"];
+        const prefixes = ["p!", "p1", "/"];
         prefixes.forEach(async inp => {
-            let prefix = msg.content.match(new RegExp(`^<@!?${client.user.id}> `))
+            const prefix = msg.content.match(new RegExp(`^<@!?${client.user.id}> `))
                 ? msg.content.match(new RegExp(`^<@!?${client.user.id}> `))[0]
                 : msg.content.toLowerCase().startsWith(inp.toLowerCase()) 
                 ? inp : null;
 
             if(!prefix) return;
 
-            let args = msg.content.replace(prefix, "").split(" ").slice(1),
+            const args = msg.content.replace(prefix, "").split(" ").slice(1),
                 input = msg.content.replace(prefix, "").split(" ")[0].toLowerCase(),
                 cmd = client.commands.get(input) || client.aliases.get(input),
                 perms = await msg.client.elevation(client, msg.author.id);

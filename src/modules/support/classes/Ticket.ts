@@ -19,7 +19,10 @@ export class Ticket {
     status: Number;
     userId: string;
     user: GuildMember;
-    attachments: any[];
+    attachments: {
+        name: string;
+        link: string;
+    }[];
     acceptedAt: string;
     channel: TextChannel;
     ticketMessage: string;
@@ -30,7 +33,7 @@ export class Ticket {
     supporters: GuildMember[];
 
     async fetch(filter: "author" | "id" | "channel" | "message", input: string | Message | TextChannel) {
-        let ticket: any;
+        let ticket;
 
         filter === "channel" ? ticket = await coll.findOne({ supportChannel: input })
             : filter === "message" ? ticket = await coll.findOne({ ticketMessage: input })
