@@ -63,7 +63,7 @@ export const updateTopic = async() => {
             closed: (await coll.find({status: 3}).toArray()).length
         };
 
-    if(ticketCount === ticketData) return ticketData = ticketCount;
+    if(ticketCount === ticketData) return;
     ticketData = ticketCount;
 
     (client.channels.cache.get(client.config.channels.ticketChannel) as TextChannel)
