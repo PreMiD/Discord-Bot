@@ -16,7 +16,7 @@ const db = client.db,
 export class Ticket {
     id: string;
     tMsg: Message;
-    status: number;
+    status: 1 | 2;
     userId: string;
     user: GuildMember;
     attachments: {
@@ -121,7 +121,6 @@ export class Ticket {
                 
             coll.findOneAndUpdate({ticketId}, {
                 $set: {
-                    status: 1,
                     ticketId: this.id,
                     userId: message.author.id,
                     messageContent: message.content,
@@ -143,7 +142,7 @@ export class Ticket {
         } catch {};
         (client.channels.cache.get(client.config.channels.supportChannel) as TextChannel).permissionOverwrites.get(this.userId)?.delete();
         msg.delete();
-        coll.findOneAndUpdate({ticketId: this.id}, {$set: {status: 3}});
+        coll.findOneAndUpdate({ticketId: this.id}, {$set: {status: 2}});
     }
 
     async accept(member: GuildMember) {
@@ -225,7 +224,7 @@ export class Ticket {
 
 		this.addLog(`[ACCEPTED] Ticket accepted by ${this.user.user.tag}`);
         sortTickets();
-        coll.findOneAndUpdate({ticketId: this.id}, {$set: {status: 2, supportChannel: channel.id, supporters: [member.id], acceptedAt: Date.now(), supportMessage: msg.id}});
+        coll.findOneAndUpdate({ticketId: this.id}, {$set: {status: 1, supportChannel: channel.id, supporters: [member.id], acceptedAt: Date.now(), supportMessage: msg.id}});
     }
 
     async close(closer, reason?) {
@@ -250,7 +249,7 @@ export class Ticket {
         (client.channels.cache.get(client.config.channels.supportChannel) as TextChannel).permissionOverwrites.get(this.userId)?.delete();
         client.channels.cache.get(this.supportChannel).delete();
 
-        coll.findOneAndUpdate({ticketId: this.id}, {$set: {status: 3}});
+        coll.findOneAndUpdate({ticketId: this.id}, {$set: {status: 2}});
 
         const vars = getVars(process.env.TICKETLOGSWEBHOOK),
             webhook = new WebhookClient(vars.id, vars.token),

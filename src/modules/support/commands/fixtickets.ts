@@ -15,8 +15,8 @@ export default {
         const coll = client.db.collection("tickets");
 
         if(args[0] === "step1") {
-            await coll.updateMany({ status: { $exists: false } }, { $set: { status: 3 } });
-            await coll.updateMany({ status: 2 }, { $set: { status: 3 } });
+            await coll.updateMany({ status: { $exists: false } }, { $set: { status: 2 } });
+            await coll.updateMany({ status: 1 }, { $set: { status: 2 } });
             msg.reactions.removeAll();
             msg.react("✅");
         }
@@ -24,7 +24,7 @@ export default {
         if(args[0] === "step2") {
             for await(const channel of client.channels.cache.get(client.config.channels.ticketCategory).children.map(x => x)) {
                 const ticket = await coll.findOne({ supportChannel: channel.id });
-                if(ticket) coll.findOneAndUpdate({ supportChannel: channel.id }, { $set: { status: 2 } });
+                if(ticket) coll.findOneAndUpdate({ supportChannel: channel.id }, { $set: { status: 1 } });
             }
             msg.reactions.removeAll()
             msg.react("✅")

@@ -23,23 +23,22 @@ export default {
 
         if(!tMsg) return;
 
-        if(out.d.emoji.id === "521018476870107156" && ticket.status === 2) ticket.accept(member);
         if(out.d.emoji.name === "🚫") {
             tMsg.reactions.removeAll();
             tMsg.react("❤");
             tMsg.awaitReactions((r, u) => r.emoji.name === "❤" && u.id === out.d.user_id, { max: 1, time: 5 * 1000, errors: ["time"] })
                 .then(_ => {
-                    if(ticket.status === 2) return ticket.close(member.user, tMsg);
+                    if(ticket.status === 1) return ticket.close(member.user, tMsg);
                     else return ticket.delete(member.user, tMsg);
                 })
                 .catch(_ => {
                     tMsg.reactions.removeAll();
-                    if(ticket.status === 1) tMsg.react("521018476870107156");
+                    if(!ticket.status) tMsg.react("521018476870107156");
                     tMsg.react("🚫");
                 })
         };
 
-        if(out.d.emoji.name === "success" && ticket.status !== 2) {
+        if(out.d.emoji.name === "success" && !ticket.status) {
             ticket.accept(member);
             tMsg.reactions.removeAll();
             tMsg.react("🚫");
