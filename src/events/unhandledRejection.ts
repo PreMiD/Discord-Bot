@@ -1,8 +1,18 @@
+import { MessageEmbed, WebhookClient } from "discord.js";
+
 module.exports = {
     name: "unhandledRejection",
     type: "process",
-    run: (client, error) => {
-        if(error.stack.includes("DiscordAPIError: Missing Permissions")) return;
-        client.error(error.stack);
+    run: (client, err) => {
+        const wh = process.env.ERRORSWEBHOOK.split(","),
+		hook = new WebhookClient(wh[0], wh[1]);
+
+        hook.send(
+            new MessageEmbed({
+                title: "Discord-Bot",
+                color: "#ff5050",
+                description: `\`\`\`${err.stack.toString()}\`\`\``
+            })
+        );
     }
 };
