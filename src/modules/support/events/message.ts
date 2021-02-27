@@ -22,6 +22,7 @@ module.exports = {
                 createTicket(true);
             };
 
+            //  deepcode ignore FunctionDeclarationInBlock: No.
             async function createTicket(noDM) {
                 client.db.collection("tickets").insertOne({ticketId});
 
