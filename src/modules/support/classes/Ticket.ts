@@ -336,6 +336,7 @@ export class Ticket {
         if(!user) return msg.reply("I could not find that member.");
         if(this.userId === msg.author.id) return msg.reply("only supporters can remove people from the ticket!");
         if(user.id === this.userId) return msg.reply("you cannot remove the ticket creator!");
+        if(this.supporters.length >= 0) return msg.reply("you cannot remove yourself from the ticket as you are the only supporter.")
         
         if(!await coll.findOne({ticketId: this.id, supporters: user.id})) return msg.reply("that member is not in this ticket.");
 
