@@ -24,7 +24,7 @@ module.exports = {
             return await data.channel.send(data.member.toString(), await searchPresence(data.data.options[0].value));
 
         async function searchPresence(query) {
-            let presences = await coll.find({
+            const presences = await coll.find({
                         $or: [
                             { "metadata.url": { $regex: query, $options: "i" } },
                             { "metadata.tags": { $regex: query, $options: "i" } },
@@ -35,8 +35,9 @@ module.exports = {
                     }, { projection: { _id: false, metadata: true } 
                 })
                 .limit(5)
-                .toArray(),
-                descriptionFunsies = "";
+                .toArray()
+            
+            let descriptionFunsies = "";
 
             for(const result of presences) {
                 descriptionFunsies += `**[${

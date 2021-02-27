@@ -12,8 +12,8 @@ import shortInfos from "../../modules/moderation/short-infos";
 
 export class PreMiD extends Client {
     database: Promise<MongoClient>;
-    moduleCount: Number;
-    ttCount: Number;
+    moduleCount: number;
+    ttCount: number;
     db: Db;
     
     readonly logger = Methods.createLogger();
@@ -34,7 +34,7 @@ export class PreMiD extends Client {
     
     constructor(options?: Partial<Interfaces.Options>) { 
         super(options); 
-        for (let i in shortInfos) {
+        for (const i in shortInfos) {
             this.infos.set(i, shortInfos[i]);
             if (shortInfos[i].aliases) shortInfos[i].aliases.forEach((alias: string) => this.infoAliases.set(alias, i));
         }

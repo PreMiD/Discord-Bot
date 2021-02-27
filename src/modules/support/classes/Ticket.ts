@@ -16,7 +16,7 @@ const db = client.db,
 export class Ticket {
     id: string;
     tMsg: Message;
-    status: Number;
+    status: number;
     userId: string;
     user: GuildMember;
     attachments: {

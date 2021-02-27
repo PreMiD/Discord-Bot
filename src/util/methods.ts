@@ -16,7 +16,7 @@ export const elevation = async (client, userId) => {
         DEVELOPER = 5
     }
 
-    let permlvl: Number = 0;
+    let permlvl: number = 0;
 	const roles = client.config.roles,
 		member = client.guilds.resolve(client.config.main_guild).members.resolve(userId) || (await client.guilds.resolve(client.config.main_guild).members.fetch(userId));
 
