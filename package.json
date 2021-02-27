@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --unhandled-rejections=strict dist/index",
+    "start": "node dist/index",
     "compile": "yarn --silent && rimraf dist && tsc",
     "quick": "yarn compile && yarn start",
     "test": "echo \"Error: no test specified\" && exit 1"
