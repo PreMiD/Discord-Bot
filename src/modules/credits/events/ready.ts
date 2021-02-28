@@ -3,7 +3,7 @@ import schedule from "node-schedule";
 
 export default {
     name: "ready",
-    run: (client) => {
+    run: () => {
         schedule.scheduleJob("flag updater", "0 */6 * * *", updateFlags);
 
         updateCredits();

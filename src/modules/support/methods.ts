@@ -75,7 +75,7 @@ export const checkDuplicates = () => {
 
     channels.forEach((c: TextChannel) => {
         channels.forEach(async (c2: TextChannel) => {
-            if((c.name == c2.name) && (c.id !== c2.id)) {
+            if((c.name === c2.name) && (c.id !== c2.id)) {
                 const ticket = await coll.findOne({ supportChannel: c.id }),
                     ticket2 = await coll.findOne({ supportChannel: c2.id });
 
