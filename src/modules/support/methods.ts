@@ -68,3 +68,20 @@ export const updateTopic = async() => {
         
         channel.setTopic(`${content} | Last updated: ${moment(new Date()).format("DD/MM/YY LT")} (${Date().split("(")[1].replace(")", "").match(/[A-Z]/g).join("")})`);
 }
+
+export const checkDuplicates = () => {
+    const coll = client.db.collection("tickets"), channels = (client.channels.cache.get(client.config.channels.ticketCategory) as CategoryChannel).children;
+    console.log((client.channels.cache.get(client.config.channels.ticketCategory) as CategoryChannel).name)
+
+    channels.forEach((c: TextChannel) => {
+        channels.forEach(async (c2: TextChannel) => {
+            if((c.name == c2.name) && (c.id !== c2.id)) {
+                const ticket = await coll.findOne({ supportChannel: c.id }),
+                    ticket2 = await coll.findOne({ supportChannel: c2.id });
+
+                if(ticket && !ticket2) c2.delete();
+                if(!ticket && ticket2) c.delete();
+            }
+        })
+    })
+}
