@@ -15,5 +15,5 @@ export default {
     booster: "585532751663333383",
     proofreader: "522755339448483840",
     translator: "502148045991968788",
-    presenceDev: "606222296016879722",
+    presenceDev: "606222296016879722"
 };

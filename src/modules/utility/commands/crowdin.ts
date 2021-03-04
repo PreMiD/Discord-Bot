@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { client } from "../../.."
+import { client } from "../../..";
 import UniformEmbed from "../../../util/UniformEmbed";
 import { removeAllTranslatorRoles } from "../methods";
 
@@ -49,7 +49,7 @@ export default {
                     "#ff5050"
                 ))).delete({ timeout: 15 * 1000 });
         else {
-            if(!user) return 
+            if(!user) return; 
                 (await data.channel.send(data.member.toString(), new UniformEmbed(
                     { description: "You do not have your Crowdin account linked to your Discord account. Use `/crowdin link` to link it." },
                     ":globe_with_meridians: Crowdin",
@@ -66,4 +66,4 @@ export default {
             ))).delete({ timeout: 15 * 1000 });
         }
     }
-}
+};

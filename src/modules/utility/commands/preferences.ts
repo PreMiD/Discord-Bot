@@ -55,4 +55,4 @@ export default {
             })).delete({ timeout: 15 * 1000 });
         }
     }
-}
+};

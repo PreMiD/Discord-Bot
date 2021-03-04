@@ -47,9 +47,9 @@ export class PreMiD extends Client {
         this.debug("Database... connecting");
 		const db = await connect(process.env.MONGO_URI as string, {
 			useUnifiedTopology: true,
-			useNewUrlParser: true,
-        })
-        process.stdout.moveCursor(0, -1)
+			useNewUrlParser: true
+        });
+        process.stdout.moveCursor(0, -1);
         process.stdout.clearLine(1);
 		this.success("Database... connected");
         return db;
@@ -69,11 +69,11 @@ export class PreMiD extends Client {
         await loadCommands(this);
         await loadEvents(this);
 
-        this.info(`Loading modules (${this.moduleCount})`)
+        this.info(`Loading modules (${this.moduleCount})`);
         this.info(`Loaded commands (${this.commands.size})`);
 		this.info(`Loaded events (${this.events.size})`);
 
-        super.login(token).catch(this.logger.error)
+        super.login(token).catch(this.logger.error);
 
         return token as string;
     }

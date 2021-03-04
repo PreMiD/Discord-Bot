@@ -1,4 +1,4 @@
-import { Collection, Snowflake } from "discord.js"
+import { Collection, Snowflake } from "discord.js";
 import { client } from "../..";
 import { Ticket } from "../support/classes/ticket";
 
@@ -21,7 +21,7 @@ export default async (user, visible) => {
 		tickets,
 		itStatus: false
 	});
-}
+};
 
 async function run(user) {
 	const task = tasksRunningFor.get(user.id);

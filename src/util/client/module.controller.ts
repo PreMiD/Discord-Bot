@@ -13,7 +13,7 @@ export const loadEvents = async (client) => {
                     client.events.set(event.name+Math.random(), event);
                     client.on(event.name, (...args) => event.run(client, ...args));
                 });
-    })
+    });
     
     readdirSync(`${process.cwd()}/dist/events/`).filter(x => x.endsWith(".js"))
     .forEach(file => {
@@ -25,7 +25,7 @@ export const loadEvents = async (client) => {
     });
 
     return true;
-}
+};
 
 export const loadCommands = async (client) => {
     modules.forEach(async module => {
@@ -36,8 +36,8 @@ export const loadCommands = async (client) => {
                     const command = require(`${commandsPath}${file}`).default;
                     client.commands.set(command.config.name, command);
                     command.config.aliases.forEach(alias => client.aliases.set(alias, command));
-                })
-    })
+                });
+    });
 
     return true;
-}
+};

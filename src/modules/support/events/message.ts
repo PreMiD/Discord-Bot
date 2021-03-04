@@ -5,9 +5,9 @@ export default {
     run: async (client, msg) => {
         if(msg.author.bot) return;
         if(msg.channel.id === client.config.channels.supportChannel) {
-            if(msg.content.length < 20) {msg.delete();(await msg.reply("please specify atleast 20 characters when creating a ticket.")).delete({timeout: 10000});return;};
-            if(msg.content.toLowerCase().includes("discord.gg")) {msg.delete();(await msg.reply("invite links are not allowed in tickets!")).delete({timeout: 10000});return;};
-            if(msg.content.toLowerCase().includes("chromebook")) {msg.delete();msg.author.send("We noticed you mentioned the phrase \`chromebook\` in your ticket. We do not currently support chromebooks! Your ticket has been automatically closed.");return;};
+            if(msg.content.length < 20) {msg.delete();(await msg.reply("please specify atleast 20 characters when creating a ticket.")).delete({timeout: 10000});return}
+            if(msg.content.toLowerCase().includes("discord.gg")) {msg.delete();(await msg.reply("invite links are not allowed in tickets!")).delete({timeout: 10000});return}
+            if(msg.content.toLowerCase().includes("chromebook")) {msg.delete();msg.author.send("We noticed you mentioned the phrase \`chromebook\` in your ticket. We do not currently support chromebooks! Your ticket has been automatically closed.");return}
 
             const attachments = [],
                 mAttachments = msg.attachments.map(x => x),
@@ -16,11 +16,11 @@ export default {
                 ticketId = (ticketCount + 1).toString().padStart(5, "0");
 
             try {
-                await (await msg.author.send("Creating ticket...")).delete()
+                await (await msg.author.send("Creating ticket...")).delete();
                 createTicket(false);
             } catch {
                 createTicket(true);
-            };
+            }
 
             //  deepcode ignore FunctionDeclarationInBlock: No.
             async function createTicket(noDM) {
@@ -35,9 +35,8 @@ export default {
             }
         }
 
-        let ticket = new Ticket();
+        const ticket = new Ticket();
         if (!(await ticket.fetch("channel", msg.channel.id))) return;
-
 
         ticket.addLog(`[MESSAGE] ${msg.author.tag}: ${msg.content}`);
         client.db.collection("tickets").findOneAndUpdate({ ticketId: ticket.id }, { $set: { lastUserMessage: Date.now() } });
@@ -57,9 +56,9 @@ export default {
                     iconURL: msg.author.avatarURL()
                 } 
             }
-        })
+        });
 
-        let args = msg.content.replace(">>", "").replace("<<", "").split(" ");
+        const args = msg.content.replace(">>", "").replace("<<", "").split(" ");
 
         if(msg.content.startsWith(">>")) {
             if(msg.content.toLowerCase().includes("image") || msg.content.toLowerCase().includes("attach"))
@@ -72,4 +71,4 @@ export default {
         }
         if(msg.content.startsWith("<<")) ticket.removeSupporter(msg, args);
     }
-}
+};

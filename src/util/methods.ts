@@ -31,4 +31,4 @@ export const elevation = async (client, userId) => {
 	if (memberRoles.has(roles.developer)) permlvl = PermLevel.DEVELOPER;
 
 	return permlvl;
-}
+};

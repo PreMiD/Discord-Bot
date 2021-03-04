@@ -29,6 +29,6 @@ export default async(res, perms) => {
 				? await ticketStats.getTicketsPerDay()
 				: await ticketStats.getUserActivity(userActivity.id)
         ]
-    })
+    });
 
-}
+};

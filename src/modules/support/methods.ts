@@ -15,9 +15,9 @@ export const sortTickets = async () => {
 
     for(let i = 0; i< positions.size; i++) {
         const channel = positions.array()[i];
-        if(channel.position === i+1) await channel.setPosition(i + 1)
+        if(channel.position === i+1) await channel.setPosition(i + 1);
     }
-}
+};
 
 export const checkOldTickets = async () => {
     const category = client.channels.cache.get(client.config.channels.ticketCategory) as CategoryChannel,
@@ -44,14 +44,14 @@ export const checkOldTickets = async () => {
     for(let i = 0; i < ticketsTC.length; i++) {
         const ticket = new Ticket();
         if(await ticket.fetch("channel", ticketsTC[i].supportChannel))
-            ticket.close(client.user, "No response for 7 days.")
+            ticket.close(client.user, "No response for 7 days.");
     }
-}
+};
 
 export const getVars = url => {
 	const regexp = /^https:\/\/discord(app)?\.com\/api\/webhooks\/(\d{18})\/([\w-]{1,})$/;
 	return { id: regexp.exec(url)[2], token: regexp.exec(url)[3] };
-}
+};
 
 export const updateTopic = async() => {
     const coll = client.db.collection("tickets"),
@@ -62,16 +62,16 @@ export const updateTopic = async() => {
             closed: (await coll.find({status: 3}).toArray()).length
         },
         channel = (client.channels.cache.get(client.config.channels.ticketChannel) as TextChannel),
-        content = `${ticketCount.unclaimed} unclaimed • ${ticketCount.inProgress} in progress • ${ticketCount.closed} closed • ${total} total`
+        content = `${ticketCount.unclaimed} unclaimed • ${ticketCount.inProgress} in progress • ${ticketCount.closed} closed • ${total} total`;
         
         if(channel.topic.includes(content)) return;
         
         channel.setTopic(`${content} | Last updated: ${moment(new Date()).format("DD/MM/YY LT")} (${Date().split("(")[1].replace(")", "").match(/[A-Z]/g).join("")})`);
-}
+};
 
 export const checkDuplicates = () => {
     const coll = client.db.collection("tickets"), channels = (client.channels.cache.get(client.config.channels.ticketCategory) as CategoryChannel).children;
-    console.log((client.channels.cache.get(client.config.channels.ticketCategory) as CategoryChannel).name)
+    console.log((client.channels.cache.get(client.config.channels.ticketCategory) as CategoryChannel).name);
 
     channels.forEach((c: TextChannel) => {
         channels.forEach(async (c2: TextChannel) => {
@@ -82,6 +82,6 @@ export const checkDuplicates = () => {
                 if(ticket && !ticket2) c2.delete();
                 if(!ticket && ticket2) c.delete();
             }
-        })
-    })
-}
+        });
+    });
+};

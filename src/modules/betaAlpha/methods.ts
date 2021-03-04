@@ -1,6 +1,5 @@
 import { client } from "../..";
 
-
 const betaUserColl = client.db.collection("betaUsers"),
     discordUsers = client.db.collection("discordUsers");
 
@@ -29,7 +28,7 @@ export const updateDiscordUsers = async () => {
 			};
 		})
 	);
-}
+};
 
 export const updateBetaUsers = async () => {
     const betaUsers = await betaUserColl
@@ -47,4 +46,4 @@ export const updateBetaUsers = async () => {
     
     for (let i = 0; i < members.size; i++)
 		await members.array()[i].roles.add(client.config.roles.beta);
-}
+};

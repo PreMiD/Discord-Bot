@@ -5,7 +5,6 @@ export default {
         const roles = client.config.roles,
             col = client.db.collection("presences");
 
-
         client.success(`Connected as ${client.user.tag}`);
         client.user.setActivity(`premid.app`);
 
@@ -16,7 +15,7 @@ export default {
         setInterval(() => {
             updatePresenceAuthors();
             updateBoosters();
-        }, 15 * 60 * 1000)
+        }, 15 * 60 * 1000);
 
         async function updatePresenceAuthors() {
             const guild = client.guilds.cache.get("493130730549805057"),
@@ -65,4 +64,4 @@ export default {
             }
         }
     }
-}
+};

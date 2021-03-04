@@ -75,7 +75,7 @@ export const updateTranslators = async() => {
 
         return members;
     }
-}
+};
 
 async function removeAllTranslatorRoles(member) {
     const langRoles = member.guild.roles.cache.array().filter(r => langNames.find(ln => ln === r.name)),

@@ -11,9 +11,9 @@ export default {
             const tickets = await coll.find({ supporters: oldM.id }).toArray();
 
             tickets.forEach(async x => {
-                let t = new Ticket();
+                const t = new Ticket();
                 if(await t.fetch("channel", x.supportChannel)) {
-                    let channel = (client.channels.cache.get(t.supportChannel) as TextChannel);
+                    const channel = (client.channels.cache.get(t.supportChannel) as TextChannel);
                     console.log(x.ticketId);
                     channel.updateOverwrite(oldM.id, {
                         VIEW_CHANNEL: false,
@@ -23,11 +23,11 @@ export default {
                         USE_EXTERNAL_EMOJIS: false
                     });
                     
-                    coll.findOneAndUpdate({ ticketId: x.ticetId }, { $pull: { supporters: oldM.user.id } })
+                    coll.findOneAndUpdate({ ticketId: x.ticetId }, { $pull: { supporters: oldM.user.id } });
 
                     if(x.supporters.length <=1) channel.send("**>>** Awaiting new supporter...");
                 }
             });
         }
     }
-}
+};

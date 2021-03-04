@@ -1,5 +1,5 @@
 import { GuildMember } from "discord.js";
-import { client } from ".."
+import { client } from "..";
 
 const coll = client.db.collection("userSettings"),
 	betaUsers = client.db.collection("betaUsers"),
@@ -14,4 +14,4 @@ export default {
         alphaUsers.findOneAndDelete({ userId: member.id });
         discordUsers.findOneAndDelete({ userId: member.id });
     }
-}
+};

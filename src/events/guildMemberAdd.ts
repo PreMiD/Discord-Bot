@@ -1,5 +1,5 @@
 import { GuildMember } from "discord.js";
-import { client } from ".."
+import { client } from "..";
 
 const coll = client.db.collection("presences"), discordUsers = client.db.collection("discordUsers");
 
@@ -22,4 +22,4 @@ export default {
             { upsert: true }
         );
     }
-}
+};

@@ -1,4 +1,4 @@
-import { client } from "../../.."
+import { client } from "../../..";
 
 const coll = client.db.collection("credits");
 
@@ -11,4 +11,4 @@ export default {
             { $set: { status: newP.status } }
         );
     }
-}
+};

@@ -11,4 +11,4 @@ export default {
             if(x.status !== 3) x.close(client.user, "Creator left server.");
         });
     }
-}
+};

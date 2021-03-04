@@ -26,4 +26,4 @@ export default {
             data.channel.send(embed);
         }
     }
-}
+};

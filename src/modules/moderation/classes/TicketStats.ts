@@ -20,8 +20,8 @@ export default class TicketStats {
 						acceptedAt: {
 							$gt: new Date(
 								new Date().getTime() - 14 * 24 * 60 * 60 * 1000
-							).valueOf(),
-						},
+							).valueOf()
+						}
 					},
 					{ projection: { _id: false } }
 				)
@@ -49,9 +49,9 @@ export default class TicketStats {
 							backgroundColor: "rgba(114, 137, 218, 0.5)",
 							borderColor: "rgba(179, 174, 255, 1)",
 							borderWidth: 1,
-							data: tickets,
-						},
-					],
+							data: tickets
+						}
+					]
 				},
 				options: {
 					scales: {
@@ -62,25 +62,25 @@ export default class TicketStats {
 									stepSize: 10,
 									min: 0,
 									max: 80,
-									beginAtZero: true,
-								},
-							},
+									beginAtZero: true
+								}
+							}
 						],
 						xAxes: [
 							{
 								ticks: {
-									fontColor: "#c3c3c3",
-								},
-							},
-						],
+									fontColor: "#c3c3c3"
+								}
+							}
+						]
 					},
 					legend: {
 						display: true,
 						labels: {
-							fontColor: "#ffffff",
-						},
-					},
-				},
+							fontColor: "#ffffff"
+						}
+					}
+				}
 			},
 			canvas = await this.createCanvas(),
 			ctx = canvas.getContext("2d"),
@@ -117,8 +117,8 @@ export default class TicketStats {
 						acceptedAt: {
 							$gt: new Date(
 								new Date().getTime() - 10 * 24 * 60 * 60 * 1000
-							).valueOf(),
-						},
+							).valueOf()
+						}
 					},
 					{ projection: { _id: false } }
 				)
@@ -131,9 +131,9 @@ export default class TicketStats {
 						acceptedAt: {
 							$gt: new Date(
 								new Date().getTime() - 10 * 24 * 60 * 60 * 1000
-							).valueOf(),
+							).valueOf()
 						},
-						supporters: { $in: [userId] },
+						supporters: { $in: [userId] }
 					},
 					{ projection: { _id: false } }
 				)
@@ -145,19 +145,19 @@ export default class TicketStats {
 						acceptedAt: {
 							$gt: new Date(
 								new Date().getTime() - 10 * 24 * 60 * 60 * 1000
-							).valueOf(),
-						},
+							).valueOf()
+						}
 					},
 					{ projection: { _id: false } }
 				)
-				.toArray(),
-		]);
+				.toArray()
+		]),
 
-		const userTickets = {
+		 userTickets = {
 				acceptedTickets: [],
 				joinedTickets: [],
 				a: { allDates: [], counts: {} },
-				j: { allDates: [], counts: {} },
+				j: { allDates: [], counts: {} }
 			},
 			accepted = [],
 			joined = [];
@@ -188,7 +188,7 @@ export default class TicketStats {
 							borderColor: "#7289da",
 							pointBackgroundColor: "#7289da",
 							pointRadius: 3,
-							data: accepted,
+							data: accepted
 						},
 						{
 							label: "Joined tickets",
@@ -196,9 +196,9 @@ export default class TicketStats {
 							borderDash: [5, 5],
 							pointBackgroundColor: "#7E51C2",
 							pointRadius: 3,
-							data: joined,
-						},
-					],
+							data: joined
+						}
+					]
 				},
 				options: {
 					scales: {
@@ -208,31 +208,31 @@ export default class TicketStats {
 									fontColor: "#eaeaea",
 									stepSize: 2,
 									min: 0,
-									max: 16,
-								},
-							},
+									max: 16
+								}
+							}
 						],
 						xAxes: [
 							{
 								ticks: {
-									fontColor: "#c3c3c3",
-								},
-							},
-						],
+									fontColor: "#c3c3c3"
+								}
+							}
+						]
 					},
 					legend: {
 						display: true,
 						labels: {
-							fontColor: "#ffffff",
-						},
-					},
-				},
+							fontColor: "#ffffff"
+						}
+					}
+				}
 			},
 			canvas = await this.createCanvas("../img/pattern.png"),
 			ctx = canvas.getContext("2d"),
 			canvasRender = new CanvasRenderService(620, 300),
 			chartDataURL = await canvasRender.renderToDataURL(chartData),
-			user = dbData[0]
+			user = dbData[0];
 
 		ctx.font = "28px 'Inter Bold'";
 		ctx.fillStyle = "#ffffff";
@@ -280,22 +280,22 @@ export default class TicketStats {
 						acceptedAt: {
 							$gt: new Date(
 								new Date().getTime() - 14 * 24 * 60 * 60 * 1000
-							).valueOf(),
-						},
+							).valueOf()
+						}
 					},
 					{
 						projection: {
 							_id: false,
 							accepter: true,
 							supporters: true,
-							timestamp: true,
-						},
+							timestamp: true
+						}
 					}
 				)
-				.toArray(),
-		]);
+				.toArray()
+		]),
 
-		const sAgents = dbData[0],
+		 sAgents = dbData[0],
 			tickets = dbData[1],
 			userTickets = [],
 			resultsPerDay = [];
@@ -332,9 +332,9 @@ export default class TicketStats {
 							borderColor: "#7289da",
 							pointBackgroundColor: "#7289da",
 							pointRadius: 3,
-							data: resultsPerDay,
-						},
-					],
+							data: resultsPerDay
+						}
+					]
 				},
 				options: {
 					scales: {
@@ -344,25 +344,25 @@ export default class TicketStats {
 									fontColor: "#eaeaea",
 									stepSize: 2,
 									min: 0,
-									max: 8,
-								},
-							},
+									max: 8
+								}
+							}
 						],
 						xAxes: [
 							{
 								ticks: {
-									fontColor: "#c3c3c3",
-								},
-							},
-						],
+									fontColor: "#c3c3c3"
+								}
+							}
+						]
 					},
 					legend: {
 						display: true,
 						labels: {
-							fontColor: "#ffffff",
-						},
-					},
-				},
+							fontColor: "#ffffff"
+						}
+					}
+				}
 			},
 			canvas = await this.createCanvas(),
 			ctx = canvas.getContext("2d"),
@@ -401,16 +401,16 @@ export default class TicketStats {
 	}
 
 	formatDate(date) {
-		var dd = date.getDate(), mm = date.getMonth() + 1;
+		let dd = date.getDate(), mm = date.getMonth() + 1;
 		if (dd < 10) dd = "0" + dd;
 		if (mm < 10) mm = "0" + mm;
 		return dd + "/" + mm;
 	}
 
 	last14Days() {
-		var result = [];
-		for (var i = 0; i < 14; i++) {
-			var d = new Date();
+		const result = [];
+		for (let i = 0; i < 14; i++) {
+			const d = new Date();
 			d.setDate(d.getDate() - i);
 			result.push(this.formatDate(d));
 		}

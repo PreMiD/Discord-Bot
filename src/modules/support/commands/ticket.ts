@@ -13,7 +13,7 @@ export default {
         switch (data.data.options[0].name) {
             case "activity": return activity(data, perms);
             case "close": {
-                const ticket = new Ticket()
+                const ticket = new Ticket();
                 let ticketFound: boolean;
     
                 if(data.channel.parent.id === data.supportCategory) ticketFound = await ticket.fetch("channel", data.channel.id);
@@ -24,4 +24,4 @@ export default {
             }
         }
     }
-}
+};

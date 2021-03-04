@@ -4,7 +4,7 @@ import { PreMiD } from "./util/client";
 env.config();
 
 const client = new PreMiD({
-		token: process.env.TOKEN,
+		token: process.env.TOKEN
 	}),  
 	db = client.db;
 

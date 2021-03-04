@@ -1,4 +1,4 @@
-import { client } from "../.."
+import { client } from "../..";
 import creditRoles from "./creditRoles";
 
 const creditsColl = client.db.collection("credits"),
@@ -6,16 +6,16 @@ const creditsColl = client.db.collection("credits"),
 
 export const updateCredits = async () => {
     const settings = await userSettingsColl.find({}).toArray(),
-        creditRolesValues = Object.values(creditRoles);
+        creditRolesValues = Object.values(creditRoles),
 
-    const creditUsers = client.guilds.cache.get(client.config.main_guild).members.cache;
+     creditUsers = client.guilds.cache.get(client.config.main_guild).members.cache;
     creditUsers.sweep(m => {
         const s = settings.find(s => s.userId === m.id);
         if(typeof s !== "undefined" && !s.showContributor) return true;
         else return !creditRolesValues.some(c => m.roles.cache.has(c));
     });
 
-    let credits = creditUsers.map(m => {
+    const credits = creditUsers.map(m => {
         const highestRole = m.roles.cache.get(containsAny(Object.values(creditRoles), m.roles.cache.keyArray())[0]),
             colorRole = m.roles.cache
                 .filter(x => x.hexColor !== "#000000")
@@ -43,9 +43,9 @@ export const updateCredits = async () => {
             rolePosition: highestRole.position,
             status: m.user.presence.status
         };
-    })
+    }),
 
-    const arr = credits.map(cU => {
+     arr = credits.map(cU => {
         return {
             updateOne: {
                 filter: { userId: cU.userId },
@@ -53,7 +53,7 @@ export const updateCredits = async () => {
                 upsert: true
             }
         };
-    })
+    });
 
     if(arr.length > 0) await creditsColl.bulkWrite(arr);
 
@@ -66,7 +66,7 @@ export const updateCredits = async () => {
 				return { deleteOne: { filter: { userId: uTR.userId } } };
 			})
 		);
-}
+};
 
 export const updateFlags = async () => {
 	const flagUsers = [];
@@ -99,8 +99,7 @@ export const updateFlags = async () => {
 			};
 		})
 	);
-}
-
+};
 
 function containsAny(source: Array<string>, target: Array<string>) {
 	return source.filter(item => target.indexOf(item) > -1);

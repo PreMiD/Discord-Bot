@@ -13,8 +13,8 @@ export default {
                 : client.ws.ping > 250 && client.ws.ping < 500
                 ? "#ffff50"
                 : "#ff5050"
-        }
+        };
 
         if(data) data.channel.send({embed});
     }
-}
+};

@@ -26,8 +26,8 @@ export default {
                 const ticket = await coll.findOne({ supportChannel: channel.id });
                 if(ticket) coll.findOneAndUpdate({ supportChannel: channel.id }, { $set: { status: 1 } });
             }
-            msg.reactions.removeAll()
-            msg.react("✅")
+            msg.reactions.removeAll();
+            msg.react("✅");
         }
 
         if(args[0] === "step3") {
@@ -40,4 +40,4 @@ export default {
             msg.channel.send(embed);
         }
     }
-}
+};

@@ -13,4 +13,4 @@ export default {
         setInterval(Methods.checkDuplicates, 10 * 1000);
         setInterval(Methods.checkOldTickets, 15 * 60 * 1000);
     }
-}
+};

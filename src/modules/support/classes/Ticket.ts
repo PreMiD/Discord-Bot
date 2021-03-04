@@ -12,7 +12,6 @@ const db = client.db,
     coll = db.collection("tickets"),
     circleFolder = "https://github.com/PreMiD/Discord-Bot/blob/main/.discord/";
 
-
 export class Ticket {
     id: string;
     tMsg: Message;
@@ -70,7 +69,6 @@ export class Ticket {
                     description: `Before your ticket is created, please have a look through our support guide to see if it can help with your issue!\nhttps://docs.premid.app/troubleshooting\n\n**Continue creating ticket?**`
                 }
             });
-            
 
             msg.react("521018476870107156").then(_ => msg.react("❌"));
 
@@ -85,7 +83,7 @@ export class Ticket {
             cancel.on("collect", _ => {
                 (client.channels.cache.get(client.config.channels.supportChannel) as TextChannel).permissionOverwrites.get(this.userId)?.delete();
                 msg.delete();
-            })
+            });
         } else {
             client.ttCount = client.ttCount ? Number(client.ttCount) + 1 : 1;
             setTimeout(() => client.ttCount = Number(client.ttCount) - 1, 60000);
@@ -117,7 +115,7 @@ export class Ticket {
                 await message.author.send(`Your ticket (\`${ticketId}\`) has been submitted!`);
             } catch {
                 (await (message.channel.send(`${message.author}, your ticket has been submitted!`))).delete({ timeout: 7 * 1000 });
-            };
+            }
                 
             coll.findOneAndUpdate({ticketId}, {
                 $set: {
@@ -132,14 +130,14 @@ export class Ticket {
                         `[${moment(new Date()).format("DD/MM/YY LT")} (${Date().split("(")[1].replace(")", "").match(/[A-Z]/g).join("")})] [TICKET CREATED] Awaiting supporter!`
                     ]
                 }
-            })
+            });
         }
     }
 
     async delete(closer, msg) {
         try {
             await client.users.cache.get(this.userId).send(`Your ticket (\`${this.id}\`) has been rejected by <@${closer.id}>`);
-        } catch {};
+        } catch {}
         (client.channels.cache.get(client.config.channels.supportChannel) as TextChannel).permissionOverwrites.get(this.userId)?.delete();
         msg.delete();
         coll.findOneAndUpdate({ticketId: this.id}, {$set: {status: 2}});
@@ -155,9 +153,9 @@ export class Ticket {
 			"EMBED_LINKS",
 			"ATTACH_FILES",
 			"USE_EXTERNAL_EMOJIS"
-		];
+		],
 
-        const channel = await ticketCategory.guild.channels.create(this.id, {
+         channel = await ticketCategory.guild.channels.create(this.id, {
             parent: ticketCategory.id,
             permissionOverwrites: [
                 {
@@ -185,9 +183,9 @@ export class Ticket {
 					};
 				})
 			) as OverwriteResolvable[]
-        });
+        }),
 
-        const embed = {
+         embed = {
             author: {
                 name: `#${this.id} [Pending]`,
                 iconURL: `${circleFolder}yellow_circle.png?raw=true`
@@ -243,7 +241,7 @@ export class Ticket {
                     }
                 ]
             });
-        } catch {};
+        } catch {}
 
         (await (client.channels.cache.get(client.config.channels.ticketChannel) as TextChannel).messages.fetch(this.ticketMessage as string)).delete();
         (client.channels.cache.get(client.config.channels.supportChannel) as TextChannel).permissionOverwrites.get(this.userId)?.delete();
@@ -286,7 +284,7 @@ export class Ticket {
                         name: `Ticket-${this.id}.txt`
                     }
                 ]
-            })
+            });
 
             setTimeout(() => rimraf(`${process.cwd()}/TicketLogs/${this.id}.txt`, () => {}), 20000);
     }
@@ -313,7 +311,7 @@ export class Ticket {
             EMBED_LINKS: true,
             ATTACH_FILES: true,
             USE_EXTERNAL_EMOJIS: true
-        })
+        });
 
         coll.findOneAndUpdate({ticketId: this.id}, {$push: {supporters: user.id}});
 
@@ -335,7 +333,7 @@ export class Ticket {
         if(!user) return msg.reply("I could not find that member.");
         if(this.userId === msg.author.id) return msg.reply("only supporters can remove people from the ticket!");
         if(user.id === this.userId) return msg.reply("you cannot remove the ticket creator!");
-        if(this.supporters.length <= 0) return msg.reply("you cannot remove yourself from the ticket as you are the only supporter.")
+        if(this.supporters.length <= 0) return msg.reply("you cannot remove yourself from the ticket as you are the only supporter.");
         
         if(!await coll.findOne({ticketId: this.id, supporters: user.id})) return msg.reply("that member is not in this ticket.");
 
@@ -347,7 +345,7 @@ export class Ticket {
             EMBED_LINKS: false,
             ATTACH_FILES: false,
             USE_EXTERNAL_EMOJIS: false
-        })
+        });
 
         coll.findOneAndUpdate({ticketId: this.id}, {$pull: {supporters: user.id}});
 
@@ -381,18 +379,18 @@ export class Ticket {
             }
         });
 
-        coll.findOneAndUpdate({ticketId: this.id}, {$push: { attachments: {name: `${imgId}-${attachment.name}`, link: `https://cdn.rcd.gg/ticket/${this.id}/${imgId}-${attachment.name}`}}})
+        coll.findOneAndUpdate({ticketId: this.id}, {$push: { attachments: {name: `${imgId}-${attachment.name}`, link: `https://cdn.rcd.gg/ticket/${this.id}/${imgId}-${attachment.name}`}}});
 
         if(msg) {
             msg.channel.send(`**>>** ${msg.author} has attached ${attachment.name} (<https://cdn.rcd.gg/ticket/${this.id}/${imgId}-${attachment.name}>)`);
             msg.delete();
-            this.updateSupportersEmbed(msg, true)
+            this.updateSupportersEmbed(msg, true);
         }
         return {name: `${imgId}-${attachment.name}`, link: `https://cdn.rcd.gg/ticket/${this.id}/${imgId}-${attachment.name}`};
     }
 
     addLog(input: string) {
-        coll.findOneAndUpdate({ticketId: this.id}, {$push: {logs: `[${moment(new Date()).format("DD/MM/YY LT")} (${Date().split("(")[1].replace(")", "").match(/[A-Z]/g).join("")})] ${input}`}})
+        coll.findOneAndUpdate({ticketId: this.id}, {$push: {logs: `[${moment(new Date()).format("DD/MM/YY LT")} (${Date().split("(")[1].replace(")", "").match(/[A-Z]/g).join("")})] ${input}`}});
     }
     
     closeWarning() {

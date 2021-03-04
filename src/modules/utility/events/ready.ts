@@ -1,4 +1,4 @@
-import { updateTranslators } from "../methods"
+import { updateTranslators } from "../methods";
 
 export default {
     name: "ready",
@@ -6,4 +6,4 @@ export default {
         updateTranslators();
         setInterval(updateTranslators, 60000);
     }
-}
+};

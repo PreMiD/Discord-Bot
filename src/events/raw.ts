@@ -18,4 +18,4 @@ export default {
 
         cmd.run(data, perms, client);
     }
-}
+};

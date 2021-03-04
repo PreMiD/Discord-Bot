@@ -1,4 +1,4 @@
-import { client } from "../../.."
+import { client } from "../../..";
 import UniformEmbed from "../../../util/UniformEmbed";
 
 export default {
@@ -17,4 +17,4 @@ export default {
 
         (await data.channel.send(data.member.toString(), embed)).delete({ timeout: 15 * 1000 });
     }
-}
+};

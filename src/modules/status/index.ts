@@ -17,13 +17,13 @@ const { channels } = client.config,
         .toLowerCase()
         .split(" ")
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
+        .join(" "),
 
-let cache = {
+ cache = {
     lastIncident: null,
     lastUpdate: null,
     incidentsSeen: 0
-}
+};
 
 setInterval(async _ => {
     try {
@@ -62,7 +62,7 @@ setInterval(async _ => {
 						description: u.body,
 						timestamp: u.createdAt
                     }
-                })
+                });
             }
 
             if(res.type === 2) {
@@ -82,8 +82,8 @@ setInterval(async _ => {
                 });
             }
         }
-    } catch (e) { console.error(e); }
-}, time)
+    } catch (e) { console.error(e) }
+}, time);
 
 export async function checkStatus() {
     try {
@@ -133,5 +133,5 @@ export async function checkStatus() {
             }
         } else if (cache.lastIncident !== null) return { send: true, type: 2 };
 			else return { send: false, type: null };
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error(e) }
 }

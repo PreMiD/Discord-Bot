@@ -9,7 +9,7 @@ export default {
         aliases: [],
         slashCommand: false
     }, run: (client, message, args) => {
-        let roleCheck: {
+        const roleCheck: {
             minecraft?: string;
             linuxTest?: string;
             vacation?: string;
@@ -29,7 +29,7 @@ export default {
             if(message.member.roles.cache.has(assignee.staff)) roleCheck.vacation = roles.vacation;
         }
     
-        let discordRoles: Discord.Role[] = Object.values(roleCheck)
+        const discordRoles: Discord.Role[] = Object.values(roleCheck)
             .map(r => message.guild.roles.cache.get(r))
             .filter(v => v != undefined);
     
@@ -41,7 +41,7 @@ export default {
                 \`\`p!assign <roleName> [optionally tag a member to remove the role from]\`\`*
     
                 ${discordRoles.map((r) => `**${r.name}**`).join(", ")}`,
-                color: "#7289DA",
+                color: "#7289DA"
             });
     
             return message.channel.send(embed).then(msg => (msg as Discord.Message).delete({ timeout: 10 * 1000 }));
@@ -56,7 +56,7 @@ export default {
             embed = new Discord.MessageEmbed({
                 title: "Unassign",
                 description: `Role **${args.join(" ")}** does not exist.`,
-                color: "#ff5050",
+                color: "#ff5050"
             });
 
             return message.channel.send(embed).then(msg => (msg as Discord.Message).delete({ timeout: 10 * 1000 }));
@@ -78,7 +78,7 @@ export default {
                 embed = new Discord.MessageEmbed({
                     title: "Unassign",
                     description: `You do not have permission to remove the role from user **${mentioned.displayName}**.`,
-                    color: "#ff5050",
+                    color: "#ff5050"
                 });
     
                 return message.channel.send(embed).then((msg) => (msg as Discord.Message).delete({ timeout: 10 * 1000 }));
@@ -110,9 +110,9 @@ export default {
         embed = new Discord.MessageEmbed({
             title: "Unassign",
             description,
-            color,
+            color
         });
 
         message.channel.send(embed).then(msg => msg.delete({ timeout: 10 * 1000 }));
     }
-}
+};

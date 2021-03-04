@@ -6,12 +6,12 @@ export default {
     run: async (client, out) => {
         if(!["MESSAGE_REACTION_ADD"].includes(out.t) || !out.d.guild_id) return;
 
-        let guild = client.guilds.cache.get(out.d.guild_id),
+        const guild = client.guilds.cache.get(out.d.guild_id),
             member = await guild.members.fetch(out.d.user_id);
         
         if(!member || member.user.bot) return;
 
-        let ticket = new Ticket();
+        const ticket = new Ticket();
         if (!(await ticket.fetch("message", out.d.message_id))) return;
 
         let tMsg;
@@ -35,8 +35,8 @@ export default {
                     tMsg.reactions.removeAll();
                     if(!ticket.status) tMsg.react("521018476870107156");
                     tMsg.react("🚫");
-                })
-        };
+                });
+        }
 
         if(out.d.emoji.name === "success" && !ticket.status) {
             ticket.accept(member);
@@ -44,4 +44,4 @@ export default {
             tMsg.react("🚫");
         }
     }
-}
+};

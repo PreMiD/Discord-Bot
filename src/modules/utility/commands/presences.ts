@@ -35,7 +35,7 @@ export default {
                     }, { projection: { _id: false, metadata: true } 
                 })
                 .limit(5)
-                .toArray()
+                .toArray();
             
             let descriptionFunsies = "";
 
@@ -52,7 +52,7 @@ export default {
                     result.metadata.author.name
                 }!\n_")`;
                 
-                let desc = result.metadata.description.en;
+                const desc = result.metadata.description.en;
                 descriptionFunsies += `${desc.length > 100 ? desc.substr(0, 100) + "..." : desc}_\n\n`;
             }
             if(presences[0])
@@ -67,14 +67,14 @@ export default {
                     },
                     `:mag_right: Presences • Search`,
                     presences[0].metadata.color
-                )
+                );
             else return new UniformEmbed(
                 {
                     description: `No results for query: \`${query}\``
                 },
                 ":mag_right: Presences • Error",
                 "#ff5050"
-            )
+            );
         }
     }
-}
+};

@@ -1,4 +1,4 @@
-import { updateCredits, updateFlags } from "../methods"
+import { updateCredits, updateFlags } from "../methods";
 import schedule from "node-schedule";
 
 export default {
@@ -9,4 +9,4 @@ export default {
         updateCredits();
         setInterval(updateCredits, 15 * 1000);
     }
-}
+};

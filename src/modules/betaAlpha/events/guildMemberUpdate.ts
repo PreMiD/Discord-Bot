@@ -1,6 +1,5 @@
 import { client } from "../../..";
 
-
 const betaUsers = client.db.collection("betaUsers"),
 	alphaUsers = client.db.collection("alphaUsers"),
     roles = client.config.roles;
@@ -121,4 +120,4 @@ export default {
             return;
         }
     }
-}
+};
