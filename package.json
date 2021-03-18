@@ -2,7 +2,7 @@
 	"name": "premid-bot",
 	"description": "Official PreMiD Discord Bot.",
 	"repository": "https://github.com/PreMiD/Discord-Bot",
-	"version": "2.5.0",
+	"version": "2.5.1",
 	"scripts": {
 		"start": "cd dist && node index",
 		"compile": "yarn --silent && rimraf dist && tsc && devScript --copyOnly",
