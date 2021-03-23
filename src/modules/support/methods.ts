@@ -71,7 +71,6 @@ export const updateTopic = async() => {
 
 export const checkDuplicates = () => {
     const coll = client.db.collection("tickets"), channels = (client.channels.cache.get(client.config.channels.ticketCategory) as CategoryChannel).children;
-    console.log((client.channels.cache.get(client.config.channels.ticketCategory) as CategoryChannel).name);
 
     channels.forEach((c: TextChannel) => {
         channels.forEach(async (c2: TextChannel) => {

@@ -1,14 +1,13 @@
 import axios from "axios";
 import chalk from "chalk";
-
 import { Client, Collection, MessageEmbed } from "discord.js";
 import { connect, Db, MongoClient } from "mongodb";
 
-import {loadEvents, loadCommands} from "./module.controller";
-
-import * as Interfaces from '../interfaces';
-import * as Methods from '../Methods';
+import { logger } from "../..";
 import shortInfos from "../../modules/moderation/short-infos";
+import * as Interfaces from "../interfaces";
+import * as Methods from "../Methods";
+import { loadCommands, loadEvents } from "./module.controller";
 
 export class PreMiD extends Client {
     database: Promise<MongoClient>;
@@ -16,22 +15,21 @@ export class PreMiD extends Client {
     ttCount: number;
     db: Db;
     
-    readonly logger = Methods.createLogger();
     readonly config = require("../../config").default;
 
     fetch = (url: string, options?: object) =>
         axios(url, options).catch(e => console.log(`${chalk.bgMagenta(` AXIOS `)} ${e}`));
     
-    info        = this.logger.info;
-    debug       = this.logger.debug;
-    error       = this.logger.error;
-    success     = this.logger.success;
+    info = logger.extend("info");
+    debug = logger.extend("debug");
+    error = logger.extend("error");
+    success = logger.extend("success");
 
     infoAliases = new Collection<string, string>();
-    events      = new Collection<string, Interfaces.Event>();
-    commands    = new Collection<string, Interfaces.Command>();
-    aliases     = new Collection<string, Interfaces.Command>();
-    infos       = new Collection<string, Interfaces.ShortInfo>();
+    commands = new Collection<string, Interfaces.Command>();
+    aliases = new Collection<string, Interfaces.Command>();
+    events = new Collection<string, Interfaces.Event>();
+    infos = new Collection<string, Interfaces.ShortInfo>();
 
     Embed = MessageEmbed;
     
@@ -73,7 +71,7 @@ export class PreMiD extends Client {
         this.info(`Loaded commands (${this.commands.size})`);
 		this.info(`Loaded events (${this.events.size})`);
 
-        super.login(token).catch(this.logger.error);
+        super.login(token).catch(this.error);
 
         return token as string;
     }

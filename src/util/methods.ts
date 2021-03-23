@@ -1,11 +1,3 @@
-import chalk from "chalk";
-export const createLogger = () => new (class Logger {
-	info = (message: string) => console.log(`${chalk.bgBlue("  ")} ${message}`);
-	debug = (message: string) => console.log(`${chalk.bgRedBright("  ")} ${message}`);
-	error = (message: string)  => console.log(`${chalk.bgRed("  ")} ${message}`);
-	success = (message: string) => console.log(`${chalk.bgGreen("  ")} ${message}`);
-})();
-
 export const elevation = async (client, userId) => {
     enum PermLevel {
         DEFAULT = 0,
