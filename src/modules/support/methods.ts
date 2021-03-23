@@ -57,12 +57,11 @@ export const updateTopic = async() => {
     const coll = client.db.collection("tickets"),
         total = await coll.countDocuments(),
         ticketCount = {
-            unclaimed: (await coll.find({status: 1}).toArray()).length,
-            inProgress: (await coll.find({status: 2}).toArray()).length,
-            closed: (await coll.find({status: 3}).toArray()).length
+            open: (await coll.find({status: 1}).toArray()).length,
+            closed: (await coll.find({status: 2}).toArray()).length
         },
         channel = (client.channels.cache.get(client.config.channels.ticketChannel) as TextChannel),
-        content = `${ticketCount.unclaimed} unclaimed • ${ticketCount.inProgress} in progress • ${ticketCount.closed} closed • ${total} total`;
+        content = `${ticketCount.open} open • ${ticketCount.closed} closed • ${total} total`;
         
         if(channel.topic.includes(content)) return;
         
