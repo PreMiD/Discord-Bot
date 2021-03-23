@@ -1,7 +1,7 @@
 {
   "name": "premid-bot",
   "version": "3.0.0",
-  "description": "",
+  "description": "Official PreMiD Discord Bot.",
   "main": "index.js",
   "scripts": {
     "start": "node dist/index",
