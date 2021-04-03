@@ -51,14 +51,7 @@ export default {
 	},
 	donate: {
 		title: "Donate to PreMiD's Development",
-		aliases: [
-			"donate",
-			"patreon",
-			"serverboost",
-			"boost",
-			"nitroboost",
-			"dontskipads"
-		],
+		aliases: ["donate", "patreon", "serverboost", "boost", "nitroboost", "dontskipads"],
 		description:
 			"Want to support PreMiD's Development? Great! You can do so by boosting our Discord server, which will get you a special role, or you can support us on [Patreon](https://patreon.com/Timeraa)!",
 		footer: false
@@ -88,7 +81,15 @@ export default {
 		title: "Allow apps from unidentified developers",
 		aliases: ["macdev", "unidentifieddeveloper", "undev", "ud"],
 		description:
-			"Steps for **macOS BigSur (11.0^)**:\n1. Right click on our installer.\n2. Click open in the dropdown menu.\n3. Click open in popup.\n\nSteps for **older macOS versions**:\n1. Open System Preferences.\n2. Go to the Security & Privacy tab.\n3. Click on the lock and enter your password or scan your fingerprint so you can make changes.\n4. Change the setting for 'Allow apps downloaded from' to 'App Store and identified developers' from just 'App Store'.",
+			"Steps for **macOS Big Sur (11.0+)**:\n1. Right click on our installer.\n2. Click open in the dropdown menu.\n3. Click open in popup.\n\nSteps for **older macOS versions**:\n1. Open System Preferences.\n2. Go to the Security & Privacy tab.\n3. Click on the lock and enter your password or scan your fingerprint so you can make changes.\n4. Change the setting for 'Allow apps downloaded from' to 'App Store and identified developers' from just 'App Store'.",
+		footer: false
+	},
+	stringurl: {
+		title: "Copying string URLs on Crowdin",
+		aliases: ["surl", "copyurl", "crowdinurl"],
+		description:
+			"When asking a question about a specific string, you should always send its URL. Here's how you can get it:\n**1.** Click on the three dots (...) on the top right of the editor.\n**2.** Select \"**Copy String URL**\".\n\nHere's an image of what the button should look like:",
+		image: "https://i.imgur.com/04BtD26.png",
 		footer: false
 	}
 };

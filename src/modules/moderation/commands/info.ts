@@ -1,5 +1,3 @@
-import * as Discord from "discord.js";
-
 import { client } from "../../..";
 import { InteractionResponse } from "../../../../@types/djs-extender";
 import UniformEmbed from "../../../util/UniformEmbed";
@@ -54,10 +52,11 @@ module.exports.run = async (data: InteractionResponse, perms: number) => {
 			client.infos.get(client.infoAliases.get(shortcutArg.value.toLowerCase())),
 		embed = new UniformEmbed(
 			{
-				description: info.description || "No description providen."
+				description: info.description || "No description provided.",
+				image: { url: info.image }
 			},
 			`:bookmark: Info • ${info.title || "No Title"}`,
-			info.color || undefined
+			info.color
 		);
 
 	data.channel.send(embed);

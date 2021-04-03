@@ -41,9 +41,10 @@ async function updateTranslators() {
 		try {
 			discordUser = await guild.members.fetch(user.userId);
 		} catch (err) {
-			await coll.findOneAndDelete({ userId: user.userId });
+			await coll.deleteOne({ userId: user.userId });
 			continue;
 		}
+		coll.updateOne({ userId: user.userId }, { $set: { user: crowdinUser } })
 
 		if (!discordUser.roles.cache.has(roles.translator))
 			await discordUser.roles.add(roles.translator);
