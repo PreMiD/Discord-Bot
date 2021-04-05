@@ -18,7 +18,7 @@
 		"chalk": "^4.1.0",
 		"chart.js": "^2.9.4",
 		"chartjs-node-canvas": "^3.0.6",
-		"discord.js": "12.5.1",
+		"discord.js": "12.5.3",
 		"dotenv": "8.2.0",
 		"fs-extra": "^9.0.1",
 		"moment": "^2.29.1",
