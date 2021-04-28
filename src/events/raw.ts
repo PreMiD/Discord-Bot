@@ -1,3 +1,4 @@
+import axios from "axios";
 import { GuildMember, TextChannel } from "discord.js";
 
 import { client } from "../";
@@ -36,6 +37,14 @@ module.exports = async ev => {
 	delete data.guild_id;
 	delete data.channel_id;
 
+	await axios(`https://discord.com/api/v8/interactions/${data.id}/${data.token}/callback`,
+		{
+			method: "POST",
+			data: { type: 1 },
+			headers: { "Content-Type": "application/json" }
+		}
+	);
+	
 	//* Run the command
 	cmd.run(ev.d as InteractionResponse, await perms);
 };
