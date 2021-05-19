@@ -14,9 +14,9 @@ export default {
 			"Using a modified client is an abuse of Discord's ToS and therefore you run the risk of losing your account. If you want to keep using Discord, you have to follow them and make sure you're not breaking any of the rules Discord has decided to put. Even using modified clients for theming or other customizations are against Discord's ToS. If you don't believe us, read it yourself [here](https://twitter.com/discordapp/status/908000828690182145).",
 		footer: false
 	},
-	creatingpresence: {
+	devpresence: {
 		title: "Creating a Presence for PreMiD",
-		aliases: ["devpresence", "howtopresence", "how2presence", "makepresence"],
+		aliases: ["presence", "creatingpresence", "how2presence", "makepresence"],
 		description:
 			"If you wish to add support for a website that does not have a Presence yet, you can either open an [issue on GitHub](https://github.com/PreMiD/Presences/issues/new?template=service_request.md) for it so that others may create it for you or you create it yourself. If you wish to create a Presence for PreMiD you need to have basic knowledge of TypeScript. For more information and docs on how to create a Presence follow our [documentation](https://docs.premid.app/dev/presence).",
 		footer: false
