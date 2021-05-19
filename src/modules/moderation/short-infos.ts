@@ -1,7 +1,7 @@
 export default {
 	troubleshoot: {
 		title: "Troubleshooting",
-		aliases: ["troubleshooting", "trouble", "ts", "tshoot"],
+		aliases: ["troubleshooting", "ts", "tshoot"],
 		description:
 			"If you have problems with PreMiD, you can read our [troubleshooting guide](https://docs.premid.app/troubleshooting) and if it doesn't solve your problem use our support system by simply writing your concern in <#566738846650335232>.",
 		footer: false
@@ -9,35 +9,35 @@ export default {
 	modifiedclient: {
 		title: "Using Modified Clients",
 		color: "FF5050",
-		aliases: ["bd", "bdiscord", "pc", "powercord", "modified", "betterdiscord"],
+		aliases: ["bd", "bdiscord", "pc", "powercord", "betterdiscord"],
 		description:
 			"Using a modified client is an abuse of Discord's ToS and therefore you run the risk of losing your account. If you want to keep using Discord, you have to follow them and make sure you're not breaking any of the rules Discord has decided to put. Even using modified clients for theming or other customizations are against Discord's ToS. If you don't believe us, read it yourself [here](https://twitter.com/discordapp/status/908000828690182145).",
 		footer: false
 	},
-	creatingpresence: {
+	devpresence: {
 		title: "Creating a Presence for PreMiD",
-		aliases: ["presence", "howtopresence", "how2presence", "makepresence"],
+		aliases: ["presence", "creatingpresence", "how2presence", "makepresence"],
 		description:
 			"If you wish to add support for a website that does not have a Presence yet, you can either open an [issue on GitHub](https://github.com/PreMiD/Presences/issues/new?template=service_request.md) for it so that others may create it for you or you create it yourself. If you wish to create a Presence for PreMiD you need to have basic knowledge of TypeScript. For more information and docs on how to create a Presence follow our [documentation](https://docs.premid.app/dev/presence).",
 		footer: false
 	},
 	docs: {
 		title: "Read the Docs!",
-		aliases: ["docs", "documentation", "readthedocs"],
+		aliases: ["documentation", "readthedocs"],
 		description:
 			"If you have any questions regarding PreMiD, its API, Presence development or how to do ... with PreMiD, please read our [documentation](https://docs.premid.app) before creating a ticket.",
 		footer: false
 	},
 	website: {
 		title: "Visit Our Website",
-		aliases: ["site", "premidsite"],
+		aliases: ["site"],
 		description:
 			"Click [here](https://premid.app) to visit our website full of greatness.",
 		footer: false
 	},
 	store: {
 		title: "PreMiD Presence Store",
-		aliases: ["addpresence", "presencestore", "presences"],
+		aliases: ["addpresence", "presencestore"],
 		description:
 			"Since 2.0 we have added our so called Presence Store which is used to add more Presences for more websites other than the default ones added by PreMiD. These Presences are created by our staff or PreMiD's community. You don't have to worry about security/privacy issues tho as our staff reviews every presence added to the store. If you wish to add more Presences to PreMiD visit [our store](https://premid.app/store)! *Oh and btw, its free.*",
 		footer: false
@@ -81,7 +81,7 @@ export default {
 		title: "Allow apps from unidentified developers",
 		aliases: ["macdev", "unidentifieddeveloper", "undev", "ud"],
 		description:
-			"Steps for **macOS Big Sur (11.0+)**:\n1. Right click on our installer.\n2. Click open in the dropdown menu.\n3. Click open in popup.\n\nSteps for **older macOS versions**:\n1. Open System Preferences.\n2. Go to the Security & Privacy tab.\n3. Click on the lock and enter your password or scan your fingerprint so you can make changes.\n4. Change the setting for 'Allow apps downloaded from' to 'App Store and identified developers' from just 'App Store'.",
+			"Steps for **macOS Big Sur (11.0+)**:\n1. Right click on our installer.\n2. Click `Open` in the dropdown menu.\n3. Click `Open` in popup.\n\nSteps for **older macOS versions**:\n1. Open System Preferences.\n2. Go to the Security & Privacy tab.\n3. Click on the lock and enter your password or scan your fingerprint so you can make changes.\n4. Change the setting for 'Allow apps downloaded from' to 'App Store and identified developers' from just 'App Store'.",
 		footer: false
 	},
 	stringurl: {
