@@ -50,7 +50,9 @@ async function updateCredits() {
 			roles: m.roles.cache.filter(r => r.name !== "@everyone").map(r => r.name),
 			roleIds: m.roles.cache.filter(r => r.name !== "@everyone").map(r => r.id),
 			roleColor: staff ? colorRole.hexColor : highestRole.hexColor,
-			rolePosition: highestRole.position,
+			rolePosition: Object.values(creditRoles)
+				.reverse()
+				.findIndex(highestRole.id),
 			status: m.user.presence.status
 		};
 	});
