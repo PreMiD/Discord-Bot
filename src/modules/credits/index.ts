@@ -1,10 +1,10 @@
-import schedule from "node-schedule";
-
-import { pmdDB } from "../../database/client";
-import { client } from "../../index";
-import { info } from "../../util/debug";
 import { updateBetaUsers, updateDiscordUsers } from "../betaAlpha";
+
+import { client } from "../../index";
 import creditRoles from "./creditRoles";
+import { info } from "../../util/debug";
+import { pmdDB } from "../../database/client";
+import schedule from "node-schedule";
 
 const creditsColl = pmdDB.collection("credits"),
 	userSettingsColl = pmdDB.collection("userSettings");
@@ -52,7 +52,7 @@ async function updateCredits() {
 			roleColor: staff ? colorRole.hexColor : highestRole.hexColor,
 			rolePosition: Object.values(creditRoles)
 				.reverse()
-				.findIndex(highestRole.id),
+				.findIndex(r => r === highestRole.id),
 			status: m.user.presence.status
 		};
 	});
