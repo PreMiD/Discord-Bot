@@ -5,6 +5,7 @@ import { client } from "../../index";
 import { info } from "../../util/debug";
 import { updateBetaUsers, updateDiscordUsers } from "../betaAlpha";
 import creditRoles from "./creditRoles";
+import roleColors from "./roleColor";
 
 const creditsColl = pmdDB.collection("credits"),
 	userSettingsColl = pmdDB.collection("userSettings");
@@ -27,14 +28,10 @@ async function updateCredits() {
 		const highestRole = m.roles.cache.get(
 				containsAny(Object.values(creditRoles), m.roles.cache.keyArray())[0]
 			),
-			colorRole = m.roles.cache
-				.filter(x => x.hexColor !== "#000000")
-				.sort((a, b) => a.position - b.position)
-				.map(x => x)
-				.reverse()[0],
-			staff = ["656913616100130816", "672175812102979605"]
-				.map(x => m.roles.cache.map(x => x.id).includes(x))
-				.includes(true);
+			rolePosition = Object.values(creditRoles)
+				.reverse()
+				.findIndex(id => id == highestRole.id),
+			roleColor = Object.values(roleColors).reverse()[rolePosition];
 
 		return {
 			userId: m.id,
@@ -49,10 +46,8 @@ async function updateCredits() {
 			roleId: highestRole.id,
 			roles: m.roles.cache.filter(r => r.name !== "@everyone").map(r => r.name),
 			roleIds: m.roles.cache.filter(r => r.name !== "@everyone").map(r => r.id),
-			roleColor: staff ? highestRole.hexColor : colorRole.hexColor,
-			rolePosition: Object.values(creditRoles)
-				.reverse()
-				.findIndex(id => id == highestRole.id),
+			roleColor: roleColor,
+			rolePosition: rolePosition,
 			status: m.user.presence.status
 		};
 	});
