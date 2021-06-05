@@ -5,8 +5,10 @@ import { client } from "../..";
 import { pmdDB } from "../../database/client";
 import roles from "../../roles";
 
-setInterval(updateTranslators, 60 * 1000);
-updateTranslators();
+if (process.env.NODE_ENV === "production") {
+	updateTranslators();
+	setInterval(updateTranslators, 60 * 1000);
+}
 
 const langNames: Collection<string, string> = new Collection();
 
