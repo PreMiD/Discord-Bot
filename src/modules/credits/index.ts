@@ -19,7 +19,8 @@ async function updateCredits() {
 	let creditUsers = client.guilds.cache.first().members.cache;
 	creditUsers.sweep(m => {
 		const s = settings.find(s => s.userId === m.id);
-		if (typeof s !== "undefined" && !s.showContributor) return true;
+		if (typeof s?.showContributor !== "undefined" && !s.showContributor)
+			return true;
 
 		return !creditRolesValues.some(cR => m.roles.cache.has(cR));
 	});
