@@ -35,12 +35,6 @@ async function updateCredits() {
 
 		let roleColor = Object.values(roleColors).reverse()[rolePosition];
 
-		if (roleColor === null) {
-			if (m.roles.cache.has("673682085608816652")) roleColor = "#E43725";
-			else if (m.roles.cache.has("691382432246530150")) roleColor = "#3BA576";
-			else if (m.roles.cache.has("691382582083846164")) roleColor = "#D67118";
-		}
-
 		return {
 			userId: m.id,
 			name: m.user.username,
