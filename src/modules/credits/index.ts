@@ -149,4 +149,3 @@ if (process.env.NODE_ENV === "production") {
 function containsAny(source: Array<string>, target: Array<string>) {
 	return source.filter(item => target.indexOf(item) > -1);
 }
-updateCredits();
