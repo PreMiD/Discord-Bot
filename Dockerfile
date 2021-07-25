@@ -1,5 +1,4 @@
 FROM node:current-alpine
-RUN apk add --update --no-cache make g++ jpeg-dev cairo-dev giflib-dev pango-dev
 
 COPY . .
 
