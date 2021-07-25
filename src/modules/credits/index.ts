@@ -31,8 +31,9 @@ async function updateCredits() {
 			),
 			rolePosition = Object.values(creditRoles)
 				.reverse()
-				.findIndex(id => id == highestRole.id),
-			roleColor = Object.values(roleColors).reverse()[rolePosition];
+				.findIndex(id => id == highestRole.id);
+
+		let roleColor = Object.values(roleColors).reverse()[rolePosition];
 
 		return {
 			userId: m.id,
