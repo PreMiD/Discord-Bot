@@ -7,9 +7,7 @@ export function connect() {
 	return new Promise<mongoClient>((resolve, reject) => {
 		mongoClient
 			.connect(process.env.MONGO_URL, {
-				useUnifiedTopology: true,
-				useNewUrlParser: true,
-				appname: "PreMiD Discord-Bot"
+				appName: "PreMiD Discord-Bot"
 			})
 			.then(mongoClient => {
 				MongoClient = mongoClient;
