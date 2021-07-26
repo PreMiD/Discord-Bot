@@ -7,9 +7,13 @@ const betaUserColl = pmdDB.collection("betaUsers"),
 	discordUsers = pmdDB.collection("discordUsers");
 
 export async function updateDiscordUsers() {
+	const dbUsers = await discordUsers.find().toArray();
+
 	let guildMembers = await client.guilds.cache
-		.get("493130730549805057")
-		.members.fetch({ limit: 0 });
+			.get("493130730549805057")
+			.members.fetch({ limit: 0 }),
+		guildMembersArray = Array.from(guildMembers.keys()),
+		removeUsers = [];
 
 	discordUsers.bulkWrite(
 		guildMembers.map(user => {
@@ -30,6 +34,14 @@ export async function updateDiscordUsers() {
 			};
 		})
 	);
+
+	dbUsers.forEach(async user => {
+		if (guildMembersArray.indexOf(user.userId) === -1) {
+			removeUsers.push(user.userId);
+		}
+	});
+
+	await discordUsers.deleteMany({ userId: { $in: removeUsers } });
 }
 
 export async function updateBetaUsers() {
