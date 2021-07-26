@@ -12,8 +12,8 @@ export async function updateDiscordUsers() {
 	let guildMembers = await client.guilds.cache
 			.get("493130730549805057")
 			.members.fetch({ limit: 0 }),
-		guildMembersArray = Array.from(guildMembers.keys()),
 		removeUsers = [];
+	const guildMembersArray = Array.from(guildMembers.keys());
 
 	discordUsers.bulkWrite(
 		guildMembers.map(user => {
