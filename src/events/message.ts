@@ -1,6 +1,5 @@
 import * as Discord from "discord.js";
 
-import { client } from "../";
 import config from "../config";
 
 module.exports = async (message: Discord.Message) => {
@@ -44,7 +43,7 @@ module.exports = async (message: Discord.Message) => {
 
 		//* Run the command
 		cmd.run(message, params, perms);
-	} else message.react("❌"), message.delete({ timeout: 5 * 1000 });
+	} else message.react("❌"), setTimeout(() => message.delete(), 5 * 1000);
 };
 
 export async function sendFancyMessage(
@@ -55,16 +54,18 @@ export async function sendFancyMessage(
 ) {
 	if (message instanceof Discord.Message) await message.delete();
 
-	const response = await message.channel.send(
-		new Discord.MessageEmbed({
-			description:
-				"Whoopsies, it seems' like you do not have permission to run this command!",
-			color: "RED",
-			footer: {
-				text: `${message.author.tag} | ${cmd.config.name}`
-			}
-		})
-	);
+	const response = await message.channel.send({
+		embeds: [
+			new Discord.MessageEmbed({
+				description:
+					"Whoopsies, it seems' like you do not have permission to run this command!",
+				color: "RED",
+				footer: {
+					text: `${message.author.tag} | ${cmd.config.name}`
+				}
+			})
+		]
+	});
 
-	response.delete({ timeout: 5 * 1000 });
+	setTimeout(() => response.delete(), 5 * 1000);
 }

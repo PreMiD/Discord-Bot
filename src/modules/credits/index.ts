@@ -27,7 +27,7 @@ async function updateCredits() {
 
 	let credits = creditUsers.map(m => {
 		const highestRole = m.roles.cache.get(
-				containsAny(Object.values(creditRoles), m.roles.cache.keyArray())[0]
+				containsAny(Object.values(creditRoles), [...m.roles.cache.keys()])[0]
 			),
 			rolePosition = Object.values(creditRoles)
 				.reverse()
@@ -50,7 +50,7 @@ async function updateCredits() {
 			roleIds: m.roles.cache.filter(r => r.name !== "@everyone").map(r => r.id),
 			roleColor: roleColor,
 			rolePosition: rolePosition,
-			status: m.user.presence.status
+			status: "null"
 		};
 	});
 
@@ -95,7 +95,7 @@ async function updateFlags() {
 			.first()
 			.roles.cache.filter(r => Object.values(creditRoles).includes(r.id))
 			.map(async r => {
-				const memberArray = r.members.array();
+				const memberArray = [...r.members.values()];
 				for (let i = 0; i < r.members.size; i++) {
 					const member = memberArray[i];
 					const userFlags = (await member.user.fetchFlags()).toArray();

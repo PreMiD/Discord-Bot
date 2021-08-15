@@ -55,14 +55,16 @@ setInterval(async () => {
 				if (x.impact !== "none")
 					fields.push({ name: "Impact", value: toTitleCase(x.impact) });
 				const msg = {
-					embed: {
-						title: x.name,
-						url: x.url,
-						description: u.body,
-						fields,
-						timestamp: x.createdAt,
-						color: colors[x.impact || "none"]
-					}
+					embeds: [
+						{
+							title: x.name,
+							url: x.url,
+							description: u.body,
+							fields,
+							timestamp: x.createdAt,
+							color: colors[x.impact || "none"]
+						}
+					]
 				};
 
 				//* Send it and return the message
@@ -76,12 +78,14 @@ setInterval(async () => {
 
 				//* Create the message
 				const msg = {
-					embed: {
-						title: `${x.name} updated to ${toTitleCase(u.status)}`,
-						url: x.url,
-						description: u.body,
-						timestamp: u.createdAt
-					}
+					embeds: [
+						{
+							title: `${x.name} updated to ${toTitleCase(u.status)}`,
+							url: x.url,
+							description: u.body,
+							timestamp: u.createdAt
+						}
+					]
 				};
 
 				//* Send it and return the message
@@ -94,12 +98,14 @@ setInterval(async () => {
 
 				//* Create the message
 				const msg = {
-					embed: {
-						title: `${x.name} resolved`,
-						url: x.url,
-						timestamp: x.createdAt,
-						color: colors.incidentResolved
-					}
+					embeds: [
+						{
+							title: `${x.name} resolved`,
+							url: x.url,
+							timestamp: x.createdAt,
+							color: colors.incidentResolved
+						}
+					]
 				};
 
 				//* Clear incident from the cache

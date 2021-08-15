@@ -27,21 +27,23 @@ module.exports.run = async (data: InteractionResponse, perms: number) => {
 				try {
 					await coll.insertOne({ userId: data.member.id, code });
 				} catch (err) {
-					(
-						await data.channel.send(
-							data.member.toString(),
+					let msgReply = await data.channel.send({
+						content: data.member.toString(),
+						embeds: [
 							new UniformEmbed(
 								{ description: "An unknown error occurred." },
 								":globe_with_meridians: Crowdin",
 								"#ff5050"
 							)
-						)
-					).delete({ timeout: 10 * 1000 });
+						]
+					});
+
+					setTimeout(() => msgReply.delete(), 15 * 1000);
 				}
 			} catch (err) {
-				(
-					await data.channel.send(
-						data.member.toString(),
+				let msgReply = await data.channel.send({
+					content: data.member.toString(),
+					embeds: [
 						new UniformEmbed(
 							{
 								description:
@@ -50,13 +52,14 @@ module.exports.run = async (data: InteractionResponse, perms: number) => {
 							":globe_with_meridians: Crowdin",
 							"#ff5050"
 						)
-					)
-				).delete({ timeout: 15 * 1000 });
+					]
+				});
+				setTimeout(() => msgReply.delete(), 15 * 1000);
 			}
-		else
-			(
-				await data.channel.send(
-					data.member.toString(),
+		else {
+			let msgReply = await data.channel.send({
+				content: data.member.toString(),
+				embeds: [
 					new UniformEmbed(
 						{
 							description:
@@ -65,13 +68,15 @@ module.exports.run = async (data: InteractionResponse, perms: number) => {
 						":globe_with_meridians: Crowdin",
 						"#ff5050"
 					)
-				)
-			).delete({ timeout: 15 * 1000 });
+				]
+			});
+			setTimeout(() => msgReply.delete(), 15 * 1000);
+		}
 	else {
-		if (!user)
-			return (
-				await data.channel.send(
-					data.member.toString(),
+		if (!user) {
+			let msgReply = await data.channel.send({
+				content: data.member.toString(),
+				embeds: [
 					new UniformEmbed(
 						{
 							description:
@@ -80,15 +85,18 @@ module.exports.run = async (data: InteractionResponse, perms: number) => {
 						":globe_with_meridians: Crowdin",
 						"#ff5050"
 					)
-				)
-			).delete({ timeout: 15 * 1000 });
+				]
+			});
+
+			return setTimeout(() => msgReply.delete(), 15 * 1000);
+		}
 
 		await removeAllTranslatorRoles(data.member);
 		await coll.findOneAndDelete({ userId: data.member.id });
 
-		(
-			await data.channel.send(
-				data.member.toString(),
+		let msgReply = await data.channel.send({
+			content: data.member.toString(),
+			embeds: [
 				new UniformEmbed(
 					{
 						description: "Successfully unlinked your Crowdin account."
@@ -96,8 +104,10 @@ module.exports.run = async (data: InteractionResponse, perms: number) => {
 					":globe_with_meridians: Crowdin",
 					"#50ff50"
 				)
-			)
-		).delete({ timeout: 15 * 1000 });
+			]
+		});
+
+		setTimeout(() => msgReply.delete(), 15 * 1000);
 	}
 };
 
