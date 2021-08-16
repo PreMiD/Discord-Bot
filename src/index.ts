@@ -23,7 +23,7 @@ config();
 
 //* Create new client & set login presence
 export let client = new Discord.Client({
-	intents: ["GUILD_PRESENCES", "GUILD_MESSAGES"],
+	intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_PRESENCES"],
 	presence:
 		process.env.NODE_ENV == "dev"
 			? {
