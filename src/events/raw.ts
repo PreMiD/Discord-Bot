@@ -2,7 +2,7 @@ import { GuildMember, TextChannel } from "discord.js";
 
 import { client } from "../";
 import { InteractionResponse } from "../../@types/djs-extender.d";
-import { sendFancyMessage } from "./message";
+import { sendFancyMessage } from "./messageCreate";
 
 module.exports = async ev => {
 	if (ev.t !== "INTERACTION_CREATE") return;
