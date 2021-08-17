@@ -17,7 +17,7 @@ module.exports.run = async (interaction: CommandInteraction) => {
 				await interaction.user.send(
 					`Use this link to link your **Crowdin** account to your **Discord** account: ${encodeURI(
 						`https://accounts.crowdin.com/oauth/authorize?client_id=mBK6QkfUXegOexHpp8hz&redirect_uri=http${
-							process.env.NODE_ENV === "dev"
+							process.env.NODE_ENV === "production"
 								? "s://api.premid.app"
 								: "://localhost:3001"
 						}/crowdin&response_type=code&scope=vendor&state=${code}`
