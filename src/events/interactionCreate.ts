@@ -1,4 +1,4 @@
-import { GuildMember, TextChannel, CommandInteraction } from "discord.js";
+import { TextChannel, CommandInteraction } from "discord.js";
 
 import { client } from "..";
 import { sendFancyMessage } from "../util/FancyMessage";
