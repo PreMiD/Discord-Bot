@@ -1,7 +1,0 @@
-export default {
-	staff: "656913616100130816",
-	betaRole: "591284574823120909",
-	alphaRole: "694481247564595211",
-	staffHead: "685969048399249459",
-	linuxMaintainer: "691393583189721088",
-};

@@ -1,13 +1,13 @@
-import { MessageEmbed, MessageEmbedOptions } from "discord.js";
+import { ColorResolvable, MessageEmbed, MessageEmbedOptions } from "discord.js";
 
 export default class UniformEmbed extends MessageEmbed {
 	constructor(
 		data: MessageEmbed | MessageEmbedOptions,
 		title?: string,
-		color = "7289DA"
+		color = "#7289DA"
 	) {
 		if (title) data.title = title;
-		data.color = color;
+		data.color = `${color}` as ColorResolvable;
 		super(data);
 	}
 }

@@ -44,10 +44,12 @@ function updateBoosters() {
 		last90days = new Date(
 			dateNow.setDate(dateNow.getDate() - 3 * 30)
 		).getTime(),
-		membersWithBoost = client.guilds.cache
-			.get("493130730549805057")
-			.members.cache.array()
-			.filter(member => member.premiumSinceTimestamp > 0);
+		membersWithBoost = [
+			...client.guilds.cache
+				.get("493130730549805057")
+				.members.cache.filter(member => member.premiumSinceTimestamp > 0)
+				.values()
+		];
 
 	for (const member of membersWithBoost) {
 		if (member) {

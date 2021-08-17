@@ -9,7 +9,7 @@ module.exports = async (
 ) => {
 	if (!oldPresence || newPresence.status === oldPresence.status) return;
 	coll.findOneAndUpdate(
-		{ userId: newPresence.userID },
+		{ userId: newPresence.userId },
 		{ $set: { status: newPresence.status } }
 	);
 };

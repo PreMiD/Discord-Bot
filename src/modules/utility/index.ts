@@ -30,12 +30,13 @@ async function updateTranslators() {
 			await guild.roles.fetch(roles.translator)
 		).members.filter(m => !users.find(u => u.userId === m.id));
 
-	for (const member of translatorsNotInDB.array())
+	for (const member of [...translatorsNotInDB.values()])
 		await removeAllTranslatorRoles(member);
 
 	for (const user of users) {
-		const crowdinUser = crowdinMembers.find(u => u.data.id === user.user.id)
-			?.data;
+		const crowdinUser = crowdinMembers.find(
+			u => u.data.id === user.user.id
+		)?.data;
 
 		if (!crowdinUser) continue;
 
@@ -46,7 +47,7 @@ async function updateTranslators() {
 			await coll.deleteOne({ userId: user.userId });
 			continue;
 		}
-		coll.updateOne({ userId: user.userId }, { $set: { user: crowdinUser } })
+		coll.updateOne({ userId: user.userId }, { $set: { user: crowdinUser } });
 
 		if (!discordUser.roles.cache.has(roles.translator))
 			await discordUser.roles.add(roles.translator);
@@ -70,17 +71,15 @@ async function updateTranslators() {
 					await discordUser.roles.remove(langName);
 		}
 
-		const rolesCache = (await guild.roles.fetch()).cache;
+		const rolesCache = await guild.roles.fetch();
 		for (const proofreader of proofreaderIn) {
 			let role = rolesCache.find(r => r.name === langNames.get(proofreader));
 
 			if (!role)
 				role = await guild.roles.create({
-					data: {
-						permissions: [],
-						name: langNames.get(proofreader),
-						mentionable: false
-					}
+					permissions: [],
+					name: langNames.get(proofreader),
+					mentionable: false
 				});
 
 			if (!discordUser.roles.cache.has(role.id))
@@ -90,9 +89,9 @@ async function updateTranslators() {
 }
 
 export async function removeAllTranslatorRoles(member: GuildMember) {
-	const langRoles = member.guild.roles.cache
-		.array()
-		.filter(r => langNames.find(ln => ln === r.name));
+	const langRoles = [...member.guild.roles.cache.values()].filter(r =>
+		langNames.find(ln => ln === r.name)
+	);
 
 	const rolesToRemove = member.roles.cache.filter(
 		r =>

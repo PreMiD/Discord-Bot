@@ -1,39 +1,39 @@
-
-
-import { InteractionResponse } from "../../../../@types/djs-extender";
+import { CommandInteraction } from "discord.js";
 import { pmdDB } from "../../../database/client";
 import UniformEmbed from "../../../util/UniformEmbed";
 
 const presencesColl = pmdDB.collection("presences");
 
-module.exports.run = async (res: InteractionResponse, perms: number) => {
-	if (!res.data.options)
-		return (
-			await res.channel.send(
-				`${res.member.toString()}, please specify the \`search\` or \`usage\` argument.`
-			)
-		).delete({ timeout: 10 * 1000 });
+module.exports.run = async (interaction: CommandInteraction) => {
+	if (!interaction.options.data) {
+		let msgReply = await interaction.channel.send(
+			`${interaction.member.toString()}, please specify the \`search\` or \`usage\` argument.`
+		);
+		return setTimeout(() => msgReply.delete(), 1 * 1000);
+	}
 
-	if (res.data.options.length === 2)
-		return (
-			await res.channel.send(
-				`${res.member.toString()}, please specify only one argument.`
-			)
-		).delete({ timeout: 10 * 1000 });
+	if (interaction.options.data.length === 2) {
+		let msgReply = await interaction.channel.send(
+			`${interaction.member.toString()}, please specify only one argument.`
+		);
 
-	if ((res.data.options[0].value as string).trim().length === 0)
-		return (
-			await res.channel.send(
-				`${res.member.toString()}, please specify a search query.`
-			)
-		).delete({ timeout: 10 * 1000 });
+		return setTimeout(() => msgReply.delete(), 1 * 1000);
+	}
 
-	switch (res.data.options[0].name) {
-		case "search":
-			return await res.channel.send(
-				res.member.toString(),
-				await searchPresence(res.data.options[0].value as string)
-			);
+	if ((interaction.options.data[0].value as string).trim().length === 0) {
+		let msgReply = await interaction.channel.send(
+			`${interaction.member.toString()}, please specify a search query.`
+		);
+		return setTimeout(() => msgReply.delete(), 1 * 1000);
+	}
+
+	if (interaction.options.data[0].name == "search") {
+		return await interaction.channel.send({
+			content: interaction.member.toString(),
+			embeds: [
+				await searchPresence(interaction.options.data[0].value as string)
+			]
+		});
 	}
 };
 

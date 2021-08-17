@@ -62,7 +62,7 @@ export async function updateBetaUsers() {
 	);
 
 	for (let i = 0; i < guildMembers.size; i++)
-		await guildMembers.array()[i].roles.add(roles.beta);
+		await [...guildMembers.values()][i].roles.add(roles.beta);
 
 	info("Updated beta users.");
 }

@@ -23,22 +23,26 @@ config();
 
 //* Create new client & set login presence
 export let client = new Discord.Client({
-	fetchAllMembers: true,
+	intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_PRESENCES"],
 	presence:
 		process.env.NODE_ENV == "dev"
 			? {
 					status: "dnd",
-					activity: {
-						name: "devs code",
-						type: "WATCHING"
-					}
+					activities: [
+						{
+							name: "devs code",
+							type: "WATCHING"
+						}
+					]
 			  }
 			: {
 					status: "online",
-					activity: {
-						name: "/help",
-						type: "LISTENING"
-					}
+					activities: [
+						{
+							name: "/help",
+							type: "LISTENING"
+						}
+					]
 			  }
 });
 
@@ -116,13 +120,15 @@ process.on("unhandledRejection", (err: any) => {
 	if (process.env.NODE_ENV !== "production") return console.trace(err.stack);
 
 	const wh = process.env.ERRORSWEBHOOK.split(","),
-		hook = new Discord.WebhookClient(wh[0], wh[1]);
+		hook = new Discord.WebhookClient({ id: wh[0], token: wh[1] });
 
-	hook.send(
-		new Discord.MessageEmbed({
-			title: "Discord-Bot",
-			color: "#ff5050",
-			description: `\`\`\`${err.stack.toString()}\`\`\``
-		})
-	);
+	hook.send({
+		embeds: [
+			new Discord.MessageEmbed({
+				title: "Discord-Bot",
+				color: "#ff5050",
+				description: `\`\`\`${err.stack.toString()}\`\`\``
+			})
+		]
+	});
 });
