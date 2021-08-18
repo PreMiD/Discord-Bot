@@ -21,8 +21,48 @@ export enum PermLevel {
 //* Load .env file
 config();
 
+//* Commands, Command aliases, Command permission levels
+class Client extends Discord.Client {
+	commands = new Discord.Collection<string, any>();
+	aliases = new Discord.Collection<string, any>();
+	infos = new Discord.Collection<string, any>();
+	infoAliases = new Discord.Collection<string, any>();
+	discordCommands = new Discord.Collection<string, any>();
+
+	elevation = async (userId: string) => {
+		//* Permission level checker
+		let permlvl: Number = 0;
+
+		const member =
+			client.guilds.resolve("493130730549805057").members.resolve(userId) ||
+			(await client.guilds.resolve("493130730549805057").members.fetch(userId));
+
+		if (!member) return PermLevel.DEFAULT;
+
+		const memberRoles = member.roles.cache;
+
+		//* Ticket Manager
+		if (memberRoles.has(roles.ticketManager)) permlvl = PermLevel.SUPPORT;
+		//* Jr Mod
+		if (memberRoles.has(roles.jrModerator)) permlvl = PermLevel.JRMODERATOR;
+		//* Mod
+		if (memberRoles.has(roles.moderator)) permlvl = PermLevel.MODERATOR;
+		//* Admin
+		if (
+			memberRoles.has(roles.administrator) ||
+			member.permissions.has("ADMINISTRATOR")
+		)
+			permlvl = PermLevel.ADMIN;
+		//* Dev
+		if (memberRoles.has(roles.developer)) permlvl = PermLevel.DEVELOPER;
+
+		//* Return permlvl
+		return permlvl;
+	};
+}
+
 //* Create new client & set login presence
-export let client = new Discord.Client({
+export let client = new Client({
 	intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_PRESENCES"],
 	presence:
 		process.env.NODE_ENV == "dev"
@@ -45,44 +85,6 @@ export let client = new Discord.Client({
 					]
 			  }
 });
-
-//* Commands, Command aliases, Command permission levels
-client.commands = new Discord.Collection();
-client.aliases = new Discord.Collection();
-client.infos = new Discord.Collection();
-client.infoAliases = new Discord.Collection();
-client.discordCommands = new Discord.Collection();
-
-client.elevation = async (userId: string) => {
-	//* Permission level checker
-	let permlvl: Number = 0;
-
-	const member =
-		client.guilds.resolve("493130730549805057").members.resolve(userId) ||
-		(await client.guilds.resolve("493130730549805057").members.fetch(userId));
-
-	if (!member) return PermLevel.DEFAULT;
-
-	const memberRoles = member.roles.cache;
-
-	//* Ticket Manager
-	if (memberRoles.has(roles.ticketManager)) permlvl = PermLevel.SUPPORT;
-	//* Jr Mod
-	if (memberRoles.has(roles.jrModerator)) permlvl = PermLevel.JRMODERATOR;
-	//* Mod
-	if (memberRoles.has(roles.moderator)) permlvl = PermLevel.MODERATOR;
-	//* Admin
-	if (
-		memberRoles.has(roles.administrator) ||
-		member.permissions.has("ADMINISTRATOR")
-	)
-		permlvl = PermLevel.ADMIN;
-	//* Dev
-	if (memberRoles.has(roles.developer)) permlvl = PermLevel.DEVELOPER;
-
-	//* Return permlvl
-	return permlvl;
-};
 
 run();
 
