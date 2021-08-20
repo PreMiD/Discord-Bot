@@ -50,7 +50,7 @@ async function updateCredits() {
 			roleIds: m.roles.cache.filter(r => r.name !== "@everyone").map(r => r.id),
 			roleColor: roleColor,
 			rolePosition: rolePosition,
-			status: "null"
+			status: m.presence?.status ?? "offline"
 		};
 	});
 
