@@ -9,6 +9,7 @@ on:
       - completed
 jobs:
   deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: CD
     runs-on: ubuntu-latest
     steps:
