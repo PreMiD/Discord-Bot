@@ -1,3 +1,0 @@
-[submodule "test"]
-	path = .github/workflows
-	url = git@github.com:PreMiD/workflows.git
