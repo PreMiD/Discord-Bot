@@ -1,8 +1,11 @@
-name: CI
+name: CD Docker
 on:
-  push:
+  workflow_run:
+    workflows: ["CI Dependencies"]
     branches:
-      - "main"
+      - main
+    types:
+      - completed
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -12,6 +15,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -30,4 +36,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/${{ env.IMAGE_REPOSITORY }}:latest
+            ghcr.io/${{ env.IMAGE_REPOSITORY }}:main
