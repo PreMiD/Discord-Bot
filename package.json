@@ -17,7 +17,7 @@
 		"discord.js": "13.2.0",
 		"dotenv": "10.0.0",
 		"mongodb": "4.1.3",
-		"nanoid": "^3.1.29",
+		"nanoid": "^3.1.30",
 		"node-schedule": "^2.0.0",
 		"source-map-support": "0.5.20"
 	},
