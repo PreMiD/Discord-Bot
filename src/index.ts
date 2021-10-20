@@ -19,7 +19,7 @@ export enum PermLevel {
 }
 
 //* Load .env file
-config();
+config({ path: "../.env" });
 
 //* Commands, Command aliases, Command permission levels
 class Client extends Discord.Client {
