@@ -6,7 +6,8 @@ const coll = pmdDB.collection("userSettings"),
 	alphaUsers = pmdDB.collection("alphaUsers"),
 	discordUsers = pmdDB.collection("discordUsers");
 
-module.exports = async (member: Discord.GuildMember) => {
+module.exports = (member: Discord.GuildMember) => {
+	console.log(`${member.user.username} left SpookMiD`);
 	coll.findOneAndDelete({ userId: member.id });
 	betaUsers.findOneAndDelete({ userId: member.id });
 	alphaUsers.findOneAndDelete({ userId: member.id });

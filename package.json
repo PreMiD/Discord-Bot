@@ -2,7 +2,7 @@
 	"name": "premid-bot",
 	"description": "Official PreMiD Discord Bot.",
 	"repository": "https://github.com/PreMiD/Discord-Bot",
-	"version": "2.5.2",
+	"version": "2.5.1",
 	"scripts": {
 		"start": "cd dist && node index",
 		"compile": "yarn --silent && rimraf dist && tsc && devScript --copyOnly",
@@ -12,7 +12,7 @@
 	},
 	"license": "MPL-2.0",
 	"dependencies": {
-		"axios": "0.23.0",
+		"axios": "0.24.0",
 		"chalk": "^4.1.2",
 		"discord.js": "13.2.0",
 		"dotenv": "10.0.0",
