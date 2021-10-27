@@ -7,7 +7,6 @@ const coll = pmdDB.collection("userSettings"),
 	discordUsers = pmdDB.collection("discordUsers");
 
 module.exports = (member: Discord.GuildMember) => {
-	console.log(`${member.user.username} left SpookMiD`);
 	coll.findOneAndDelete({ userId: member.id });
 	betaUsers.findOneAndDelete({ userId: member.id });
 	alphaUsers.findOneAndDelete({ userId: member.id });
