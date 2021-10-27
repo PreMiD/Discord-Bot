@@ -11,7 +11,7 @@ export function connect() {
 			})
 			.then(mongoClient => {
 				MongoClient = mongoClient;
-				pmdDB = MongoClient.db("PreMiD-DEV");
+				pmdDB = MongoClient.db("PreMiD");
 				resolve(mongoClient);
 			})
 			.catch(reject);
