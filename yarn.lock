@@ -1341,10 +1341,10 @@ tree-kill@^1.2.2:
   resolved "https://registry.yarnpkg.com/tree-kill/-/tree-kill-1.2.2.tgz#4ca09a9092c88b73a7cdc5e8a01b507b0790a0cc"
   integrity sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==
 
-ts-devscript@3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/ts-devscript/-/ts-devscript-3.0.5.tgz#8d54cf5978c52d072f1cbd99c21ec8101c75c57c"
-  integrity sha512-IwNbuiU328Q5j65fyLWUSjeO0UgbuU6MSVsCCfbHKw+vi9rhNDs2oNuCVQ0gJsLA7G3Iai9UFR2IWr9zvJDKGw==
+ts-devscript@3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/ts-devscript/-/ts-devscript-3.0.6.tgz#a9dd29219ce86bc3994bd38ddae06ac7e3d70d2d"
+  integrity sha512-bOK05Nu7TceqS6oo968bj/NN6WWUul8oR/xhRmnfUyAGl9ONfglulr9SNYnQnmgtZXo85B3MI/0/sEnSzW+3vA==
   dependencies:
     "@yarnpkg/parsers" "^2.4.0-rc.3"
     autopm "^1.3.1"
