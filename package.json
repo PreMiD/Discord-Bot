@@ -16,7 +16,7 @@
 		"chalk": "^4.1.2",
 		"discord.js": "13.3.1",
 		"dotenv": "10.0.0",
-		"mongodb": "4.1.4",
+		"mongodb": "4.2.0",
 		"nanoid": "^3.1.30",
 		"node-schedule": "^2.0.0",
 		"source-map-support": "0.5.20"
