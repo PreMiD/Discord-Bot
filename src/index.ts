@@ -47,7 +47,7 @@ export let client = new Client({
 					status: "online",
 					activities: [
 						{
-							name: "/help",
+							name: "YouTube Music",
 							type: "LISTENING"
 						}
 					]
