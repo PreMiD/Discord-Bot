@@ -1,113 +1,125 @@
-import { CommandInteraction } from "discord.js";
-import { pmdDB } from "../../../database/client";
-import UniformEmbed from "../../../util/UniformEmbed";
+import {
+  AutocompleteInteraction,
+  CommandInteraction,
+  MessageButton,
+  MessageEmbed,
+  WebhookEditMessageOptions,
+} from "discord.js";
 
-const presencesColl = pmdDB.collection("presences");
+import { client, pmdDB, presencesStrings } from "../../..";
+import { ClientCommand } from "../../../../@types/djs-extender";
+import { Presences } from "../../../../@types/interfaces";
 
-module.exports.run = async (interaction: CommandInteraction) => {
-	if (!interaction.options.data) {
-		let msgReply = await interaction.channel.send(
-			`${interaction.member.toString()}, please specify the \`search\` or \`usage\` argument.`
-		);
-		return setTimeout(() => msgReply.delete(), 1 * 1000);
+export default async function (
+	int: CommandInteraction | AutocompleteInteraction
+) {
+	if (int.isAutocomplete()) {
+		const query = int.options.getString("query") || "",
+			results = presencesStrings
+				.filter(s => s.toLowerCase().includes(query.toLowerCase()))
+				.slice(0, 25);
+
+		return int.respond(results.map(s => ({ name: s, value: s })));
 	}
 
-	if (interaction.options.data.length === 2) {
-		let msgReply = await interaction.channel.send(
-			`${interaction.member.toString()}, please specify only one argument.`
-		);
-
-		return setTimeout(() => msgReply.delete(), 1 * 1000);
-	}
-
-	if ((interaction.options.data[0].value as string).trim().length === 0) {
-		let msgReply = await interaction.channel.send(
-			`${interaction.member.toString()}, please specify a search query.`
-		);
-		return setTimeout(() => msgReply.delete(), 1 * 1000);
-	}
-
-	if (interaction.options.data[0].name == "search") {
-		return await interaction.channel.send({
-			content: interaction.member.toString(),
-			embeds: [
-				await searchPresence(interaction.options.data[0].value as string)
-			]
+	const presence = int.options.getString("query");
+	if (!presencesStrings.find(s => s === presence))
+		return await int.reply({
+			content: "That is not a valid presence.",
+			ephemeral: true
 		});
-	}
-};
 
-async function searchPresence(query: string) {
-	let presences = await presencesColl
-		.find(
-			{
-				$or: [
-					{
-						"metadata.service": { $regex: query, $options: "i" }
+	await int.deferReply();
+
+	const dbPresence = await pmdDB.collection<Presences>("presences").findOne(
+		{ name: presence },
+		{
+			projection: {
+				_id: false,
+				metadata: {
+					service: true,
+					author: { id: true },
+					contributors: { id: true },
+					url: true,
+					description: {
+						en: true
 					},
-					{
-						"metadata.url": { $regex: query, $options: "i" }
-					},
-					{
-						"metadata.tags": { $regex: query, $options: "i" }
-					},
-					{
-						"metadata.altnames": { $regex: query, $options: "i" }
-					},
-					{
-						"metadata.category": { $regex: query, $options: "i" }
-					}
-				]
+					logo: true,
+					color: true
+				}
+			}
+		}
+	);
+
+	if (!dbPresence) return;
+
+	let contributorsField: any = {};
+	if (dbPresence.metadata.contributors?.length)
+		contributorsField = {
+			name: "Contributors",
+			value: (
+				await Promise.all(
+					dbPresence.metadata.contributors.map(async c =>
+						(await client.users.fetch(c.id)).toString()
+					)
+				)
+			).join(", ")
+		};
+
+	const author = await client.users.fetch(dbPresence.metadata.author.id),
+		embed = new MessageEmbed({
+			title: dbPresence.metadata.service,
+			url:
+				"https://" +
+				(Array.isArray(dbPresence.metadata.url)
+					? dbPresence.metadata.url[0]
+					: dbPresence.metadata.url),
+			description: dbPresence.metadata.description.en,
+			thumbnail: {
+				url: dbPresence.metadata.logo
 			},
-			{ projection: { _id: false, metadata: true } }
-		)
-		.limit(5)
-		.toArray();
+			author: {
+				name: author.username + "#" + author.discriminator,
+				icon_url: author.displayAvatarURL()
+			},
+			fields: dbPresence.metadata.contributors?.length
+				? [contributorsField]
+				: []
+		});
 
-	let descriptionFunsies = "";
-	for (const result of presences) {
-		descriptionFunsies += `**[${
-			result.metadata.service
-		}](https://premid.app/store/presences/${encodeURIComponent(
-			result.metadata.service
-		)} "Click here to go to the store page for ${
-			result.metadata.service
-		}!")** by [${result.metadata.author.name}](https://premid.app/users/${
-			result.metadata.author.id
-		} "Click here to go to the profile page for ${
-			result.metadata.author.name
-		}!")`;
-		descriptionFunsies += "\n_";
-		let description = result.metadata.description.en;
-		if (description.length > 100)
-			description = description.substr(0, 100) + "...";
-		descriptionFunsies += description;
-		descriptionFunsies += "_\n\n";
-	}
+	embed.setColor(dbPresence.metadata.color as any);
 
-	return presences.length > 0
-		? new UniformEmbed(
-				{
-					thumbnail: {
-						height: 50,
-						width: 50,
-						url: presences[0].metadata.logo
-					},
-					description: `**Query:** \`${query}\`\n\n` + descriptionFunsies
-				},
-				`:mag_right: Presences • Search`,
-				presences[0].metadata.color
-		  )
-		: new UniformEmbed(
-				{
-					description: "No Results for '" + query + "'"
-				},
-				":mag_right: Presences • Error",
-				"#ff5050"
-		  );
+	const response: WebhookEditMessageOptions = {
+		embeds: [embed],
+		components: [
+			{
+				type: "ACTION_ROW",
+				components: [
+					new MessageButton({
+						label: "Open in Store",
+						url: `https://premid.app/store/presences/${dbPresence.metadata.service}`,
+						style: "LINK"
+					})
+				]
+			}
+		]
+	};
+
+	await int.editReply(response);
 }
 
-module.exports.config = {
-	name: "presences",
-	discordCommand: true
+export const config: ClientCommand = {
+	command: {
+		name: "presence",
+		description: "Search for a presence",
+		options: [
+			{
+				name: "query",
+				description: "The presence to search for",
+				type: "STRING",
+				autocomplete: true,
+				required: true
+			}
+		]
+	}
 };

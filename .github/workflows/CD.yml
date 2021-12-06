@@ -1,5 +1,4 @@
 name: CD
-
 on:
   workflow_run:
     workflows: ["CD Docker"]
@@ -13,14 +12,8 @@ jobs:
     name: CD
     runs-on: ubuntu-latest
     steps:
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
       - name: Deploy to cluster
         uses: steebchen/kubectl@v2.0.0
-        env:
-          BRANCH: ${{ steps.extract_branch.outputs.branch }}
         with:
           config: ${{ secrets.KUBE_CONFIG_DATA }}
           command: rollout restart -n premid deployment/discord-bot

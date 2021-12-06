@@ -1,68 +1,43 @@
-import { client } from "../..";
-import { pmdDB } from "../../database/client";
-import roles from "../../roles";
-import { info } from "../../util/debug";
+import { client, pmdDB } from "../..";
+import { AlphaUsers, BetaUsers } from "../../../@types/interfaces";
+import config from "../../config";
 
-const betaUserColl = pmdDB.collection("betaUsers"),
-	discordUsers = pmdDB.collection("discordUsers");
+export default async function () {
+	const betaUsers = await pmdDB
+			.collection<BetaUsers>("betaUsers")
+			.find()
+			.toArray(),
+		alphaUsers = await pmdDB
+			.collection<AlphaUsers>("alphaUsers")
+			.find()
+			.toArray(),
+		pmdGuild = await client.guilds.fetch(config.guildId);
 
-export async function updateDiscordUsers() {
-	const dbUsers = await discordUsers.find().toArray();
+	for (const aU of alphaUsers) {
+		const member = await pmdGuild.members.fetch(aU.userId);
 
-	let guildMembers = await client.guilds.cache
-			.get("493130730549805057")
-			.members.fetch({ limit: 0 }),
-		removeUsers = [];
-	const guildMembersArray = Array.from(guildMembers.keys());
-
-	discordUsers.bulkWrite(
-		guildMembers.map(user => {
-			return {
-				updateOne: {
-					filter: { userId: user.id },
-					update: {
-						$set: {
-							userId: user.id,
-							created: user.user.createdTimestamp,
-							username: user.user.username,
-							discriminator: user.user.discriminator,
-							avatar: user.user.displayAvatarURL()
-						}
-					},
-					upsert: true
-				}
-			};
-		})
-	);
-
-	dbUsers.forEach(async user => {
-		if (guildMembersArray.indexOf(user.userId) === -1) {
-			removeUsers.push(user.userId);
+		if (!member) {
+			await pmdDB
+				.collection<AlphaUsers>("alphaUsers")
+				.deleteOne({ userId: aU.userId });
+			continue;
 		}
-	});
 
-	await discordUsers.deleteMany({ userId: { $in: removeUsers } });
-}
+		if (!member.roles.cache.has(config.roles.alpha))
+			await member.roles.add(config.roles.alpha);
+	}
 
-export async function updateBetaUsers() {
-	const betaUsers: any = await betaUserColl
-		.find({}, { projection: { _id: false } })
-		.toArray();
+	for (const bU of betaUsers) {
+		const member = await pmdGuild.members.fetch(bU.userId);
 
-	let guildMembers = (
-		await client.guilds.cache
-			.get("493130730549805057")
-			.members.fetch({ limit: 0 })
-	).filter(
-		m =>
-			(m.roles.cache.has(roles.booster) ||
-				betaUsers.find(b => b.userId === m.user.id)) &&
-			!m.roles.cache.has(roles.alpha) &&
-			!m.roles.cache.has(roles.beta)
-	);
+		if (!member) {
+			await pmdDB
+				.collection<BetaUsers>("betaUsers")
+				.deleteOne({ userId: bU.userId });
+			continue;
+		}
 
-	for (let i = 0; i < guildMembers.size; i++)
-		await [...guildMembers.values()][i].roles.add(roles.beta);
-
-	info("Updated beta users.");
+		if (!member.roles.cache.has(config.roles.beta))
+			await member.roles.add(config.roles.beta);
+	}
 }

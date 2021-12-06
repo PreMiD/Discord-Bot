@@ -1,125 +1,84 @@
-import * as Discord from "discord.js";
+import { GuildMember } from "discord.js";
 
-import { pmdDB } from "../../../database/client";
-import roles from "../../../roles";
+import { pmdDB } from "../../..";
+import { AlphaUsers, BetaUsers } from "../../../../@types/interfaces";
+import config from "../../../config";
 
-const betaUsers = pmdDB.collection("betaUsers"),
-	alphaUsers = pmdDB.collection("alphaUsers");
+export default async function (oldMember: GuildMember, newMember: GuildMember) {
+	const oldRoles = oldMember.roles.cache,
+		newRoles = newMember.roles.cache;
 
-module.exports = async (
-	oldMember: Discord.GuildMember,
-	newMember: Discord.GuildMember
-) => {
-	//* Add beta access when the beta role is given.
-	if (
-		!oldMember.roles.cache.has(roles.beta) &&
-		newMember.roles.cache.has(roles.beta)
-	) {
-		betaUsers.findOneAndUpdate(
-			{ userId: newMember.id },
-			{ $set: { userId: newMember.id } },
-			{ upsert: true }
-		);
+	//* Member get's alpha role
+	if (!oldRoles.has(config.roles.alpha) && newRoles.has(config.roles.alpha)) {
+		if (newRoles.has(config.roles.beta))
+			await newMember.roles.remove(config.roles.beta);
+
+		return await pmdDB
+			.collection<BetaUsers>("betaUsers")
+			.updateOne(
+				{ userId: oldMember.id },
+				{ $set: { userId: oldMember.id } },
+				{ upsert: true }
+			);
 	}
 
-	if (
-		!oldMember.roles.cache.has(roles.alpha) &&
-		newMember.roles.cache.has(roles.alpha)
-	) {
-		alphaUsers.findOneAndUpdate(
-			{ userId: newMember.id },
-			{ $set: { userId: newMember.id } },
-			{ upsert: true }
-		);
+	//* Member get's beta role
+	if (!oldRoles.has(config.roles.beta) && newRoles.has(config.roles.beta))
+		return await pmdDB
+			.collection<BetaUsers>("betaUsers")
+			.updateOne(
+				{ userId: oldMember.id },
+				{ $set: { userId: oldMember.id } },
+				{ upsert: true }
+			);
+
+	//* Member loses beta role
+	if (oldRoles.has(config.roles.beta) && !newRoles.has(config.roles.beta)) {
+		//* Member has donator or booster role but not alpha role, add beta back to user
+		if (
+			(newRoles.has(config.roles.donator) ||
+				newRoles.has(config.roles.booster)) &&
+			!newRoles.has(config.roles.alpha) &&
+			!newRoles.has(config.roles.patron)
+		)
+			return await newMember.roles.add(config.roles.beta);
+
+		return await pmdDB
+			.collection<BetaUsers>("betaUsers")
+			.deleteOne({ userId: oldMember.id });
 	}
 
-	//* Remove beta access when the beta role is removed.
-	if (
-		oldMember.roles.cache.has(roles.beta) &&
-		!newMember.roles.cache.has(roles.beta)
-	)
-		betaUsers.findOneAndDelete({ userId: newMember.id });
+	//* Member loses alpha role
+	if (oldRoles.has(config.roles.alpha) && !newRoles.has(config.roles.alpha)) {
+		//* Member has patron role, give alpha role back
+		if (newRoles.has(config.roles.patron))
+			return await newMember.roles.add(config.roles.alpha);
 
-	//* Remove alpha access when the alpha role is removed.
-	if (
-		oldMember.roles.cache.has(roles.alpha) &&
-		!newMember.roles.cache.has(roles.alpha)
-	)
-		alphaUsers.findOneAndDelete({ userId: newMember.id });
-
-	//* Give old patron beta if he stops supporting
-	if (
-		oldMember.roles.cache.has(roles.patron) &&
-		!newMember.roles.cache.has(roles.patron)
-	) {
-		await newMember.roles.remove(roles.alpha);
-		newMember.roles.add([roles.beta, roles.donator]);
-		return;
+		return await pmdDB
+			.collection<AlphaUsers>(`alphaUsers`)
+			.deleteOne({ userId: oldMember.id });
 	}
 
-	//* If user is patron and does not have alpha role, give it to them.
-	if (
-		newMember.roles.cache.has(roles.patron) &&
-		!newMember.roles.cache.has(roles.alpha)
-	) {
-		if (newMember.roles.cache.has(roles.donator))
-			newMember.roles.remove([roles.donator, roles.beta]);
-		newMember.roles.add(roles.alpha);
-		return;
+	//* New Patron, give alpha role and remove beta role
+	if (newRoles.has(config.roles.patron) && !oldRoles.has(config.roles.patron)) {
+		if (newRoles.has(config.roles.beta))
+			await newMember.roles.remove(config.roles.beta);
+		if (!newRoles.has(config.roles.alpha))
+			await newMember.roles.add(config.roles.alpha);
 	}
 
-	//* If user is donator and does not have beta role, give it to them.
-	if (
-		newMember.roles.cache.has(roles.donator) &&
-		!newMember.roles.cache.has(roles.alpha) &&
-		!newMember.roles.cache.has(roles.beta)
-	)
-		newMember.roles.add(roles.beta);
-
-	//* If user is donator and get's alpha role remove beta role
-	if (
-		newMember.roles.cache.has(roles.donator) &&
-		newMember.roles.cache.has(roles.alpha) &&
-		newMember.roles.cache.has(roles.beta)
-	)
-		newMember.roles.remove(roles.beta);
-
-	//* If user boosts and doesn't have beta role, give it to them.
-	if (
-		newMember.roles.cache.has(roles.booster) &&
-		!newMember.roles.cache.has(roles.beta) &&
-		!newMember.roles.cache.has(roles.alpha)
-	)
-		newMember.roles.add(roles.beta);
-
-	//* Remove beta access when boost expires.
-	if (
-		oldMember.roles.cache.has(roles.donator) &&
-		newMember.roles.cache.has(roles.donator)
-	)
-		return;
-
-	//* Remove beta access if they didn't boost for longer then 3 months.
-	if (
-		oldMember.roles.cache.has(roles.booster) &&
-		!newMember.roles.cache.has(roles.booster) &&
-		!newMember.roles.cache.has(roles.patron) &&
-		!newMember.roles.cache.has(roles.donator)
-	) {
-		newMember.roles.remove(roles.beta);
-		return;
+	//* Member stops pledging on Patreon, give beta role
+	if (oldRoles.has(config.roles.patron) && !newRoles.has(config.roles.patron)) {
+		if (newRoles.has(config.roles.alpha))
+			await newMember.roles.remove(config.roles.alpha);
+		await newMember.roles.add(config.roles.beta);
 	}
 
-	//* Remove alpha and add back beta if they boosted over 3 monhts.
-	if (
-		oldMember.roles.cache.has(roles.booster) &&
-		!newMember.roles.cache.has(roles.booster) &&
-		!newMember.roles.cache.has(roles.patron) &&
-		newMember.roles.cache.has(roles.donator) &&
-		newMember.roles.cache.has(roles.alpha)
-	) {
-		newMember.roles.remove(roles.alpha);
-		newMember.roles.add(roles.beta);
-		return;
-	}
-};
+	//* Member receives donator role, give beta role
+	if (newRoles.has(config.roles.donator) && !oldRoles.has(config.roles.donator))
+		return await newMember.roles.add(config.roles.beta);
+
+	//* Member boosts, give beta role
+	if (newRoles.has(config.roles.booster) && !oldRoles.has(config.roles.booster))
+		return await newMember.roles.add(config.roles.beta);
+}

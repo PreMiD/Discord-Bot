@@ -1,14 +1,12 @@
-import * as Discord from "discord.js";
-import { pmdDB } from "../database/client";
+import { GuildMember } from "discord.js";
 
-const coll = pmdDB.collection("userSettings"),
-	betaUsers = pmdDB.collection("betaUsers"),
-	alphaUsers = pmdDB.collection("alphaUsers"),
-	discordUsers = pmdDB.collection("discordUsers");
+import { pmdDB } from "..";
+import { DiscordUsers } from "../../@types/interfaces";
 
-module.exports = (member: Discord.GuildMember) => {
-	coll.findOneAndDelete({ userId: member.id });
-	betaUsers.findOneAndDelete({ userId: member.id });
-	alphaUsers.findOneAndDelete({ userId: member.id });
-	discordUsers.findOneAndDelete({ userId: member.id });
-};
+export default async function (member: GuildMember) {
+	await Promise.all([
+		pmdDB
+			.collection<DiscordUsers>("discordUsers")
+			.deleteOne({ userId: member.id })
+	]);
+}

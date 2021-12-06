@@ -1,16 +1,19 @@
 FROM node:current-alpine
 
+COPY package.json package.json
+RUN yarn
+
 COPY . .
 
 RUN yarn build
-RUN npm prune --production
 
 FROM node:current-alpine
 
 ENV NODE_ENV=production
 
-COPY --from=0 dist .
-COPY --from=0 node_modules node_modules
+COPY package.json package.json
+RUN yarn
 
+COPY --from=0 dist .
 
 CMD ["node", "index"]

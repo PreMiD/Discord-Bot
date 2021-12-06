@@ -1,3 +1,5 @@
+import config from "../../config";
+
 export default {
 	projectLeader: "493135149274365975",
 	staffCoordinator: "691382096878370837",
@@ -10,10 +12,10 @@ export default {
 	marketingDirector: "673681900476432387",
 	localizationManager: "811262682408943616",
 	representative: "691384256672563332",
-	patron: "515874214750715904",
-	donator: "502165799172309013",
-	booster: "585532751663333383",
+	patron: config.roles.patron,
+	donator: config.roles.donator,
+	booster: config.roles.booster,
 	proofreader: "522755339448483840",
 	translator: "502148045991968788",
-	presenceDev: "606222296016879722"
+	presenceDev: config.roles.presenceDev
 };

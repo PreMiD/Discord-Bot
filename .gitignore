@@ -1,11 +1,4 @@
+
 node_modules
-dist
-
-TicketLogs/*
-
-src/package.json
-
-.vscode
 .env
-
-*.js
+dist
