@@ -36,7 +36,7 @@ export default class ModuleLoader {
 		if (existsSync(`events`)) this.loadEvents(`events`);
 
 		if (existsSync("modules"))
-			this.loadModules("modules", readdirSync("modules"));
+			this.promises.push(this.loadModules("modules", readdirSync("modules")));
 
 		const commands = existsSync(`commands`) ? readdirSync(`commands`) : false;
 
