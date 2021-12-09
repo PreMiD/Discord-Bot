@@ -40,7 +40,7 @@ export interface Presences {
 		service: string;
 		color: string;
 		author: { id: Snowflake };
-		contributors: { id: Snowflake }[];
+		contributors?: { id: Snowflake }[];
 		url: string | string[];
 		description: {
 			en: string;

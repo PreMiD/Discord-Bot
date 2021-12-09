@@ -7,8 +7,13 @@ import updateDiscordUser from "../util/functions/updateDiscordUser";
 
 export default async function (member: GuildMember) {
 	const isPresenceDev = (await pmdDB
-		.collection<Presences>("Presences")
-		.findOne({ "metadata.author.id": member.id }))
+		.collection<Presences>("presences")
+		.findOne({
+			$or: [
+				{ "metadata.author.id": member.id },
+				{ "metadata.contributors.id": member.id }
+			]
+		}))
 		? true
 		: false;
 
