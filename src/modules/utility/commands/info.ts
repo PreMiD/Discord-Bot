@@ -1,11 +1,11 @@
 import {
-  ColorResolvable,
-  CommandInteraction,
-  InteractionReplyOptions,
-  MessageActionRow,
-  MessageButton,
-  MessageButtonOptions,
-  MessageEmbed,
+	ColorResolvable,
+	CommandInteraction,
+	InteractionReplyOptions,
+	MessageActionRow,
+	MessageButton,
+	MessageButtonOptions,
+	MessageEmbed
 } from "discord.js";
 import { sortBy } from "lodash";
 
@@ -49,7 +49,6 @@ export const config: ClientCommand = {
 	command: {
 		name: "info",
 		description: "Posts an information message.",
-		defaultPermission: true,
 		options: [
 			{
 				type: 3,
