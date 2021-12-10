@@ -1,6 +1,11 @@
-import { AutocompleteInteraction, Client, Collection, CommandInteraction } from "discord.js";
-import { existsSync, readdirSync } from "fs";
-import { isEqual } from "lodash";
+import {
+	AutocompleteInteraction,
+	Client,
+	Collection,
+	CommandInteraction
+} from "discord.js";
+import { existsSync } from "fs";
+import { readdir } from "fs/promises";
 import { basename, dirname, resolve } from "path";
 
 import { client, mainLog } from "../..";
@@ -33,14 +38,13 @@ export default class ModuleLoader {
 	}
 
 	async init() {
-		if (existsSync(`events`)) this.loadEvents(`events`);
+		if (existsSync(`events`)) this.promises.push(this.loadEvents(`events`));
+
+		if (existsSync("commands"))
+			this.promises.push(this.loadCommands(`commands`));
 
 		if (existsSync("modules"))
-			this.promises.push(this.loadModules("modules", readdirSync("modules")));
-
-		const commands = existsSync(`commands`) ? readdirSync(`commands`) : false;
-
-		if (commands) this.promises.push(this.loadCommands(`commands`));
+			this.promises.push(this.loadModules("modules", await readdir("modules")));
 
 		await Promise.all(this.promises);
 
@@ -66,7 +70,7 @@ export default class ModuleLoader {
 		if (!existsSync(basePath)) return;
 
 		const log = this.log.extend(basename(dirname(resolve("..", basePath)))),
-			events = readdirSync(`${basePath}`).filter(f => !f.endsWith(".map"));
+			events = (await readdir(`${basePath}`)).filter(f => !f.endsWith(".map"));
 		log("Loading %d events...", events.length);
 
 		await Promise.all(
@@ -83,7 +87,9 @@ export default class ModuleLoader {
 		if (!existsSync(basePath)) return;
 
 		const log = this.log.extend(basename(dirname(resolve("..", basePath)))),
-			commands = readdirSync(`${basePath}`).filter(f => !f.endsWith(".map"));
+			commands = (await readdir(`${basePath}`)).filter(
+				f => !f.endsWith(".map")
+			);
 		log("Loading %d commands...", commands.length);
 		await Promise.all(
 			commands.map(async command => {
@@ -95,7 +101,7 @@ export default class ModuleLoader {
 					run: cmd.default
 				});
 
-				log("Loaded %s command...", command.split(".")[0]);
+				log("Loaded %s command.", command.split(".")[0]);
 			})
 		);
 	}
@@ -111,19 +117,17 @@ export default class ModuleLoader {
 			commands.map(c => c.command)
 		);
 
-		for (const aCmd of activeCommands.values()) {
-			const cmd = commands.find(c => c.command.name === aCmd.name)!;
+		this.log("Updating permissions...");
+		await pmdGuild.commands.permissions.set({
+			fullPermissions: activeCommands.map(c => {
+				const perms = commands.find(
+					c1 => c1.command.name === c.name
+				)?.permissions;
 
-			try {
-				const aPerms = await aCmd.permissions.fetch({});
+				return { id: c.id, permissions: perms || [] };
+			})
+		});
 
-				if (!isEqual(cmd.permissions, aPerms)) {
-					console.log(cmd.permissions, aPerms);
-					this.log("Updating permissions for %s...", aCmd.name);
-
-					await aCmd.permissions.set({ permissions: cmd.permissions || [] });
-				}
-			} catch (err) {}
-		}
+		this.log("Updated permissions.");
 	}
 }
