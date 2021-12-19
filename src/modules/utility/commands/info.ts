@@ -276,7 +276,7 @@ export const shortInfos: {
 		links: [
 			{
 				label: "Proof",
-				url: "https://twitter.com/discord/status/123370407039066931"
+				url: "https://twitter.com/discord/status/1233704070390669312"
 			}
 		],
 		footer: false
