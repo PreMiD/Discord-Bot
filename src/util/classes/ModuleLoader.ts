@@ -120,9 +120,8 @@ export default class ModuleLoader {
 		this.log("Updating permissions...");
 		await pmdGuild.commands.permissions.set({
 			fullPermissions: activeCommands.map(c => {
-				const perms = commands.find(
-					c1 => c1.command.name === c.name
-				)?.permissions;
+				const perms = commands.find(c1 => c1.command.name === c.name)
+					?.permissions;
 
 				return { id: c.id, permissions: perms || [] };
 			})

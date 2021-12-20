@@ -1,9 +1,9 @@
 import {
-  AutocompleteInteraction,
-  CommandInteraction,
-  MessageButton,
-  MessageEmbed,
-  WebhookEditMessageOptions,
+	AutocompleteInteraction,
+	CommandInteraction,
+	MessageButton,
+	MessageEmbed,
+	WebhookEditMessageOptions
 } from "discord.js";
 
 import { client, pmdDB, presencesStrings } from "../../..";

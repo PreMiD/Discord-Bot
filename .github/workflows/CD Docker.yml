@@ -29,7 +29,9 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - run: echo IMAGE_REPOSITORY=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_ENV
+      - run:
+          echo IMAGE_REPOSITORY=$(echo ${{ github.repository }} | tr '[:upper:]'
+          '[:lower:]') >> $GITHUB_ENV
       - name: Build and push
         uses: docker/build-push-action@v2
         with:

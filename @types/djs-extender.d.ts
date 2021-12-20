@@ -1,8 +1,8 @@
 import {
-  ApplicationCommandData,
-  ApplicationCommandPermissionData,
-  AutocompleteInteraction,
-  CommandInteraction,
+	ApplicationCommandData,
+	ApplicationCommandPermissionData,
+	AutocompleteInteraction,
+	CommandInteraction
 } from "discord.js";
 
 declare module "discord.js" {
