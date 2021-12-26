@@ -1,9 +1,4 @@
-import {
-	AutocompleteInteraction,
-	Client,
-	Collection,
-	CommandInteraction
-} from "discord.js";
+import { AutocompleteInteraction, Client, Collection, CommandInteraction } from "discord.js";
 import { existsSync } from "fs";
 import { readdir } from "fs/promises";
 import { basename, dirname, resolve } from "path";
@@ -30,8 +25,7 @@ export default class ModuleLoader {
 
 			const cmd = client.commands.get(int1.commandName) as ClientCommand;
 
-			if (!cmd && int1.isCommand())
-				return int1.reply({ ephemeral: true, content: "Command not found." });
+			if (!cmd && int1.isCommand()) return int1.reply({ ephemeral: true, content: "Command not found." });
 
 			cmd.run!(int1);
 		});
@@ -40,11 +34,9 @@ export default class ModuleLoader {
 	async init() {
 		if (existsSync(`events`)) this.promises.push(this.loadEvents(`events`));
 
-		if (existsSync("commands"))
-			this.promises.push(this.loadCommands(`commands`));
+		if (existsSync("commands")) this.promises.push(this.loadCommands(`commands`));
 
-		if (existsSync("modules"))
-			this.promises.push(this.loadModules("modules", await readdir("modules")));
+		if (existsSync("modules")) this.promises.push(this.loadModules("modules", await readdir("modules")));
 
 		await Promise.all(this.promises);
 
@@ -87,9 +79,7 @@ export default class ModuleLoader {
 		if (!existsSync(basePath)) return;
 
 		const log = this.log.extend(basename(dirname(resolve("..", basePath)))),
-			commands = (await readdir(`${basePath}`)).filter(
-				f => !f.endsWith(".map")
-			);
+			commands = (await readdir(`${basePath}`)).filter(f => !f.endsWith(".map"));
 		log("Loading %d commands...", commands.length);
 		await Promise.all(
 			commands.map(async command => {
@@ -106,23 +96,17 @@ export default class ModuleLoader {
 		);
 	}
 
-	private async updateInteractions(
-		commands: Collection<string, ClientCommand>
-	) {
+	private async updateInteractions(commands: Collection<string, ClientCommand>) {
 		const pmdGuild = await client.guilds.fetch(config.guildId);
 
 		await client.application!.commands.fetch({ guildId: pmdGuild.id });
 
-		let activeCommands = await pmdGuild.commands.set(
-			commands.map(c => c.command)
-		);
+		let activeCommands = await pmdGuild.commands.set(commands.map(c => c.command));
 
 		this.log("Updating permissions...");
 		await pmdGuild.commands.permissions.set({
 			fullPermissions: activeCommands.map(c => {
-				const perms = commands.find(
-					c1 => c1.command.name === c.name
-				)?.permissions;
+				const perms = commands.find(c1 => c1.command.name === c.name)?.permissions;
 
 				return { id: c.id, permissions: perms || [] };
 			})

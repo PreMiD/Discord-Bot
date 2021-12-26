@@ -14,11 +14,7 @@ export default class Module {
 	initialized: Promise<void>;
 	log: debug.Debugger;
 
-	constructor(
-		public moduleLoader: ModuleLoader,
-		public client: Client,
-		public options: ModuleOptions
-	) {
+	constructor(public moduleLoader: ModuleLoader, public client: Client, public options: ModuleOptions) {
 		this.moduleLoader.modules.push(this);
 
 		this.log = mainLog.extend(`Module`).extend(options.name);
@@ -27,9 +23,7 @@ export default class Module {
 
 	async init() {
 		this.log("Loading commands...");
-		await this.moduleLoader.loadCommands(
-			resolve(`${this.options.path}/commands`)
-		);
+		await this.moduleLoader.loadCommands(resolve(`${this.options.path}/commands`));
 
 		try {
 			this.log("Running index script...");
