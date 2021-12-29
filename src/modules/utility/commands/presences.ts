@@ -1,23 +1,13 @@
-import {
-  AutocompleteInteraction,
-  CommandInteraction,
-  MessageButton,
-  MessageEmbed,
-  WebhookEditMessageOptions,
-} from "discord.js";
+import { AutocompleteInteraction, CommandInteraction, MessageButton, MessageEmbed, WebhookEditMessageOptions } from "discord.js";
 
 import { client, pmdDB, presencesStrings } from "../../..";
 import { ClientCommand } from "../../../../@types/djs-extender";
 import { Presences } from "../../../../@types/interfaces";
 
-export default async function (
-	int: CommandInteraction | AutocompleteInteraction
-) {
+export default async function (int: CommandInteraction | AutocompleteInteraction) {
 	if (int.isAutocomplete()) {
 		const query = int.options.getString("query") || "",
-			results = presencesStrings
-				.filter(s => s.toLowerCase().includes(query.toLowerCase()))
-				.slice(0, 25);
+			results = presencesStrings.filter(s => s.toLowerCase().includes(query.toLowerCase())).slice(0, 25);
 
 		return int.respond(results.map(s => ({ name: s, value: s })));
 	}
@@ -57,23 +47,13 @@ export default async function (
 	if (dbPresence.metadata.contributors?.length)
 		contributorsField = {
 			name: "Contributors",
-			value: (
-				await Promise.all(
-					dbPresence.metadata.contributors.map(async c =>
-						(await client.users.fetch(c.id)).toString()
-					)
-				)
-			).join(", ")
+			value: (await Promise.all(dbPresence.metadata.contributors.map(async c => (await client.users.fetch(c.id)).toString()))).join(", ")
 		};
 
 	const author = await client.users.fetch(dbPresence.metadata.author.id),
 		embed = new MessageEmbed({
 			title: dbPresence.metadata.service,
-			url:
-				"https://" +
-				(Array.isArray(dbPresence.metadata.url)
-					? dbPresence.metadata.url[0]
-					: dbPresence.metadata.url),
+			url: "https://" + (Array.isArray(dbPresence.metadata.url) ? dbPresence.metadata.url[0] : dbPresence.metadata.url),
 			description: dbPresence.metadata.description.en,
 			thumbnail: {
 				url: dbPresence.metadata.logo
@@ -82,9 +62,7 @@ export default async function (
 				name: author.username + "#" + author.discriminator,
 				icon_url: author.displayAvatarURL()
 			},
-			fields: dbPresence.metadata.contributors?.length
-				? [contributorsField]
-				: []
+			fields: dbPresence.metadata.contributors?.length ? [contributorsField] : []
 		});
 
 	embed.setColor(dbPresence.metadata.color as any);

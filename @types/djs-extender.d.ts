@@ -1,9 +1,4 @@
-import {
-  ApplicationCommandData,
-  ApplicationCommandPermissionData,
-  AutocompleteInteraction,
-  CommandInteraction,
-} from "discord.js";
+import { ApplicationCommandData, ApplicationCommandPermissionData, AutocompleteInteraction, CommandInteraction } from "discord.js";
 
 declare module "discord.js" {
 	interface Client {

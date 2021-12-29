@@ -33,9 +33,7 @@ export async function updateCredits() {
 
 		const color =
 			//@ts-expect-error
-			roleColors[
-				Object.entries(roles).find(v => v[1] === highestRole.id)![0]
-			] as string;
+			roleColors[Object.entries(roles).find(v => v[1] === highestRole.id)![0]] as string;
 
 		return {
 			userId: m.id,
@@ -45,8 +43,7 @@ export async function updateCredits() {
 				format: "png",
 				dynamic: true
 			}),
-			premium_since:
-				m.premiumSince !== null ? m.premiumSinceTimestamp! : undefined,
+			premium_since: m.premiumSince !== null ? m.premiumSinceTimestamp! : undefined,
 			role: highestRole.name,
 			roleId: highestRole.id,
 			roles: m.roles.cache.filter(r => r.name !== "@everyone").map(r => r.name),

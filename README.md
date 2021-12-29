@@ -3,5 +3,6 @@
     <h1>PreMiD • Discord Bot</h1>
 </div>
 
-#### This  repository contains the code for our discord bot which helps us with support tickets and passing data through discord and our website!
+#### This repository contains the code for our discord bot which helps us with support tickets and passing data through discord and our website!
+
 #### For support or any questions, you can head to our [Discord Server](https://discord.premid.app)!

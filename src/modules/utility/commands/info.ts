@@ -12,9 +12,7 @@ import { sortBy } from "lodash";
 import { ClientCommand } from "../../../../@types/djs-extender";
 
 export default async function (int: CommandInteraction) {
-	const info = Object.values(shortInfos).find(
-			(_, i) => Object.keys(shortInfos)[i] === int.options.getString("name")!
-		)!,
+	const info = Object.values(shortInfos).find((_, i) => Object.keys(shortInfos)[i] === int.options.getString("name")!)!,
 		embed = new MessageEmbed({
 			title: `${info.emoji || "🔖"} ${info.title}`,
 			description: info.description,
@@ -39,8 +37,7 @@ export default async function (int: CommandInteraction) {
 		response.components = [actionRow];
 	}
 
-	if (int.options.getUser("user"))
-		response.content = int.options.getUser("user")!.toString();
+	if (int.options.getUser("user")) response.content = int.options.getUser("user")!.toString();
 
 	return await int.reply(response);
 }
@@ -138,7 +135,6 @@ export const shortInfos: {
 		image?: string;
 		color?: ColorResolvable;
 		links?: Partial<MessageButtonOptions>[];
-		footer: boolean;
 	};
 } = {
 	troubleshooting: {
@@ -146,7 +142,7 @@ export const shortInfos: {
 		emoji: "❓",
 		description:
 			"If you have problems with PreMiD, you can read our troubleshooting guide and if it doesn't solve your problem use our support system by simply writing your concern in <#566738846650335232>.",
-		footer: false,
+
 		links: [
 			{
 				label: "Troubleshooting Guide",
@@ -168,8 +164,7 @@ export const shortInfos: {
 				label: "Discord's Tweet",
 				url: "https://twitter.com/discordapp/status/908000828690182145"
 			}
-		],
-		footer: false
+		]
 	},
 	creatingAPresence: {
 		title: "Creating a Presence for PreMiD",
@@ -185,8 +180,7 @@ export const shortInfos: {
 				label: "Open an issue",
 				url: "https://github.com/PreMiD/Presences/issues/new?template=service_request.md"
 			}
-		],
-		footer: false
+		]
 	},
 	docs: {
 		title: "Read the Docs!",
@@ -197,37 +191,32 @@ export const shortInfos: {
 				label: "Documentation",
 				url: "https://docs.premid.app"
 			}
-		],
-		footer: false
+		]
 	},
 	website: {
 		title: "Visit Our Website",
 		emoji: "🌐",
-		description:
-			"Press the button below to visit our website full of greatness.",
+		description: "Press the button below to visit our website full of greatness.",
 		links: [
 			{
 				label: "Website",
 				url: "https://premid.app"
 			}
-		],
-		footer: false
+		]
 	},
 	presenceStore: {
 		title: "PreMiD Presence Store",
 		emoji: "🏪",
 		description:
 			"Since 2.0 we have added our so called Presence Store which is used to add more Presences for more websites other than the default ones added by PreMiD. These Presences are created by our staff or PreMiD's community. You don't have to worry about security/privacy issues tho as our staff reviews every presence added to the store. If you wish to add more Presences to PreMiD visit [our store](https://premid.app/store)! *Oh and btw, its free.*",
-		links: [{ label: "Presence Store", url: "https://premid.app/store" }],
-		footer: false
+		links: [{ label: "Presence Store", url: "https://premid.app/store" }]
 	},
 	downloadPreMiD: {
 		title: "Download PreMiD",
 		emoji: "📦",
 		description:
 			"You can download PreMiD and its extension for your browser, but don't forget that **you need both application and extension** to get PreMiD to work (**NOTE: We do not support the web version of Discord**).",
-		links: [{ label: "Downloads", url: "https://premid.app/downloads" }],
-		footer: false
+		links: [{ label: "Downloads", url: "https://premid.app/downloads" }]
 	},
 	donate: {
 		title: "Donate to PreMiD's Development",
@@ -237,15 +226,13 @@ export const shortInfos: {
 		links: [
 			{ label: "Patreon", url: "https://patreon.com/Timeraa" },
 			{ label: "GitHub Sponsors", url: "https://github.com/sponsors/Timeraa" }
-		],
-		footer: false
+		]
 	},
 	creatingATicket: {
 		title: "Creating a Proper Support Ticket",
 		emoji: "🙋",
 		description:
-			"We built our own support system which you can use by writing a message into <#566738846650335232>. These tickets are being handled by our support agents/moderators. But please don't abuse this channel by writing nonsense into it.\n\n**You can help us speed up the process of handling your ticket if you provide us with basic information like:**\n• Your problem\n• Your OS (Operating System)\n• Your browser\n• Assets of your problem (images, files, logs...).\n\n**Before you create a ticket make sure to read our documentation as it may already have the answer to your question/problem**",
-		footer: false
+			"We built our own support system which you can use by writing a message into <#566738846650335232>. These tickets are being handled by our support agents/moderators. But please don't abuse this channel by writing nonsense into it.\n\n**You can help us speed up the process of handling your ticket if you provide us with basic information like:**\n• Your problem\n• Your OS (Operating System)\n• Your browser\n• Assets of your problem (images, files, logs...).\n\n**Before you create a ticket make sure to read our documentation as it may already have the answer to your question/problem**"
 	},
 	suggestingAPresence: {
 		title: "Suggesting a Presence",
@@ -265,27 +252,23 @@ export const shortInfos: {
 				label: "Service Request",
 				url: "https://github.com/PreMiD/Presences/discussions/4658"
 			}
-		],
-		footer: false
+		]
 	},
 	tos: {
 		title: "PreMiD and Discord",
 		emoji: "🧬",
-		description:
-			"PreMiD is compliant to Discord's ToS and therefore you can use it without any risk of losing your Discord account.",
+		description: "PreMiD is compliant to Discord's ToS and therefore you can use it without any risk of losing your Discord account.",
 		links: [
 			{
 				label: "Proof",
 				url: "https://twitter.com/discord/status/1233704070390669312"
 			}
-		],
-		footer: false
+		]
 	},
 	unidentifiedDeveloper: {
 		title: "Allow apps from unidentified developers",
 		description:
-			"Steps for **macOS Big Sur (11.0+)**:\n1. Right click on our installer.\n2. Click `Open` in the dropdown menu.\n3. Click `Open` in popup.\n\nSteps for **older macOS versions**:\n1. Open System Preferences.\n2. Go to the Security & Privacy tab.\n3. Click on the lock and enter your password or scan your fingerprint so you can make changes.\n4. Change the setting for 'Allow apps downloaded from' to 'App Store and identified developers' from just 'App Store'.",
-		footer: false
+			"Steps for **macOS Big Sur (11.0+)**:\n1. Right click on our installer.\n2. Click `Open` in the dropdown menu.\n3. Click `Open` in popup.\n\nSteps for **older macOS versions**:\n1. Open System Preferences.\n2. Go to the Security & Privacy tab.\n3. Click on the lock and enter your password or scan your fingerprint so you can make changes.\n4. Change the setting for 'Allow apps downloaded from' to 'App Store and identified developers' from just 'App Store'."
 	},
 	reportingaPresenceRelatedBug: {
 		title: "Reporting a Presence Related Bug",
@@ -301,15 +284,13 @@ export const shortInfos: {
 				label: "Bug Report",
 				url: "https://github.com/PreMiD/Presences/issues/new?assignees=&labels=%F0%9F%90%9B+Bug&template=bug_report.yml&title=Service+Name+%7C+Service+URL"
 			}
-		],
-		footer: false
+		]
 	},
 	crowdinStringIssue: {
 		title: "Copying string URLs on Crowdin",
 		description:
 			"When asking a question about a specific string, you should always send its URL. Here's how you can get it:\n**1.** Click on the three dots (...) on the top right of the editor.\n**2.** Select \"**Copy String URL**\".\n\nHere's an image of what the button should look like:",
-		image: "https://i.imgur.com/04BtD26.png",
-		footer: false
+		image: "https://i.imgur.com/04BtD26.png"
 	},
 	falseAdblockDetection: {
 		title: "False Adblock Detection",
@@ -321,7 +302,6 @@ export const shortInfos: {
 				label: "Download Links",
 				url: "https://discord.com/channels/493130730549805057/527675240231206934/715852870062309386"
 			}
-		],
-		footer: false
+		]
 	}
 };

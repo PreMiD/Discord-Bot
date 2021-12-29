@@ -13,11 +13,9 @@ class Client extends Discord.Client {
 	commands = new Discord.Collection<string, ClientCommand>();
 }
 
-if (!process.env.MONGO_URI)
-	throw new Error("Please set the MONGO_URI environment variable");
+if (!process.env.MONGO_URI) throw new Error("Please set the MONGO_URI environment variable");
 
-if (!process.env.TOKEN)
-	throw new Error("Please set the TOKEN environment variable");
+if (!process.env.TOKEN) throw new Error("Please set the TOKEN environment variable");
 
 export const mainLog = debug("PreMiD-Bot"),
 	mongodb = new MongoClient(process.env.MONGO_URI, {
@@ -31,27 +29,7 @@ export let pmdDB: Db,
 
 //* Create new client & set login presence
 export let client = new Client({
-	intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_PRESENCES"],
-	presence:
-		process.env.NODE_ENV == "dev"
-			? {
-					status: "dnd",
-					activities: [
-						{
-							name: "devs code",
-							type: "WATCHING"
-						}
-					]
-			  }
-			: {
-					status: "online",
-					activities: [
-						{
-							name: "YouTube Music",
-							type: "LISTENING"
-						}
-					]
-			  }
+	intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_PRESENCES"]
 });
 
 async function run() {

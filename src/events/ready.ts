@@ -5,6 +5,17 @@ import config from "../config";
 export default async function () {
 	await managePresenceDevelopers();
 	setInterval(managePresenceDevelopers, 15 * 60 * 1000);
+
+	updateStatusActivity();
+	setInterval(updateStatusActivity, 2 * 60 * 1000);
+}
+
+async function updateStatusActivity(): Promise<void> {
+	const presences = (await pmdDB.collection<Presences>("presences").find({}).toArray()).map(presence => presence.metadata),
+		randomPresence = presences[Math.floor(Math.random() * presences.length)];
+	client.user?.setActivity(randomPresence.service, {
+		type: randomPresence.category === "music" ? "LISTENING" : randomPresence.category === "videos" ? "WATCHING" : "PLAYING"
+	});
 }
 
 async function managePresenceDevelopers() {
@@ -26,10 +37,7 @@ async function managePresenceDevelopers() {
 							}
 						}
 					)
-					.map(u => [
-						u.metadata.author.id,
-						...(u.metadata.contributors?.map(c => c.id) || [])
-					])
+					.map(u => [u.metadata.author.id, ...(u.metadata.contributors?.map(c => c.id) || [])])
 					.toArray()
 			).flat()
 		)
