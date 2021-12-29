@@ -1,6 +1,6 @@
 import debug from "debug";
 import { Client } from "discord.js";
-import { resolve } from "path";
+import { resolve } from "node:path";
 
 import { mainLog } from "../..";
 import ModuleLoader from "./ModuleLoader";

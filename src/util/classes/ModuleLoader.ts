@@ -1,7 +1,7 @@
 import { AutocompleteInteraction, Client, Collection, CommandInteraction } from "discord.js";
-import { existsSync } from "fs";
-import { readdir } from "fs/promises";
-import { basename, dirname, resolve } from "path";
+import { existsSync } from "node:fs";
+import { readdir } from "node:fs/promises";
+import { basename, dirname, resolve } from "node:path";
 
 import { client, mainLog } from "../..";
 import { ClientCommand } from "../../../@types/djs-extender";
