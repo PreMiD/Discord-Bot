@@ -48,5 +48,6 @@ export interface Presences {
 		version: string;
 		logo: string;
 		category: string;
+		tags: string | string[];
 	};
 }
