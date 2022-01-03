@@ -175,15 +175,15 @@ export const shortInfos: {
 		title: "Creating a Presence for PreMiD",
 		emoji: "🏗",
 		description:
-			"If you wish to add support for a website that does not have a Presence yet, you can either open an discussion on GitHuB for it so that others may create it for you or you create it yourself. If you wish to create a Presence for PreMiD you need to have basic knowledge of TypeScript. For more information and docs on how to create a Presence follow our documentation.",
+			"If you wish to add support for a website that does not have a Presence yet, you can either open an issue on GitHub for it so that others may create it for you or you create it yourself. If you wish to create a Presence for PreMiD you need to have basic knowledge of TypeScript. For more information and docs on how to create a Presence follow our documentation.",
 		links: [
 			{
 				label: "Documentation",
 				url: "https://docs.premid.app/dev/presence"
 			},
 			{
-				label: "Open an issue",
-				url: "https://github.com/PreMiD/Presences/issues/new?template=service_request.md"
+				label: "Service Request",
+				url: "https://github.com/PreMiD/Presences/issues/new?assignees=&labels=Service+Request&template=service_request.yml"
 			}
 		],
 		footer: false
@@ -251,7 +251,7 @@ export const shortInfos: {
 		title: "Suggesting a Presence",
 		emoji: "🗳",
 		description:
-			"If you'd like to suggest a presence, you can do this on our GitHub repository by creating a new discussion with the Service Request template! If want to create a Presence yourself, you can find more information on our documentation",
+			"If you'd like to suggest a presence, you can do this on our GitHub repository by creating a new issue with the Service Request template! If want to create a Presence yourself, you can find more information on our documentation",
 		links: [
 			{
 				label: "PreMiD Documentation",
@@ -263,7 +263,7 @@ export const shortInfos: {
 			},
 			{
 				label: "Service Request",
-				url: "https://github.com/PreMiD/Presences/discussions/4658"
+				url: "https://github.com/PreMiD/Presences/issues/new?assignees=&labels=Service+Request&template=service_request.yml"
 			}
 		],
 		footer: false
