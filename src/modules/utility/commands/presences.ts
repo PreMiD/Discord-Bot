@@ -1,4 +1,10 @@
-import { AutocompleteInteraction, CommandInteraction, MessageButton, MessageEmbed, WebhookEditMessageOptions } from "discord.js";
+import {
+  AutocompleteInteraction,
+  CommandInteraction,
+  MessageButton,
+  MessageEmbed,
+  WebhookEditMessageOptions,
+} from "discord.js";
 
 import { client, pmdDB, presencesStrings } from "../../..";
 import { ClientCommand } from "../../../../@types/djs-extender";
@@ -75,7 +81,7 @@ export default async function (int: CommandInteraction | AutocompleteInteraction
 				components: [
 					new MessageButton({
 						label: "Open in Store",
-						url: `https://premid.app/store/presences/${dbPresence.metadata.service}`,
+						url: `https://premid.app/store/presences/${encodeURI(dbPresence.metadata.service)}`,
 						style: "LINK"
 					})
 				]
