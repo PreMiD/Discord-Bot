@@ -8,7 +8,7 @@ updates:
       prefix: "🔼"
       prefix-development: "🔼"
     labels:
-      - "dependencies"
+      - "🔼 dependencies"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -17,4 +17,4 @@ updates:
       prefix: "🔼"
       prefix-development: "🔼"
     labels:
-      - "dependencies"
+      - "🔼 dependencies"
