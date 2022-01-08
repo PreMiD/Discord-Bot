@@ -13,7 +13,7 @@
 		"debug": "^4.3.3",
 		"discord.js": "13.5.0",
 		"lodash": "^4.17.21",
-		"mongodb": "4.2.2",
+		"mongodb": "4.3.0",
 		"source-map-support": "0.5.21"
 	},
 	"devDependencies": {
