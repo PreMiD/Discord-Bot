@@ -113,6 +113,10 @@ export const config: ClientCommand = {
 						{
 							name: "False Adblock Detection",
 							value: "falseAdblockDetection"
+						},
+						{
+							name: "Request a new feature",
+							value: "requestANewFeature"
 						}
 					],
 					"name"
@@ -301,6 +305,18 @@ export const shortInfos: {
 			{
 				label: "Download Links",
 				url: "https://discord.com/channels/493130730549805057/527675240231206934/715852870062309386"
+			}
+		]
+	},
+	requestANewFeature: {
+		title: "Request a new feature",
+		emoji: "🗳",
+		description:
+			"Does a presence you use not support a crucial page or not support all the possible domains for the website? If you believe a presence should include more features, you should open an issue on the Presence Repository using the Feature Request template.",
+		links: [
+			{
+				label: "Template",
+				url: "https://github.com/PreMiD/Presences/issues/new?assignees=&labels=Feature+Request&template=feature_request.yml"
 			}
 		]
 	}
