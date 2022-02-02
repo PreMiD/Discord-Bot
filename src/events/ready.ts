@@ -13,7 +13,7 @@ export default async function () {
 async function updateStatusActivity(): Promise<void> {
 	const presences = (await pmdDB.collection<Presences>("presences").find({}).toArray())
 			.map(presence => presence.metadata)
-			.filter(presence => !presence.tags.includes("nsfw") || presence.tags !== "nsfw"),
+			.filter(presence => !presence.tags.includes("nsfw")),
 		randomPresence = presences[Math.floor(Math.random() * presences.length)];
 	client.user?.setActivity(randomPresence.service, {
 		type: randomPresence.category === "music" ? "LISTENING" : randomPresence.category === "videos" ? "WATCHING" : "PLAYING"
