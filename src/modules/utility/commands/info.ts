@@ -1,4 +1,6 @@
+import { DiscordCommand } from "discord-module-loader";
 import {
+	AutocompleteInteraction,
 	ColorResolvable,
 	CommandInteraction,
 	InteractionReplyOptions,
@@ -7,129 +9,64 @@ import {
 	MessageButtonOptions,
 	MessageEmbed
 } from "discord.js";
-import { sortBy } from "lodash";
 
-import { ClientCommand } from "../../../../@types/djs-extender";
+export default new DiscordCommand({
+	name: "info",
+	description: "Posts an information message.",
+	options: [
+		{
+			name: "query",
+			description: "The presence to search for",
+			type: "STRING",
+			autocomplete: true,
+			required: true
+		},
+		{
+			name: "user",
+			description: "User to mention",
+			type: 6
+		}
+	],
+	execute: async (int: AutocompleteInteraction | CommandInteraction) => {
+		if (int.isAutocomplete()) {
+			const query = int.options.getString("query") || "",
+				results = Object.keys(shortInfos)
+					.filter(s => s.toLowerCase().includes(query.toLowerCase()))
+					.slice(0, 25);
 
-export default async function (int: CommandInteraction) {
-	const info = Object.values(shortInfos).find((_, i) => Object.keys(shortInfos)[i] === int.options.getString("name")!)!,
-		embed = new MessageEmbed({
-			title: `${info.emoji || "🔖"} ${info.title}`,
-			description: info.description,
-			color: info.color ?? "BLURPLE"
-		});
+			return int.respond(results.map(s => ({ name: s, value: s })));
+		}
 
-	let response: InteractionReplyOptions = { embeds: [embed] };
+		const info = Object.values(shortInfos).find((_, i) => Object.keys(shortInfos)[i] === int.options.getString("name")!)!,
+			embed = new MessageEmbed({
+				title: `${info.emoji || "🔖"} ${info.title}`,
+				description: info.description,
+				color: info.color ?? "BLURPLE"
+			});
 
-	if (info.image) embed.setImage(info.image);
-	if (info.links) {
-		const actionRow = new MessageActionRow();
+		let response: InteractionReplyOptions = { embeds: [embed] };
 
-		for (const link of info.links)
-			actionRow.components.push(
-				new MessageButton({
-					//@ts-expect-error
-					style: "LINK",
-					...link
-				})
-			);
+		if (info.image) embed.setImage(info.image);
+		if (info.links) {
+			const actionRow = new MessageActionRow();
 
-		response.components = [actionRow];
+			for (const link of info.links)
+				actionRow.components.push(
+					new MessageButton({
+						//@ts-expect-error
+						style: "LINK",
+						...link
+					})
+				);
+
+			response.components = [actionRow];
+		}
+
+		if (int.options.getUser("user")) response.content = int.options.getUser("user")!.toString();
+
+		return await int.reply(response);
 	}
-
-	if (int.options.getUser("user")) response.content = int.options.getUser("user")!.toString();
-
-	return await int.reply(response);
-}
-
-export const config: ClientCommand = {
-	command: {
-		name: "info",
-		description: "Posts an information message.",
-		options: [
-			{
-				type: 3,
-				required: true,
-				name: "name",
-				description: "Name of the info.",
-				choices: sortBy(
-					[
-						{
-							name: "Download PreMiD",
-							value: "downloadPreMiD"
-						},
-						{
-							name: "Donate",
-							value: "donate"
-						},
-						{
-							name: "Troubleshooting",
-							value: "troubleshooting"
-						},
-						{
-							name: "ToS",
-							value: "tos"
-						},
-						{
-							name: "Docs",
-							value: "docs"
-						},
-						{
-							name: "Website",
-							value: "website"
-						},
-						{
-							name: "Modified Client",
-							value: "modifiedClient"
-						},
-						{
-							name: "Creating a Presence",
-							value: "creatingAPresence"
-						},
-						{
-							name: "Presence Store",
-							value: "presenceStore"
-						},
-						{
-							name: "Crowdin String Issue",
-							value: "crowdinStringIssue"
-						},
-						{
-							name: "Creating a Ticket",
-							value: "creatingATicket"
-						},
-						{
-							name: "Suggesting a Presence",
-							value: "suggestingAPresence"
-						},
-						{
-							name: "Unidentified Developer",
-							value: "unidentifiedDeveloper"
-						},
-						{
-							name: "Reporting a Presence Related Bug",
-							value: "reportingaPresenceRelatedBug"
-						},
-						{
-							name: "False Adblock Detection",
-							value: "falseAdblockDetection"
-						},
-						{
-							name: "Request a new feature",
-							value: "requestANewFeature"
-						}
-					],
-					"name"
-				)
-			},
-			{
-				name: "user",
-				description: "User to mention",
-				type: 6
-			}
-		]
-	}
-};
+});
 
 export const shortInfos: {
 	[key: string]: {
