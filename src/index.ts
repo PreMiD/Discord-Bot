@@ -24,7 +24,7 @@ export const mainLog = debug("PreMiD-Bot"),
 	mongodb = new MongoClient(process.env.MONGO_URI, {
 		appName: "PreMiD Bot"
 	}),
-	moduleLoader = new ModuleLoader(client)
+	moduleLoader = new ModuleLoader(client);
 
 debug.enable("PreMiD-Bot*");
 
@@ -40,7 +40,7 @@ async function run() {
 
 	mainLog("Loading commands and events");
 	await moduleLoader.loadAll();
-	
+
 	await updatePresenceList();
 	setInterval(updatePresenceList, 1000 * 60 * 5);
 }
@@ -51,6 +51,6 @@ async function updatePresenceList() {
 		.find({}, { projection: { _id: false, name: true } })
 		.map(p => p.name)
 		.toArray();
-	}
-	
-	run();
+}
+
+run();

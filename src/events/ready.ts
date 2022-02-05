@@ -12,7 +12,7 @@ export default new DiscordEvent("ready", async () => {
 
 	mainLog("Updating slash commands");
 	await moduleLoader.updateSlashCommands();
-	
+
 	mainLog("Connected to Discord");
 });
 

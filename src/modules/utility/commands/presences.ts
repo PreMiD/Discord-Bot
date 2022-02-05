@@ -14,7 +14,7 @@ export default new DiscordCommand({
 			type: "STRING",
 			autocomplete: true,
 			required: true
-		},
+		}
 	],
 	execute: async (int: AutocompleteInteraction | CommandInteraction) => {
 		if (int.isAutocomplete()) {
