@@ -1,7 +1,7 @@
-import { GuildMember } from "discord.js";
+import { DiscordEvent } from "discord-module-loader";
 
-import updateDiscordUser from "../util/functions/updateDiscordUser";
+import updateDiscordUser from "../functions/updateDiscordUser";
 
-export default async function (_: GuildMember, newMember: GuildMember) {
+export default new DiscordEvent("guildMemberUpdate", async (_, newMember) => {
 	await updateDiscordUser(newMember);
-}
+});

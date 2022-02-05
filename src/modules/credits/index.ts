@@ -1,3 +1,4 @@
+import { DiscordModule } from "discord-module-loader";
 import { GuildMember } from "discord.js";
 
 import { client, pmdDB } from "../..";
@@ -6,10 +7,12 @@ import config from "../../config";
 import roleColors from "./roleColors";
 import roles from "./roles";
 
-export default async function () {
+export default new DiscordModule("credits");
+
+client.on("ready", async => {
 	updateCredits();
 	setInterval(updateCredits, 5 * 60 * 1000);
-}
+});
 
 export async function updateCredits() {
 	const guild = await client.guilds.fetch(config.guildId),
