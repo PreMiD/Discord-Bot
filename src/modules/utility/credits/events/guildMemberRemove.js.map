@@ -1,1 +1,0 @@
-{"version":3,"file":"guildMemberRemove.js","sourceRoot":"","sources":["guildMemberRemove.ts"],"names":[],"mappings":";;AAAA,iEAAqD;AAGrD,gCAAiC;AAGjC,kBAAe,IAAI,oCAAY,CAAC,mBAAmB,EAAE,KAAK,EAAC,MAAM,EAAC,EAAE;IACnE,MAAM,SAAK,CAAC,UAAU,CAAU,SAAS,CAAC,CAAC,SAAS,CAAC,EAAE,MAAM,EAAE,MAAM,CAAC,EAAE,EAAE,CAAC,CAAC;AAC7E,CAAC,CAAC,CAAC"}
