@@ -398,10 +398,10 @@ discord-api-types@^0.26.0:
   resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.26.1.tgz#726f766ddc37d60da95740991d22cb6ef2ed787b"
   integrity sha512-T5PdMQ+Y1MEECYMV5wmyi9VEYPagEDEi4S0amgsszpWY0VB9JJ/hEvM6BgLhbdnKky4gfmZEXtEEtojN8ZKJQQ==
 
-discord-module-loader@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/discord-module-loader/-/discord-module-loader-1.0.1.tgz#3876d05b2f708179dee998149a1d812373fa4800"
-  integrity sha512-d+5uJDF0XgZ2LJQXzPnLFpP0GrOy8Jz+k7a/N/cmV/FMvtcoJBr86qisavwVsIKUule56PN8LZ0uLyGN/2vlLw==
+discord-module-loader@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/discord-module-loader/-/discord-module-loader-1.2.1.tgz#16e8bb16dc9e1cb21b04208e405e7f1a84a44cd6"
+  integrity sha512-Gzr8kyD+UeJcJEt7w/dnrOhhUY+ddzt24ViyOeNRurgX/SPejbfi/t9rtoH8yBt+239VqgPLmZFcAJDYW/J07Q==
   dependencies:
     debug "^4.3.3"
     discord.js "^13.6.0"

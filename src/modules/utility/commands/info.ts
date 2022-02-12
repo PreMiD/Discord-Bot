@@ -16,7 +16,7 @@ export default new DiscordCommand({
 	options: [
 		{
 			name: "query",
-			description: "The presence to search for",
+			description: "The infomation message to search for",
 			type: "STRING",
 			autocomplete: true,
 			required: true
@@ -34,10 +34,10 @@ export default new DiscordCommand({
 					.filter(s => s.toLowerCase().includes(query.toLowerCase()))
 					.slice(0, 25);
 
-			return int.respond(results.map(s => ({ name: s, value: s })));
+			return int.respond(results.map(s => ({ name: shortInfos[s].title, value: s })));
 		}
 
-		const info = Object.values(shortInfos).find((_, i) => Object.keys(shortInfos)[i] === int.options.getString("name")!)!,
+		const info = Object.values(shortInfos).find((_, i) => Object.keys(shortInfos)[i] === int.options.getString("query")!)!,
 			embed = new MessageEmbed({
 				title: `${info.emoji || "🔖"} ${info.title}`,
 				description: info.description,
