@@ -1,5 +1,4 @@
 import { DiscordEvent } from "discord-module-loader";
-import { GuildMember } from "discord.js";
 
 import { pmdDB } from "../../..";
 import { AlphaUsers, BetaUsers } from "../../../../@types/interfaces";
