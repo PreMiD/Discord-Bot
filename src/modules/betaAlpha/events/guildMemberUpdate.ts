@@ -12,16 +12,16 @@ export default new DiscordEvent("guildMemberUpdate", async (oldMember, newMember
 	if (!oldRoles.has(config.roles.alpha) && newRoles.has(config.roles.alpha)) {
 		if (newRoles.has(config.roles.beta)) await newMember.roles.remove(config.roles.beta);
 
-		return void (await pmdDB
+		return await pmdDB
 			.collection<BetaUsers>("betaUsers")
-			.updateOne({ userId: oldMember.id }, { $set: { userId: oldMember.id } }, { upsert: true }));
+			.updateOne({ userId: oldMember.id }, { $set: { userId: oldMember.id } }, { upsert: true });
 	}
 
 	//* Member get's beta role
 	if (!oldRoles.has(config.roles.beta) && newRoles.has(config.roles.beta))
-		return void (await pmdDB
+		return await pmdDB
 			.collection<BetaUsers>("betaUsers")
-			.updateOne({ userId: oldMember.id }, { $set: { userId: oldMember.id } }, { upsert: true }));
+			.updateOne({ userId: oldMember.id }, { $set: { userId: oldMember.id } }, { upsert: true });
 
 	//* Member loses beta role
 	if (oldRoles.has(config.roles.beta) && !newRoles.has(config.roles.beta)) {
@@ -31,17 +31,17 @@ export default new DiscordEvent("guildMemberUpdate", async (oldMember, newMember
 			!newRoles.has(config.roles.alpha) &&
 			!newRoles.has(config.roles.patron)
 		)
-			return void (await newMember.roles.add(config.roles.beta));
+			return await newMember.roles.add(config.roles.beta);
 
-		return void (await pmdDB.collection<BetaUsers>("betaUsers").deleteOne({ userId: oldMember.id }));
+		return await pmdDB.collection<BetaUsers>("betaUsers").deleteOne({ userId: oldMember.id });
 	}
 
 	//* Member loses alpha role
 	if (oldRoles.has(config.roles.alpha) && !newRoles.has(config.roles.alpha)) {
 		//* Member has patron role, give alpha role back
-		if (newRoles.has(config.roles.patron)) return void (await newMember.roles.add(config.roles.alpha));
+		if (newRoles.has(config.roles.patron)) return await newMember.roles.add(config.roles.alpha);
 
-		return void (await pmdDB.collection<AlphaUsers>(`alphaUsers`).deleteOne({ userId: oldMember.id }));
+		return await pmdDB.collection<AlphaUsers>(`alphaUsers`).deleteOne({ userId: oldMember.id });
 	}
 
 	//* New Patron, give alpha role and remove beta role
@@ -57,8 +57,8 @@ export default new DiscordEvent("guildMemberUpdate", async (oldMember, newMember
 	}
 
 	//* Member receives donator role, give beta role
-	if (newRoles.has(config.roles.donator) && !oldRoles.has(config.roles.donator)) return void (await newMember.roles.add(config.roles.beta));
+	if (newRoles.has(config.roles.donator) && !oldRoles.has(config.roles.donator)) return await newMember.roles.add(config.roles.beta);
 
 	//* Member boosts, give beta role
-	if (newRoles.has(config.roles.booster) && !oldRoles.has(config.roles.booster)) return void (await newMember.roles.add(config.roles.beta));
+	if (newRoles.has(config.roles.booster) && !oldRoles.has(config.roles.booster)) return await newMember.roles.add(config.roles.beta);
 });
