@@ -1,8 +1,11 @@
+import { DiscordModule } from "discord-module-loader";
 import { client, pmdDB } from "../..";
 import { AlphaUsers, BetaUsers } from "../../../@types/interfaces";
 import config from "../../config";
 
-export default async function () {
+export default new DiscordModule("betaAlpha");
+
+client.on("ready", async () => {
 	const betaUsers = await pmdDB.collection<BetaUsers>("betaUsers").find().toArray(),
 		alphaUsers = await pmdDB.collection<AlphaUsers>("alphaUsers").find().toArray(),
 		pmdGuild = await client.guilds.fetch(config.guildId);
@@ -28,4 +31,4 @@ export default async function () {
 
 		if (!member.roles.cache.has(config.roles.beta)) await member.roles.add(config.roles.beta);
 	}
-}
+});

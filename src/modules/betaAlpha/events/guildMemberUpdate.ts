@@ -1,10 +1,10 @@
-import { GuildMember } from "discord.js";
+import { DiscordEvent } from "discord-module-loader";
 
 import { pmdDB } from "../../..";
 import { AlphaUsers, BetaUsers } from "../../../../@types/interfaces";
 import config from "../../../config";
 
-export default async function (oldMember: GuildMember, newMember: GuildMember) {
+export default new DiscordEvent("guildMemberUpdate", async (oldMember, newMember) => {
 	const oldRoles = oldMember.roles.cache,
 		newRoles = newMember.roles.cache;
 
@@ -61,4 +61,4 @@ export default async function (oldMember: GuildMember, newMember: GuildMember) {
 
 	//* Member boosts, give beta role
 	if (newRoles.has(config.roles.booster) && !oldRoles.has(config.roles.booster)) return await newMember.roles.add(config.roles.beta);
-}
+});

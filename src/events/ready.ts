@@ -1,14 +1,20 @@
-import { client, mainLog, pmdDB } from "..";
+import { DiscordEvent } from "discord-module-loader";
+import { client, mainLog, moduleLoader, pmdDB } from "..";
 import { Presences } from "../../@types/interfaces";
 import config from "../config";
 
-export default async function () {
+export default new DiscordEvent("ready", async () => {
 	await managePresenceDevelopers();
 	setInterval(managePresenceDevelopers, 15 * 60 * 1000);
 
 	updateStatusActivity();
 	setInterval(updateStatusActivity, 60 * 1000);
-}
+
+	mainLog("Updating slash commands");
+	await moduleLoader.updateSlashCommands();
+
+	mainLog("Connected to Discord");
+});
 
 async function updateStatusActivity(): Promise<void> {
 	const presences = (await pmdDB.collection<Presences>("presences").find({}).toArray())

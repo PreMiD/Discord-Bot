@@ -398,7 +398,16 @@ discord-api-types@^0.26.0:
   resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.26.1.tgz#726f766ddc37d60da95740991d22cb6ef2ed787b"
   integrity sha512-T5PdMQ+Y1MEECYMV5wmyi9VEYPagEDEi4S0amgsszpWY0VB9JJ/hEvM6BgLhbdnKky4gfmZEXtEEtojN8ZKJQQ==
 
-discord.js@13.6.0:
+discord-module-loader@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/discord-module-loader/-/discord-module-loader-1.2.1.tgz#16e8bb16dc9e1cb21b04208e405e7f1a84a44cd6"
+  integrity sha512-Gzr8kyD+UeJcJEt7w/dnrOhhUY+ddzt24ViyOeNRurgX/SPejbfi/t9rtoH8yBt+239VqgPLmZFcAJDYW/J07Q==
+  dependencies:
+    debug "^4.3.3"
+    discord.js "^13.6.0"
+    source-map-support "^0.5.21"
+
+discord.js@13.6.0, discord.js@^13.6.0:
   version "13.6.0"
   resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-13.6.0.tgz#d8a8a591dbf25cbcf9c783d5ddf22c4694860475"
   integrity sha512-tXNR8zgsEPxPBvGk3AQjJ9ljIIC6/LOPjzKwpwz8Y1Q2X66Vi3ZqFgRHYwnHKC0jC0F+l4LzxlhmOJsBZDNg9g==
@@ -1078,7 +1087,7 @@ socks@^2.6.1:
     ip "^1.1.5"
     smart-buffer "^4.1.0"
 
-source-map-support@0.5.21, source-map-support@^0.5.19:
+source-map-support@0.5.21, source-map-support@^0.5.19, source-map-support@^0.5.21:
   version "0.5.21"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.21.tgz#04fe7c7f9e1ed2d662233c28cb2b35b9f63f6e4f"
   integrity sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==
