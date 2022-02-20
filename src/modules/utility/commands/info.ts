@@ -82,7 +82,7 @@ export const shortInfos: {
 		title: "Troubleshooting",
 		emoji: "❓",
 		description:
-			"If you have problems with PreMiD, you can read our troubleshooting guide and if it doesn't solve your problem use our support system by simply writing your concern in <#566738846650335232>.",
+			"If you have problems with PreMiD, you should read our troubleshooting guide and if it doesn't resolve your problem use the <#566738846650335232> system where you can find more information.",
 
 		links: [
 			{
@@ -91,11 +91,11 @@ export const shortInfos: {
 			}
 		]
 	},
-	modifiedClient: {
-		title: "Using Modified Clients",
+	modifiedClients: {
+		title: "Modified Clients",
 		color: "#FF5050",
 		description:
-			"Using a modified client is an abuse of Discord's ToS and therefore you run the risk of losing your account. If you want to keep using Discord, you have to follow them and make sure you're not breaking any of the rules Discord has decided to put. Even using modified clients for theming or other customizations are against Discord's ToS. If you don't believe us, read it yourself.",
+			"Using a modified client is an violation of Discord's ToS and therefore you run the risk of losing your account. If you want to keep using Discord, you have to follow them and make sure you're not breaking any of the rules Discord. Even using modified clients for theming or other customizations are against Discord's ToS. If you don't believe us, read it yourself.",
 		links: [
 			{
 				label: "Discord's ToS",
@@ -108,10 +108,10 @@ export const shortInfos: {
 		]
 	},
 	creatingAPresence: {
-		title: "Creating a Presence for PreMiD",
+		title: "Creating a Presence",
 		emoji: "🏗",
 		description:
-			"If you wish to add support for a website that does not have a Presence yet, you can either open an issue on GitHub for it so that others may create it for you or you create it yourself. If you wish to create a Presence for PreMiD you need to have basic knowledge of TypeScript. For more information and docs on how to create a Presence follow our documentation.",
+			"If you wish to add support for a service that does not have a Presence yet, you can either open an issue on GitHub to request the presence to be created or you create it yourself. If you wish to create a Presence for PreMiD you need to have basic knowledge of TypeScript. For more information and docs on how to create a Presence follow our documentation.",
 		links: [
 			{
 				label: "Documentation",
@@ -124,9 +124,9 @@ export const shortInfos: {
 		]
 	},
 	docs: {
-		title: "Read the Docs!",
+		title: "Read the Docs",
 		description:
-			"If you have any questions regarding PreMiD, its API, Presence development or how to do ... with PreMiD, please read our documentation before creating a ticket.",
+			"If you have any questions regarding PreMiD, please read our documentation before creating a ticket. Presence development related queries should be redirected to <#607524579874832446>",
 		links: [
 			{
 				label: "Documentation",
@@ -146,34 +146,33 @@ export const shortInfos: {
 		]
 	},
 	presenceStore: {
-		title: "PreMiD Presence Store",
+		title: "Presence Store",
 		emoji: "🏪",
-		description:
-			"Since 2.0 we have added our so called Presence Store which is used to add more Presences for more websites other than the default ones added by PreMiD. These Presences are created by our staff or PreMiD's community. You don't have to worry about security/privacy issues tho as our staff reviews every presence added to the store. If you wish to add more Presences to PreMiD visit [our store](https://premid.app/store)! *Oh and btw, its free.*",
+		description: "Press the button below to visit our Presence Store full of the your favourite services!",
 		links: [{ label: "Presence Store", url: "https://premid.app/store" }]
 	},
 	downloadPreMiD: {
 		title: "Download PreMiD",
 		emoji: "📦",
 		description:
-			"You can download PreMiD and its extension for your browser, but don't forget that **you need both application and extension** to get PreMiD to work (**NOTE: We do not support the web version of Discord**).",
+			"You can download PreMiD and its extension for your browser, but don't forget that **you need both application and extension** to get PreMiD to work.\n :warning: PreMiD does not support the web version of Discord, you **must** use the desktop version of Discord.",
 		links: [{ label: "Downloads", url: "https://premid.app/downloads" }]
 	},
 	donate: {
-		title: "Donate to PreMiD's Development",
+		title: "Donate",
 		emoji: "💵",
 		description:
-			"Want to support PreMiD's Development? Great! You can do so by boosting our Discord server, which will get you a special role, or you can support us on Patreon!",
+			"Want to support PreMiD's development? Great! You can do so by boosting our Discord server, which you will get a special role, or you can support us on Patreon!",
 		links: [
 			{ label: "Patreon", url: "https://patreon.com/Timeraa" },
 			{ label: "GitHub Sponsors", url: "https://github.com/sponsors/Timeraa" }
 		]
 	},
 	creatingATicket: {
-		title: "Creating a Proper Support Ticket",
+		title: "Creating a Support Ticket",
 		emoji: "🙋",
 		description:
-			"We built our own support system which you can use by writing a message into <#566738846650335232>. These tickets are being handled by our support agents/moderators. But please don't abuse this channel by writing nonsense into it.\n\n**You can help us speed up the process of handling your ticket if you provide us with basic information like:**\n• Your problem\n• Your OS (Operating System)\n• Your browser\n• Assets of your problem (images, files, logs...).\n\n**Before you create a ticket make sure to read our documentation as it may already have the answer to your question/problem**"
+			"We built our own support system which you can use by writing a message into <#566738846650335232>. These tickets are being handled by our Support Agents.\n\n**You can help us speed up the process of handling your ticket if you provide us with basic information like:**\n• Your problem\n• Your OS (Operating System)\n• Your browser\n• Assets of your problem (images, files, logs...).\n\n**Before you create a ticket make sure to read our documentation as it may already have the answer to your question/problem**"
 	},
 	suggestingAPresence: {
 		title: "Suggesting a Presence",
@@ -207,12 +206,12 @@ export const shortInfos: {
 		]
 	},
 	unidentifiedDeveloper: {
-		title: "Allow apps from unidentified developers",
+		title: "Allow apps from unidentified developers (macOS)",
 		description:
 			"Steps for **macOS Big Sur (11.0+)**:\n1. Right click on our installer.\n2. Click `Open` in the dropdown menu.\n3. Click `Open` in popup.\n\nSteps for **older macOS versions**:\n1. Open System Preferences.\n2. Go to the Security & Privacy tab.\n3. Click on the lock and enter your password or scan your fingerprint so you can make changes.\n4. Change the setting for 'Allow apps downloaded from' to 'App Store and identified developers' from just 'App Store'."
 	},
-	reportingaPresenceRelatedBug: {
-		title: "Reporting a Presence Related Bug",
+	reportingaPresenceBug: {
+		title: "Reporting a Presence bug",
 		emoji: "🐛",
 		description:
 			"If you've found an issue with a presence, it is important that you report your issue on the Presence repository so the bug is resolved within a timely fashion. You can report the bug using the Bug Report template, **ensuring you fill in the template properly**.",
@@ -227,17 +226,11 @@ export const shortInfos: {
 			}
 		]
 	},
-	crowdinStringIssue: {
-		title: "Copying string URLs on Crowdin",
-		description:
-			"When asking a question about a specific string, you should always send its URL. Here's how you can get it:\n**1.** Click on the three dots (...) on the top right of the editor.\n**2.** Select \"**Copy String URL**\".\n\nHere's an image of what the button should look like:",
-		image: "https://i.imgur.com/04BtD26.png"
-	},
-	falseAdblockDetection: {
-		title: "False Adblock Detection",
+	adblockDetection: {
+		title: "Adblock Detection",
 		emoji: "🚫",
 		description:
-			'If our Website has falsely detected the presence of an ad-blocker, you can simply press "I don\'t want to support" six times and you will be redirected to the download. Alternatively, you can find direct download links below.',
+			'If our website has falsely detected the presence of an ad-blocker, you can simply press "I don\'t want to support" six times and you will be redirected to the download. Alternatively, you can find direct download links below.',
 		links: [
 			{
 				label: "Download Links",
@@ -246,7 +239,7 @@ export const shortInfos: {
 		]
 	},
 	requestANewFeature: {
-		title: "Request a new feature",
+		title: "Requesting a Presence feature",
 		emoji: "🗳",
 		description:
 			"Does a presence you use not support a crucial page or not support all the possible domains for the website? If you believe a presence should include more features, you should open an issue on the Presence Repository using the Feature Request template.",
@@ -254,6 +247,25 @@ export const shortInfos: {
 			{
 				label: "Template",
 				url: "https://github.com/PreMiD/Presences/issues/new?assignees=&labels=Feature+Request&template=feature_request.yml"
+			}
+		]
+	},
+	frequentFixes: {
+		title: "Frequent fixes for Presence bugs",
+		emoji: "🗳",
+		description: "There are some frequent fixes for presences, use the buttons to navigate to these.",
+		links: [
+			{
+				label: "YouTube/Netflix",
+				url: "https://discord.com/channels/493130730549805057/527675240231206934/831995042469642251"
+			},
+			{
+				label: "YouTube",
+				url: "https://discord.com/channels/493130730549805057/527675240231206934/827037909504753704"
+			},
+			{
+				label: "General fix",
+				url: "https://discord.com/channels/493130730549805057/527675240231206934/723231955893747763"
 			}
 		]
 	}
