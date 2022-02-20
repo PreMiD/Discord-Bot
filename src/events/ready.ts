@@ -1,4 +1,5 @@
 import { DiscordEvent } from "discord-module-loader";
+
 import { client, mainLog, moduleLoader, pmdDB } from "..";
 import { Presences } from "../../@types/interfaces";
 import config from "../config";
@@ -51,14 +52,14 @@ async function managePresenceDevelopers() {
 		)
 	];
 
-	const pmdGuild = await client.guilds.fetch(config.guildId);
+	const pmdGuild = await client.guilds.fetch(config.guildId),
+		members = (await pmdGuild.members.fetch()).filter(m => presenceDevs.includes(m.id));
 
-	for (const pDev of presenceDevs)
+	for (const pDev of members.values())
 		try {
-			const member = await pmdGuild.members.fetch(pDev);
-			if (!member.roles.cache.has(config.roles.presenceDev)) {
-				await member.roles.add(config.roles.presenceDev);
-				log("Added missing role to %s", member.user.tag);
+			if (!pDev.roles.cache.has(config.roles.presenceDev)) {
+				await pDev.roles.add(config.roles.presenceDev);
+				log("Added missing role to %s", pDev.user.tag);
 			}
 		} catch (err) {}
 

@@ -1,5 +1,4 @@
 import { DiscordModule } from "discord-module-loader";
-import { GuildMember } from "discord.js";
 
 import { client, pmdDB } from "../..";
 import { AlphaUsers, BetaUsers } from "../../../@types/interfaces";
@@ -12,33 +11,31 @@ client.on("ready", async () => {
 		alphaUsers = await pmdDB.collection<AlphaUsers>("alphaUsers").find().toArray(),
 		pmdGuild = await client.guilds.fetch(config.guildId);
 
-	for (const aU of alphaUsers) {
-		let member: GuildMember | null = null;
+	const members = (await pmdGuild.members.fetch()).filter(
+			m => typeof alphaUsers.find(u => m.id === u.userId) !== "undefined" || typeof betaUsers.find(u => m.id === u.userId) !== "undefined"
+		),
+		membersNotInGuild = [...new Set(...betaUsers.map(m => m.userId), ...alphaUsers.map(m => m.userId))].filter(m => !members.has(m));
 
-		try {
-			member = await pmdGuild.members.fetch(aU.userId);
-		} catch (err) {}
+	for (const m of members.values()) {
+		const alpha = alphaUsers.find(u => u.userId === m.id) ? true : false,
+			beta = betaUsers.find(u => u.userId === m.id) ? true : false;
 
-		if (!member) {
-			await pmdDB.collection<AlphaUsers>("alphaUsers").deleteOne({ userId: aU.userId });
+		if (alpha) {
+			if (!m.roles.cache.has(config.roles.alpha)) await m.roles.add(config.roles.alpha);
+
+			if (beta) {
+				await m.roles.remove(config.roles.beta);
+				await pmdDB.collection<BetaUsers>("betaUsers").deleteOne({ userId: m.id });
+			}
+
 			continue;
 		}
 
-		if (!member.roles.cache.has(config.roles.alpha)) await member.roles.add(config.roles.alpha);
+		if (beta) if (!m.roles.cache.has(config.roles.beta)) await m.roles.add(config.roles.beta);
 	}
 
-	for (const bU of betaUsers) {
-		let member: GuildMember | null = null;
-
-		try {
-			member = await pmdGuild.members.fetch(bU.userId);
-		} catch (err) {}
-
-		if (!member) {
-			await pmdDB.collection<BetaUsers>("betaUsers").deleteOne({ userId: bU.userId });
-			continue;
-		}
-
-		if (!member.roles.cache.has(config.roles.beta)) await member.roles.add(config.roles.beta);
+	for (const m of membersNotInGuild) {
+		await pmdDB.collection<BetaUsers>("betaUsers").deleteOne({ userId: m });
+		await pmdDB.collection<AlphaUsers>("alphaUsers").deleteOne({ userId: m });
 	}
 });
