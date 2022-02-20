@@ -1,4 +1,6 @@
 import { DiscordModule } from "discord-module-loader";
+import { GuildMember } from "discord.js";
+
 import { client, pmdDB } from "../..";
 import { AlphaUsers, BetaUsers } from "../../../@types/interfaces";
 import config from "../../config";
@@ -11,7 +13,11 @@ client.on("ready", async () => {
 		pmdGuild = await client.guilds.fetch(config.guildId);
 
 	for (const aU of alphaUsers) {
-		const member = await pmdGuild.members.fetch(aU.userId);
+		let member: GuildMember | null = null;
+
+		try {
+			member = await pmdGuild.members.fetch(aU.userId);
+		} catch (err) {}
 
 		if (!member) {
 			await pmdDB.collection<AlphaUsers>("alphaUsers").deleteOne({ userId: aU.userId });
@@ -22,7 +28,11 @@ client.on("ready", async () => {
 	}
 
 	for (const bU of betaUsers) {
-		const member = await pmdGuild.members.fetch(bU.userId);
+		let member: GuildMember | null = null;
+
+		try {
+			member = await pmdGuild.members.fetch(bU.userId);
+		} catch (err) {}
 
 		if (!member) {
 			await pmdDB.collection<BetaUsers>("betaUsers").deleteOne({ userId: bU.userId });
