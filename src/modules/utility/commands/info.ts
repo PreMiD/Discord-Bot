@@ -253,7 +253,7 @@ export const shortInfos: {
 	frequentFixes: {
 		title: "Frequent fixes for Presence bugs",
 		emoji: "🗳",
-		description: "There are some frequent fixes for presences, use the buttons to navigate to these.",
+		description: "There are some frequent fixes for presences, use the buttons to navigate to these.\n If this doesn't work, please submit your issue to <#566738846650335232>",
 		links: [
 			{
 				label: "YouTube/Netflix",
