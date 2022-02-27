@@ -28,6 +28,11 @@ export async function updateCredits() {
 		creditUsers.push(...role.members.values());
 	}
 
+	const oldCreditUsers = await pmdDB
+		.collection<Credits>("credits")
+		.find({ userId: { $nin: creditUsers.map(c => c.id) } })
+		.toArray();
+
 	const members = [...new Set(creditUsers)].map(m => {
 		const highestRole = m.roles.cache
 			.filter(r => Object.values(roles).includes(r.id))
@@ -57,13 +62,14 @@ export async function updateCredits() {
 		};
 	});
 
-	await pmdDB.collection<Credits>("credits").bulkWrite(
-		members.map(m => ({
+	await pmdDB.collection<Credits>("credits").bulkWrite([
+		...members.map(m => ({
 			updateOne: {
 				filter: { userId: m.userId },
 				update: { $set: m },
 				upsert: true
 			}
-		}))
-	);
+		})),
+		...oldCreditUsers.map(m => ({ deleteOne: { filter: { userId: m.userId } } }))
+	]);
 }
