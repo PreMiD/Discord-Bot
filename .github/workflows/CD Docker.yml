@@ -30,6 +30,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           build-args: |
-            "GH_NPM_TOKEN=${{ secrets.GH_NPM_TOKEN }}"
+            "GH_NPM_TOKEN=${{ secrets.GITHUB_TOKEN }}"
           push: true
           tags: ghcr.io/${{ env.IMAGE_REPOSITORY }}:main
