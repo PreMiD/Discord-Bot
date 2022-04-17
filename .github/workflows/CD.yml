@@ -1,19 +1,28 @@
 name: CD
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 on:
   workflow_run:
-    workflows: ["CD Docker"]
+    workflows: ["CI Dependencies"]
     branches:
       - main
     types:
       - completed
 jobs:
-  deploy:
+  docker:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    name: CD
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to cluster
-        uses: steebchen/kubectl@v2.0.0
-        with:
-          config: ${{ secrets.KUBE_CONFIG_DATA }}
-          command: rollout restart -n premid deployment/discord-bot
+    uses: "Recodive/Workflows/.github/workflows/CD Docker.yml@main"
+    secrets:
+      GH_NPM_TOKEN: ${{ secrets.GH_NPM_TOKEN }}
+    permissions:
+      contents: read
+      packages: write
+  deploy:
+    needs: docker
+    uses: Recodive/Workflows/.github/workflows/CD.yml@main
+    secrets:
+      KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+    with:
+      namespace: premid
+      deployment: discord-bot
