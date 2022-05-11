@@ -21,7 +21,7 @@
 		"@types/debug": "^4.1.7",
 		"@types/lodash": "^4.14.182",
 		"@types/node": "^17.0.31",
-		"dotenv": "^16.0.0",
+		"dotenv": "^16.0.1",
 		"ts-devscript": "3.0.6"
 	}
 }
