@@ -1,10 +1,13 @@
 import { DiscordEvent } from "discord-module-loader";
+import { GuildMember, PartialGuildMember } from "discord.js";
 
 import { pmdDB } from "../../..";
 import { AlphaUsers, BetaUsers } from "../../../../@types/interfaces";
 import config from "../../../config";
 
-export default new DiscordEvent("guildMemberUpdate", async (oldMember, newMember) => {
+export default new DiscordEvent("guildMemberUpdate", async (oldMember: GuildMember | PartialGuildMember, newMember: GuildMember) => {
+	if (oldMember.partial) return;
+
 	const oldRoles = oldMember.roles.cache,
 		newRoles = newMember.roles.cache;
 

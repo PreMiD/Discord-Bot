@@ -9,7 +9,7 @@ import roles from "./roles";
 
 export default new DiscordModule("credits");
 
-client.on("ready", async => {
+client.once("ready", () => {
 	updateCredits();
 	setInterval(updateCredits, 5 * 60 * 1000);
 });
@@ -34,22 +34,16 @@ export async function updateCredits() {
 		.toArray();
 
 	const members = [...new Set(creditUsers)].map(m => {
-		const highestRole = m.roles.cache
-			.filter(r => Object.values(roles).includes(r.id))
-			.sort((a, b) => b.position - a.position)
-			.at(0)!;
+		const highestRole = m.roles.highest;
 
-		const color =
-			//@ts-expect-error
-			roleColors[Object.entries(roles).find(v => v[1] === highestRole.id)![0]] as string;
+		const color = roleColors[Object.values(roles).find((v: string) => v === highestRole.id)!];
 
 		return {
 			userId: m.id,
 			name: m.user.username,
 			tag: m.user.discriminator,
 			avatar: m.user.displayAvatarURL({
-				format: "png",
-				dynamic: true
+				extension: "png"
 			}),
 			premium_since: m.premiumSince !== null ? m.premiumSinceTimestamp! : undefined,
 			role: highestRole.name,

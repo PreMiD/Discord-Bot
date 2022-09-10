@@ -1,12 +1,14 @@
 import "source-map-support/register";
 
+if (process.env.NODE_ENV !== "production") require("dotenv/config");
+
 import debug from "debug";
 import * as Discord from "discord.js";
 import { Db, MongoClient } from "mongodb";
 
 import { ClientCommand } from "../@types/djs-extender";
 import ModuleLoader from "discord-module-loader";
-if (process.env.NODE_ENV !== "production") require("dotenv").config({ path: "../.env" });
+import { GatewayIntentBits } from "discord.js";
 
 class Client extends Discord.Client {
 	commands = new Discord.Collection<string, ClientCommand>();
@@ -17,7 +19,7 @@ if (!process.env.MONGO_URI) throw new Error("Please set the MONGO_URI environmen
 if (!process.env.TOKEN) throw new Error("Please set the TOKEN environment variable");
 
 export let client = new Client({
-	intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_PRESENCES"]
+	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildPresences]
 });
 
 export const mainLog = debug("PreMiD-Bot"),

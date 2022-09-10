@@ -18,4 +18,4 @@ export default {
 	proofreader: "522755339448483840",
 	translator: "502148045991968788",
 	presenceDev: config.roles.presenceDev
-};
+} as Record<string, string>;

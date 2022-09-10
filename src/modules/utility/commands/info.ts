@@ -1,33 +1,36 @@
 import { DiscordCommand } from "discord-module-loader";
 import {
+	ActionRowBuilder,
+	ApplicationCommandOptionType,
 	AutocompleteInteraction,
-	ColorResolvable,
-	CommandInteraction,
+	ButtonBuilder,
+	ButtonStyle,
+	ChatInputCommandInteraction,
+	EmbedBuilder,
 	InteractionReplyOptions,
-	MessageActionRow,
-	MessageButton,
-	MessageButtonOptions,
-	MessageEmbed
+	LinkButtonComponentData
 } from "discord.js";
 
 export default new DiscordCommand({
-	name: "info",
-	description: "Posts an information message.",
-	options: [
-		{
-			name: "query",
-			description: "The infomation message to search for",
-			type: "STRING",
-			autocomplete: true,
-			required: true
-		},
-		{
-			name: "user",
-			description: "User to mention",
-			type: 6
-		}
-	],
-	execute: async (int: AutocompleteInteraction | CommandInteraction) => {
+	command: {
+		name: "info",
+		description: "Posts an information message.",
+		options: [
+			{
+				name: "query",
+				description: "The infomation message to search for",
+				type: ApplicationCommandOptionType.String,
+				autocomplete: true,
+				required: true
+			},
+			{
+				name: "user",
+				description: "User to mention",
+				type: ApplicationCommandOptionType.User
+			}
+		]
+	},
+	execute: async (int: AutocompleteInteraction | ChatInputCommandInteraction) => {
 		if (int.isAutocomplete()) {
 			const query = int.options.getString("query") || "",
 				results = Object.keys(shortInfos)
@@ -38,28 +41,27 @@ export default new DiscordCommand({
 		}
 
 		const info = Object.values(shortInfos).find((_, i) => Object.keys(shortInfos)[i] === int.options.getString("query")!)!,
-			embed = new MessageEmbed({
+			embed = new EmbedBuilder({
 				title: `${info.emoji || "🔖"} ${info.title}`,
 				description: info.description,
-				color: info.color ?? "BLURPLE"
+				color: info.color ?? 7506394
 			});
 
 		let response: InteractionReplyOptions = { embeds: [embed] };
 
 		if (info.image) embed.setImage(info.image);
 		if (info.links) {
-			const actionRow = new MessageActionRow();
+			const actionRow = new ActionRowBuilder<ButtonBuilder>();
 
 			for (const link of info.links)
 				actionRow.components.push(
-					new MessageButton({
-						//@ts-expect-error
-						style: "LINK",
+					new ButtonBuilder({
+						style: ButtonStyle.Link,
 						...link
 					})
 				);
 
-			response.components = [actionRow];
+			response.components?.push(actionRow);
 		}
 
 		if (int.options.getUser("user")) response.content = int.options.getUser("user")!.toString();
@@ -74,8 +76,8 @@ export const shortInfos: {
 		description: string;
 		emoji?: string;
 		image?: string;
-		color?: ColorResolvable;
-		links?: Partial<MessageButtonOptions>[];
+		color?: number;
+		links?: Partial<LinkButtonComponentData>[];
 	};
 } = {
 	troubleshooting: {
@@ -93,7 +95,7 @@ export const shortInfos: {
 	},
 	modifiedClients: {
 		title: "Modified Clients",
-		color: "#FF5050",
+		color: 16732240,
 		description:
 			"Using a modified client is an violation of Discord's ToS and therefore you run the risk of losing your account. If you want to keep using Discord, you have to follow them and make sure you're not breaking any of the rules Discord. Even using modified clients for theming or other customizations are against Discord's ToS. If you don't believe us, read it yourself.",
 		links: [
@@ -253,7 +255,8 @@ export const shortInfos: {
 	frequentFixes: {
 		title: "Frequent fixes for Presence bugs",
 		emoji: "🗳",
-		description: "There are some frequent fixes for presences, use the buttons to navigate to these.\n If this doesn't work, please submit your issue to <#566738846650335232>",
+		description:
+			"There are some frequent fixes for presences, use the buttons to navigate to these.\n If this doesn't work, please submit your issue to <#566738846650335232>",
 		links: [
 			{
 				label: "YouTube/Netflix",

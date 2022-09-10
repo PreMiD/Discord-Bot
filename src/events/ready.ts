@@ -1,4 +1,5 @@
 import { DiscordEvent } from "discord-module-loader";
+import { ActivityType } from "discord.js";
 
 import { client, mainLog, moduleLoader, pmdDB } from "..";
 import { Presences } from "../../@types/interfaces";
@@ -23,7 +24,12 @@ async function updateStatusActivity(): Promise<void> {
 			.filter(presence => !presence.tags.includes("nsfw")),
 		randomPresence = presences[Math.floor(Math.random() * presences.length)];
 	client.user?.setActivity(randomPresence.service, {
-		type: randomPresence.category === "music" ? "LISTENING" : randomPresence.category === "videos" ? "WATCHING" : "PLAYING"
+		type:
+			randomPresence.category === "music"
+				? ActivityType.Listening
+				: randomPresence.category === "videos"
+				? ActivityType.Watching
+				: ActivityType.Playing
 	});
 }
 

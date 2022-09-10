@@ -16,4 +16,4 @@ export default {
 	proofreader: "#00B0E6",
 	translator: "#2286D0",
 	presenceDev: "#96A5E9"
-};
+} as Record<string, string>;
