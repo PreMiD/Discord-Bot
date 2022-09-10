@@ -58,7 +58,7 @@ export default new DiscordCommand({
 		if (dbPresence.metadata.tags.includes("nsfw") && (int.channel?.type == "GUILD_TEXT" && !int.channel.nsfw)) {
 			await int.editReply({
 				embeds: [{
-					title: ":mag_right: Presences • Error",
+					title: ":mag_right: Presences • Warning",
 					description: "This presence is marked as NSFW, but this channel is not marked as NSFW. Please move to a NSFW channel to view this presence.",
 					color: "#FF5050"
 				}]
