@@ -82,7 +82,7 @@ export const shortInfos: {
 		title: "Troubleshooting",
 		emoji: "❓",
 		description:
-			"If you have problems with PreMiD, you should read our troubleshooting guide and if it doesn't resolve your problem use the <#566738846650335232> system where you can find more information.",
+			"If you have problems with PreMiD, you should read our troubleshooting guide and if that doesn't help, create a new post in <#1019726199494279248>.",
 
 		links: [
 			{
@@ -126,7 +126,7 @@ export const shortInfos: {
 	docs: {
 		title: "Read the Docs",
 		description:
-			"If you have any questions regarding PreMiD, please read our documentation before creating a ticket. Presence development related queries should be redirected to <#607524579874832446>",
+			"If you have any questions regarding PreMiD, please read our documentation before creating a ticket. Presence development related queries should be redirected to <#1019727742335463474>",
 		links: [
 			{
 				label: "Documentation",
@@ -172,7 +172,7 @@ export const shortInfos: {
 		title: "Creating a Support Ticket",
 		emoji: "🙋",
 		description:
-			"We built our own support system which you can use by writing a message into <#566738846650335232>. These tickets are being handled by our Support Agents.\n\n**You can help us speed up the process of handling your ticket if you provide us with basic information like:**\n• Your problem\n• Your OS (Operating System)\n• Your browser\n• Assets of your problem (images, files, logs...).\n\n**Before you create a ticket make sure to read our documentation as it may already have the answer to your question/problem**"
+			"Recently, we have migrated to use Discord's new forum channels for our support system. You can now create a ticket by creating a new post in <#1019726199494279248>"
 	},
 	suggestingAPresence: {
 		title: "Suggesting a Presence",
@@ -253,7 +253,7 @@ export const shortInfos: {
 	frequentFixes: {
 		title: "Frequent fixes for Presence bugs",
 		emoji: "🗳",
-		description: "There are some frequent fixes for presences, use the buttons to navigate to these.\n If this doesn't work, please submit your issue to <#566738846650335232>",
+		description: "There are some frequent fixes for presences, use the buttons to navigate to these.\n If this doesn't work, please submit your issue to <#1019726199494279248>",
 		links: [
 			{
 				label: "YouTube/Netflix",
