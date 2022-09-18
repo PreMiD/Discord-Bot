@@ -47,7 +47,8 @@ export default new DiscordCommand({
 							en: true
 						},
 						logo: true,
-						color: true
+						color: true,
+						tags: true
 					}
 				}
 			}
