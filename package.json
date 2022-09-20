@@ -12,7 +12,7 @@
 	"dependencies": {
 		"debug": "^4.3.4",
 		"discord-module-loader": "^1.4.0",
-		"discord.js": "13.8.1",
+		"discord.js": "14.3.0",
 		"lodash": "^4.17.21",
 		"mongodb": "4.10.0",
 		"source-map-support": "0.5.21"
