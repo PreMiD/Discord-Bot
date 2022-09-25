@@ -14,6 +14,7 @@ client.on("ready", async () => {
 	const members = (await pmdGuild.members.fetch()).filter(
 			m => typeof alphaUsers.find(u => m.id === u.userId) !== "undefined" || typeof betaUsers.find(u => m.id === u.userId) !== "undefined"
 		),
+		//@ts-ignore
 		membersNotInGuild = [...new Set(...betaUsers.map(m => m.userId), ...alphaUsers.map(m => m.userId))].filter(m => !members.has(m));
 
 	for (const m of members.values()) {

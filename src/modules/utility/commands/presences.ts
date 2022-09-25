@@ -1,29 +1,32 @@
 import { DiscordCommand } from "discord-module-loader";
-import { AutocompleteInteraction, CommandInteraction, MessageButton, MessageEmbed, WebhookEditMessageOptions } from "discord.js";
+import { ButtonBuilder, EmbedBuilder, WebhookEditMessageOptions, ButtonStyle, ApplicationCommandOptionType } from "discord.js";
 
 import { client, pmdDB, presencesStrings } from "../../..";
 import { Presences } from "../../../../@types/interfaces";
 
 export default new DiscordCommand({
-	name: "presence",
-	description: "Search for a presence",
-	options: [
-		{
-			name: "query",
-			description: "Posts an information message.",
-			type: "STRING",
-			autocomplete: true,
-			required: true
-		}
-	],
-	execute: async (int: AutocompleteInteraction | CommandInteraction) => {
+	command: {
+		name: "presence",
+		description: "Search for a presence",
+		options: [
+			{
+				name: "query",
+				description: "Posts an information message.",
+				type: ApplicationCommandOptionType.String,
+				autocomplete: true,
+				required: true
+			}
+		]
+	},
+	execute: async int => {
 		if (int.isAutocomplete()) {
 			const query = int.options.getString("query") || "",
 				results = presencesStrings.filter(s => s.toLowerCase().includes(query.toLowerCase())).slice(0, 25);
 
-			return int.respond(results.map(s => ({ name: s, value: s })));
+			return await int.respond(results.map(s => ({ name: s, value: s })));
 		}
 
+		//@ts-ignore
 		const presence = int.options.getString("query");
 		if (!presencesStrings.find(s => s === presence))
 			return await int.reply({
@@ -63,7 +66,7 @@ export default new DiscordCommand({
 			};
 
 		const author = await client.users.fetch(dbPresence.metadata.author.id),
-			embed = new MessageEmbed({
+			embed = new EmbedBuilder({
 				title: dbPresence.metadata.service,
 				url: "https://" + (Array.isArray(dbPresence.metadata.url) ? dbPresence.metadata.url[0] : dbPresence.metadata.url),
 				description: dbPresence.metadata.description.en,
@@ -83,12 +86,12 @@ export default new DiscordCommand({
 			embeds: [embed],
 			components: [
 				{
-					type: "ACTION_ROW",
+					type: 1,
 					components: [
-						new MessageButton({
+						new ButtonBuilder({
 							label: "Open in Store",
 							url: `https://premid.app/store/presences/${encodeURI(dbPresence.metadata.service)}`,
-							style: "LINK"
+							style: ButtonStyle.Link
 						})
 					]
 				}

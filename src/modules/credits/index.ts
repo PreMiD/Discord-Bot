@@ -48,8 +48,8 @@ export async function updateCredits() {
 			name: m.user.username,
 			tag: m.user.discriminator,
 			avatar: m.user.displayAvatarURL({
-				format: "png",
-				dynamic: true
+				extension: "png",
+				forceStatic: false
 			}),
 			premium_since: m.premiumSince !== null ? m.premiumSinceTimestamp! : undefined,
 			role: highestRole.name,

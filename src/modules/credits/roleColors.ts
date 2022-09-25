@@ -2,6 +2,7 @@ export default {
 	projectLeader: "#E43725",
 	staffCoordinator: "#E43725",
 	administrator: "#E43725",
+	projectManagement: "#E43725",
 	reviewer: "#3BA576",
 	developer: "#3BA576",
 	designer: "#3BA576",

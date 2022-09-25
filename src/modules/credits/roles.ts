@@ -4,6 +4,7 @@ export default {
 	projectLeader: "493135149274365975",
 	staffCoordinator: "691382096878370837",
 	administrator: "685969048399249459",
+	projectManagement: "673682085608816652",
 	reviewer: "630445337143935009",
 	developer: "691396820236107837",
 	designer: "691386502566903850",

@@ -1,67 +1,72 @@
 import { DiscordCommand } from "discord-module-loader";
 import {
-	AutocompleteInteraction,
 	ColorResolvable,
-	CommandInteraction,
 	InteractionReplyOptions,
-	MessageActionRow,
-	MessageButton,
-	MessageButtonOptions,
-	MessageEmbed
+	ButtonBuilder,
+	APIButtonComponent,
+	EmbedBuilder,
+	ButtonStyle,
+	ActionRowBuilder,
+	ApplicationCommandOptionType
 } from "discord.js";
 
 export default new DiscordCommand({
-	name: "info",
-	description: "Posts an information message.",
-	options: [
-		{
-			name: "query",
-			description: "The infomation message to search for",
-			type: "STRING",
-			autocomplete: true,
-			required: true
-		},
-		{
-			name: "user",
-			description: "User to mention",
-			type: 6
-		}
-	],
-	execute: async (int: AutocompleteInteraction | CommandInteraction) => {
+	command: {
+		name: "info",
+		description: "Posts an information message.",
+		options: [
+			{
+				name: "query",
+				description: "The infomation message to search for",
+				type: ApplicationCommandOptionType.String,
+				autocomplete: true,
+				required: true
+			},
+			{
+				name: "user",
+				description: "User to mention",
+				type: 6
+			}
+		]
+	},
+	execute: async int => {
 		if (int.isAutocomplete()) {
 			const query = int.options.getString("query") || "",
 				results = Object.keys(shortInfos)
 					.filter(s => s.toLowerCase().includes(query.toLowerCase()))
 					.slice(0, 25);
 
-			return int.respond(results.map(s => ({ name: shortInfos[s].title, value: s })));
+			return await int.respond(results.map(s => ({ name: shortInfos[s].title, value: s })));
 		}
 
+		//@ts-ignore
 		const info = Object.values(shortInfos).find((_, i) => Object.keys(shortInfos)[i] === int.options.getString("query")!)!,
-			embed = new MessageEmbed({
+			embed = new EmbedBuilder({
 				title: `${info.emoji || "🔖"} ${info.title}`,
-				description: info.description,
-				color: info.color ?? "BLURPLE"
+				description: info.description
 			});
+
+		embed.setColor(info.color ?? "Blurple");
 
 		let response: InteractionReplyOptions = { embeds: [embed] };
 
 		if (info.image) embed.setImage(info.image);
 		if (info.links) {
-			const actionRow = new MessageActionRow();
+			const actionRow = new ActionRowBuilder();
 
 			for (const link of info.links)
-				actionRow.components.push(
-					new MessageButton({
-						//@ts-expect-error
-						style: "LINK",
+				actionRow.addComponents(
+					new ButtonBuilder({
+						style: ButtonStyle.Link,
 						...link
 					})
 				);
 
+			//@ts-ignore
 			response.components = [actionRow];
 		}
 
+		//@ts-ignore
 		if (int.options.getUser("user")) response.content = int.options.getUser("user")!.toString();
 
 		return await int.reply(response);
@@ -75,7 +80,7 @@ export const shortInfos: {
 		emoji?: string;
 		image?: string;
 		color?: ColorResolvable;
-		links?: Partial<MessageButtonOptions>[];
+		links?: Partial<APIButtonComponent>[];
 	};
 } = {
 	troubleshooting: {
@@ -253,7 +258,8 @@ export const shortInfos: {
 	frequentFixes: {
 		title: "Frequent fixes for Presence bugs",
 		emoji: "🗳",
-		description: "There are some frequent fixes for presences, use the buttons to navigate to these.\n If this doesn't work, please submit your issue to <#1019726199494279248>",
+		description:
+			"There are some frequent fixes for presences, use the buttons to navigate to these.\n If this doesn't work, please submit your issue to <#1019726199494279248>",
 		links: [
 			{
 				label: "YouTube/Netflix",

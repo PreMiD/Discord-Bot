@@ -17,13 +17,14 @@ if (!process.env.MONGO_URI) throw new Error("Please set the MONGO_URI environmen
 if (!process.env.TOKEN) throw new Error("Please set the TOKEN environment variable");
 
 export let client = new Client({
-	intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_PRESENCES"]
+	intents: ["Guilds", "GuildMembers", "GuildMessages", "GuildPresences"]
 });
 
 export const mainLog = debug("PreMiD-Bot"),
 	mongodb = new MongoClient(process.env.MONGO_URI, {
 		appName: "PreMiD Bot"
 	}),
+	//@ts-ignore
 	moduleLoader = new ModuleLoader(client);
 
 debug.enable("PreMiD-Bot*");

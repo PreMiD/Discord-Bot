@@ -11,7 +11,7 @@ export default async function (member: GuildMember) {
 				userId: member.id,
 				username: member.user.username,
 				discriminator: member.user.discriminator,
-				avatar: member.user.displayAvatarURL({ dynamic: true }),
+				avatar: member.user.displayAvatarURL({ forceStatic: false }),
 				created: member.user.createdTimestamp
 			}
 		},
