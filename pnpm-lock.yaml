@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@types/debug': ^4.1.7
   '@types/lodash': ^4.14.186
-  '@types/node': ^17.0.43
+  '@types/node': ^18.0.0
   debug: ^4.3.4
   discord-module-loader: ^1.4.0
   discord.js: ^14.6.0
@@ -24,7 +24,7 @@ dependencies:
 devDependencies:
   '@types/debug': 4.1.7
   '@types/lodash': 4.14.186
-  '@types/node': 17.0.45
+  '@types/node': 18.8.5
   dotenv: 16.0.3
   ts-devscript: 3.0.7
 
@@ -130,7 +130,7 @@ packages:
   /@types/keyv/3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
-      '@types/node': 17.0.45
+      '@types/node': 18.8.5
     dev: true
 
   /@types/lodash/4.14.186:
@@ -141,13 +141,13 @@ packages:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: true
 
-  /@types/node/17.0.45:
-    resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
+  /@types/node/18.8.5:
+    resolution: {integrity: sha512-Bq7G3AErwe5A/Zki5fdD3O6+0zDChhg671NfPjtIcbtzDNZTv4NPKMRFr7gtYPG7y+B8uTiNK4Ngd9T0FTar6Q==}
 
   /@types/responselike/1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
-      '@types/node': 17.0.45
+      '@types/node': 18.8.5
     dev: true
 
   /@types/webidl-conversions/6.1.1:
@@ -157,14 +157,14 @@ packages:
   /@types/whatwg-url/8.2.1:
     resolution: {integrity: sha512-2YubE1sjj5ifxievI5Ge1sckb9k/Er66HyR2c+3+I6VDUUg1TLPdYYTEbQ+DjRkS4nTxMJhgWfSfMRD2sl2EYQ==}
     dependencies:
-      '@types/node': 17.0.45
+      '@types/node': 18.8.5
       '@types/webidl-conversions': 6.1.1
     dev: false
 
   /@types/ws/8.5.3:
     resolution: {integrity: sha512-6YOoWjruKj1uLf3INHH7D3qTXwFfEsg1kf3c0uDdSBJwfa/llkwIjrAGV7j7mVgGNbzTQ3HiHKKDXl6bJPD97w==}
     dependencies:
-      '@types/node': 17.0.45
+      '@types/node': 18.8.5
     dev: false
 
   /@yarnpkg/parsers/3.0.0-rc.20:
