@@ -9,7 +9,7 @@ specifiers:
   discord.js: ^14.6.0
   dotenv: ^16.0.3
   lodash: ^4.17.21
-  mongodb: 4.13.0
+  mongodb: 4.14.0
   source-map-support: 0.5.21
   ts-devscript: 3.0.7
 
@@ -18,7 +18,7 @@ dependencies:
   discord-module-loader: 1.4.0
   discord.js: 14.6.0
   lodash: 4.17.21
-  mongodb: 4.13.0
+  mongodb: 4.14.0
   source-map-support: 0.5.21
 
 devDependencies:
@@ -612,7 +612,6 @@ packages:
 
   /@aws-sdk/util-base64-browser/3.188.0:
     resolution: {integrity: sha512-qlH+5NZBLiyKziL335BEPedYxX6j+p7KFRWXvDQox9S+s+gLCayednpK+fteOhBenCcR9fUZOVuAPScy1I8qCg==}
-    deprecated: The package @aws-sdk/util-base64-browser has been renamed to @aws-sdk/util-base64. Please install the renamed package.
     dependencies:
       tslib: 2.4.0
     dev: false
@@ -621,7 +620,6 @@ packages:
   /@aws-sdk/util-base64-node/3.188.0:
     resolution: {integrity: sha512-r1dccRsRjKq+OhVRUfqFiW3sGgZBjHbMeHLbrAs9jrOjU2PTQ8PSzAXLvX/9lmp7YjmX17Qvlsg0NCr1tbB9OA==}
     engines: {node: '>= 12.0.0'}
-    deprecated: The package @aws-sdk/util-base64-node has been renamed to @aws-sdk/util-base64. Please install the renamed package.
     dependencies:
       '@aws-sdk/util-buffer-from': 3.188.0
       tslib: 2.4.0
@@ -1594,8 +1592,8 @@ packages:
       whatwg-url: 11.0.0
     dev: false
 
-  /mongodb/4.13.0:
-    resolution: {integrity: sha512-+taZ/bV8d1pYuHL4U+gSwkhmDrwkWbH1l4aah4YpmpscMwgFBkufIKxgP/G7m87/NUuQzc2Z75ZTI7ZOyqZLbw==}
+  /mongodb/4.14.0:
+    resolution: {integrity: sha512-coGKkWXIBczZPr284tYKFLg+KbGPPLlSbdgfKAb6QqCFt5bo5VFZ50O3FFzsw4rnkqjwT6D8Qcoo9nshYKM7Mg==}
     engines: {node: '>=12.9.0'}
     dependencies:
       bson: 4.7.0
