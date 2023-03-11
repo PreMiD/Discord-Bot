@@ -13,7 +13,8 @@ if (process.env.NODE_ENV !== "production") require("dotenv").config({ path: "../
 Sentry.init({
 	dsn: process.env.SENTRY_DSN,
 	tracesSampleRate: process.env.NODE_ENV === "production" ? 0.5 : 1,
-	sampleRate: process.env.NODE_ENV === "production" ? 0.5 : 1
+	sampleRate: process.env.NODE_ENV === "production" ? 0.5 : 1,
+	environment: process.env.NODE_ENV
 });
 
 class Client extends Discord.Client {
