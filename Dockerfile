@@ -1,19 +1,23 @@
-FROM node:current-alpine
+FROM node:current-alpine as base
+WORKDIR /app
 
-COPY package.json package.json
-RUN yarn
+RUN corepack enable
+
+COPY pnpm-lock.yaml .
+RUN pnpm fetch
+
+FROM base as builder
 
 COPY . .
 
-RUN yarn build
+RUN pnpm i --offline
+RUN pnpm build
 
-FROM node:current-alpine
+FROM base
 
 ENV NODE_ENV=production
 
-COPY package.json package.json
-RUN yarn
-
-COPY --from=0 dist .
+COPY --from=builder /app/dist .
+RUN pnpm i --offline --prod
 
 CMD ["node", "index"]

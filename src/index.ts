@@ -6,7 +6,15 @@ import { Db, MongoClient } from "mongodb";
 
 import { ClientCommand } from "../@types/djs-extender";
 import ModuleLoader from "discord-module-loader";
+import * as Sentry from "@sentry/node";
+import "@sentry/tracing";
 if (process.env.NODE_ENV !== "production") require("dotenv").config({ path: "../.env" });
+
+Sentry.init({
+	dsn: process.env.SENTRY_DSN,
+	tracesSampleRate: process.env.NODE_ENV === "production" ? 0.5 : 1,
+	sampleRate: process.env.NODE_ENV === "production" ? 0.5 : 1
+});
 
 class Client extends Discord.Client {
 	commands = new Discord.Collection<string, ClientCommand>();
