@@ -1,5 +1,5 @@
 import { DiscordCommand } from "discord-module-loader";
-import { ButtonBuilder, EmbedBuilder, WebhookEditMessageOptions, ButtonStyle, ApplicationCommandOptionType } from "discord.js";
+import { ButtonBuilder, EmbedBuilder, ButtonStyle, ApplicationCommandOptionType, WebhookMessageCreateOptions } from "discord.js";
 
 import { client, pmdDB, presencesStrings } from "../../..";
 import { Presences } from "../../../../@types/interfaces";
@@ -82,7 +82,7 @@ export default new DiscordCommand({
 
 		embed.setColor(dbPresence.metadata.color as any);
 
-		const response: WebhookEditMessageOptions = {
+		const response: WebhookMessageCreateOptions = {
 			embeds: [embed],
 			components: [
 				{

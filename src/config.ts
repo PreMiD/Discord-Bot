@@ -1,6 +1,8 @@
 export default {
 	guildId: "493130730549805057",
 	roles: {
+		contributor: "1032759805732978708",
+		volunteer: "656913616100130816",
 		presenceDev: "606222296016879722",
 		beta: "591284574823120909",
 		alpha: "694481247564595211",

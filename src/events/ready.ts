@@ -59,15 +59,26 @@ async function managePresenceDevelopers() {
 	];
 
 	const pmdGuild = await client.guilds.fetch(config.guildId),
-		members = (await pmdGuild.members.fetch()).filter(m => presenceDevs.includes(m.id));
+		presenceDevRole = await pmdGuild.roles.fetch(config.roles.presenceDev);
 
-	for (const pDev of members.values())
+	if (!presenceDevRole) return log("Presence Dev role not found");
+
+	for (const member of presenceDevRole.members.values())
+		if (!presenceDevs.includes(member.id)) {
+			await member.roles.remove(presenceDevRole);
+			log("Removed role from %s", member.user.tag);
+		}
+
+	for (const pDev of presenceDevs) {
+		if (presenceDevRole.members.has(pDev)) continue;
+
 		try {
-			if (!pDev.roles.cache.has(config.roles.presenceDev)) {
-				await pDev.roles.add(config.roles.presenceDev);
-				log("Added missing role to %s", pDev.user.tag);
-			}
-		} catch (err) {}
+			await pmdGuild.members.addRole({ role: presenceDevRole, user: pDev });
+			log("Added role to %s", pDev);
+		} catch (err) {
+			log("Failed to add role to %s", pDev);
+		}
+	}
 
 	log("Updated!");
 }
