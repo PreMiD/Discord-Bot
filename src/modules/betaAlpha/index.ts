@@ -132,4 +132,42 @@ client.on("ready", async () => {
 			}))
 		);
 	//#endregion
+
+	await updateBetaUsers();
+	setInterval(updateBetaUsers, 1000 * 60 * 5);
 });
+
+async function updateBetaUsers() {
+	//* Give people beta role in Discord if they have it in db
+	const betaUsers = await pmdDB.collection<BetaUsers>("betaUsers").find().toArray();
+	const betaUsersDiscord = betaUsers.map(m => m.userId);
+
+	const pmdGuild = await client.guilds.fetch(config.guildId);
+	const betaRole = await pmdGuild.roles.fetch(config.roles.beta);
+
+	if (!betaRole) return;
+
+	for (const m of betaUsersDiscord) {
+		if (betaRole.members.has(m)) continue;
+
+		try {
+			mainLog(`Giving beta role to ${m}`);
+			await pmdGuild.members.addRole({ role: betaRole, user: m, reason: "User has beta access" });
+		} catch (e) {
+			//* User left the server, remove from db
+			mainLog(`Removing beta user ${m} from db`);
+			await pmdDB.collection<BetaUsers>("betaUsers").deleteOne({ userId: m });
+		}
+	}
+
+	//* Remove beta role from people in Discord if they don't have it in db
+	const betaRoleMembers = betaRole.members.map(m => m.id);
+	for (const m of betaRoleMembers) {
+		const beta = betaUsersDiscord.find(u => u === m);
+
+		if (!beta) {
+			mainLog(`Removing beta role from ${m}`);
+			await pmdGuild.members.fetch(m).then(m => m.roles.remove(config.roles.beta));
+		}
+	}
+}
