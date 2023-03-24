@@ -73,16 +73,26 @@ client.on("ready", async () => {
 	const alphaMembersArray = alphaRole.members.map(m => m.id);
 	for (const m of alphaUsers) {
 		if (alphaMembersArray.includes(m.userId)) continue;
-		mainLog(`Giving alpha role to ${m.userId}`);
-		await pmdGuild.members.addRole({ role: alphaRole, user: m.userId, reason: "User has alpha access" });
+		try {
+			mainLog(`Giving alpha role to ${m.userId}`);
+			await pmdGuild.members.addRole({ role: alphaRole, user: m.userId, reason: "User has alpha access" });
+		} catch {
+			mainLog(`Failed to give alpha role to ${m.userId}`);
+			await pmdDB.collection<AlphaUsers>("alphaUsers").deleteOne({ userId: m.userId });
+		}
 	}
 
 	//* .has super slow
 	const betaMembersArray = betaRole.members.map(m => m.id);
 	for (const m of betaUsers) {
 		if (betaMembersArray.includes(m.userId)) continue;
-		mainLog(`Giving beta role to ${m.userId}`);
-		await pmdGuild.members.addRole({ role: betaRole, user: m.userId, reason: "User has beta access" });
+		try {
+			mainLog(`Giving beta role to ${m.userId}`);
+			await pmdGuild.members.addRole({ role: betaRole, user: m.userId, reason: "User has beta access" });
+		} catch {
+			mainLog(`Failed to give beta role to ${m.userId}`);
+			await pmdDB.collection<BetaUsers>("betaUsers").deleteOne({ userId: m.userId });
+		}
 	}
 	//#endregion
 
