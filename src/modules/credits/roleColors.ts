@@ -11,6 +11,7 @@ export default {
 	marketingDirector: "#3BA576",
 	localizationManager: "#3BA576",
 	representative: "#3BA576",
+	contributor: "#EB459E",
 	patron: "#E5472F",
 	donator: "#FFAA33",
 	booster: "#F265FF",

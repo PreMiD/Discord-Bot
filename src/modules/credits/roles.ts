@@ -13,6 +13,7 @@ export default {
 	marketingDirector: "673681900476432387",
 	localizationManager: "811262682408943616",
 	representative: "691384256672563332",
+	contributor: config.roles.contributor,
 	patron: config.roles.patron,
 	donator: config.roles.donator,
 	booster: config.roles.booster,
