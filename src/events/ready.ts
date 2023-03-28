@@ -60,7 +60,8 @@ async function managePresenceDevelopers() {
 	];
 
 	const pmdGuild = await client.guilds.fetch(config.guildId),
-		presenceDevRole = await pmdGuild.roles.fetch(config.roles.presenceDev);
+		presenceDevRole = await pmdGuild.roles.fetch(config.roles.presenceDev),
+		presenceDevRoleMembers = presenceDevRole?.members.map(m => m.id) || [];
 
 	if (!presenceDevRole) return log("Presence Dev role not found");
 
@@ -71,7 +72,7 @@ async function managePresenceDevelopers() {
 		}
 
 	for (const pDev of presenceDevs) {
-		if (presenceDevRole.members.has(pDev)) continue;
+		if (presenceDevRoleMembers.includes(pDev)) continue;
 
 		try {
 			await pmdGuild.members.addRole({ role: presenceDevRole, user: pDev });

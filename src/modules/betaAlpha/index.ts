@@ -157,8 +157,9 @@ async function updateBetaUsers() {
 
 	if (!betaRole) return;
 
+	const betaRoleMembers = betaRole.members.map(m => m.id);
 	for (const m of betaUsersDiscord) {
-		if (betaRole.members.has(m)) continue;
+		if (betaRoleMembers.includes(m)) continue;
 
 		try {
 			mainLog(`Giving beta role to ${m}`);
@@ -171,7 +172,6 @@ async function updateBetaUsers() {
 	}
 
 	//* Remove beta role from people in Discord if they don't have it in db
-	const betaRoleMembers = betaRole.members.map(m => m.id);
 	for (const m of betaRoleMembers) {
 		const beta = betaUsersDiscord.find(u => u === m);
 

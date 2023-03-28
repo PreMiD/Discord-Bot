@@ -61,6 +61,7 @@ async function updatePresenceList() {
 		.find({}, { projection: { _id: false, name: true } })
 		.map(p => p.name)
 		.toArray();
+	mainLog("Updated presence list");
 }
 
 run();
