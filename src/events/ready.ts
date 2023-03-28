@@ -6,8 +6,9 @@ import { Presences } from "../../@types/interfaces";
 import config from "../config";
 
 export default new DiscordEvent("ready", async () => {
-	await managePresenceDevelopers();
-	setInterval(managePresenceDevelopers, 15 * 60 * 1000);
+	managePresenceDevelopers().then(() => {
+		setInterval(managePresenceDevelopers, 15 * 60 * 1000);
+	});
 
 	updateStatusActivity();
 	setInterval(updateStatusActivity, 60 * 1000);
