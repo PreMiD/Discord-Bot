@@ -44,7 +44,7 @@ export default new DiscordEvent("guildMemberUpdate", async (oldMember: GuildMemb
 	}
 
 	//* Member gets random role that is eligible for beta
-	if (betaRoles.some(r => addedRoles.has(r))) {
+	if (betaRoles.some(r => addedRoles.has(r)) && !newMember.roles.cache.has(config.roles.alpha)) {
 		return await newMember.roles.add(config.roles.beta);
 	}
 
