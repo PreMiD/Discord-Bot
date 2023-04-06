@@ -154,12 +154,14 @@ async function updateBetaUsers() {
 
 	const pmdGuild = await client.guilds.fetch(config.guildId);
 	const betaRole = await pmdGuild.roles.fetch(config.roles.beta);
+	const alphaRole = await pmdGuild.roles.fetch(config.roles.alpha);
 
-	if (!betaRole) return;
+	if (!betaRole || !alphaRole) return;
 
 	const betaRoleMembers = betaRole.members.map(m => m.id);
+	const alphaRoleMembers = alphaRole.members.map(m => m.id);
 	for (const m of betaUsersDiscord) {
-		if (betaRoleMembers.includes(m)) continue;
+		if (betaRoleMembers.includes(m) || alphaRoleMembers.includes(m)) continue;
 
 		try {
 			mainLog(`Giving beta role to ${m}`);
