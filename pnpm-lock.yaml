@@ -24,8 +24,8 @@ dependencies:
     specifier: ^4.17.21
     version: 4.17.21
   mongodb:
-    specifier: 5.9.1
-    version: 5.9.1
+    specifier: 5.9.2
+    version: 5.9.2
   source-map-support:
     specifier: 0.5.21
     version: 0.5.21
@@ -966,8 +966,8 @@ packages:
       whatwg-url: 11.0.0
     dev: false
 
-  /mongodb@5.9.1:
-    resolution: {integrity: sha512-NBGA8AfJxGPeB12F73xXwozt8ZpeIPmCUeWRwl9xejozTXFes/3zaep9zhzs1B/nKKsw4P3I4iPfXl3K7s6g+Q==}
+  /mongodb@5.9.2:
+    resolution: {integrity: sha512-H60HecKO4Bc+7dhOv4sJlgvenK4fQNqqUIlXxZYQNbfEWSALGAwGoyJd/0Qwk4TttFXUOHJ2ZJQe/52ScaUwtQ==}
     engines: {node: '>=14.20.1'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.188.0
