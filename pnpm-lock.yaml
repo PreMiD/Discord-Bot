@@ -42,7 +42,7 @@ devDependencies:
     version: 18.19.18
   dotenv:
     specifier: ^16.0.3
-    version: 16.0.3
+    version: 16.4.5
   ts-devscript:
     specifier: 3.0.7
     version: 3.0.7
@@ -578,8 +578,8 @@ packages:
     resolution: {integrity: sha512-v3mQ/DTdrOiVxk1Jmut/ywN5uCTYNThcW71+Kn+w8fw2xkFYRyC0kbrXNuduXVLfkXVTpa2HYdz6bImiGyhkEg==}
     dev: true
 
-  /dotenv@16.0.3:
-    resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
+  /dotenv@16.4.5:
+    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
     dev: true
 
