@@ -131,7 +131,7 @@ export const shortInfos: {
 	docs: {
 		title: "Read the Docs",
 		description:
-			"If you have any questions regarding PreMiD, please read our documentation before creating a ticket. Presence development related queries should be redirected to <#1019727742335463474>",
+			"If you have any questions regarding PreMiD, please read our documentation before creating a ticket. Presence development related queries should be redirected to <#607524579874832446>",
 		links: [
 			{
 				label: "Documentation",
