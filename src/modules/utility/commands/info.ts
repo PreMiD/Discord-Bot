@@ -259,7 +259,7 @@ export const shortInfos: {
 		title: "Premid Beta",
 		emoji: "✨",
 		description:
-			"Do you want cool new features? Want to use premid with the browser version of discord? Download the beta!",
+			"Do you want cool new features? Want to use premid with the browser version of Discord? Download the beta!",
 		links: [
 			{
 				label: "Betab Release Page",
