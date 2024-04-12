@@ -255,6 +255,18 @@ export const shortInfos: {
 			}
 		]
 	},
+	beta: {
+		title: "PreMiD Beta",
+		emoji: "✨",
+		description:
+			"Do you want cool new features? Want to use PreMiD with the browser version of Discord? Download the beta!",
+		links: [
+			{
+				label: "Beta Release Page",
+				url: "https://premid.app/beta"
+			}
+		]
+	},
 	frequentFixes: {
 		title: "Frequent fixes for Presence bugs",
 		emoji: "🗳",
