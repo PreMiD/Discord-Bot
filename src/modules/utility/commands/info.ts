@@ -256,13 +256,13 @@ export const shortInfos: {
 		]
 	},
 	beta: {
-		title: "Premid Beta",
+		title: "PreMiD Beta",
 		emoji: "✨",
 		description:
-			"Do you want cool new features? Want to use premid with the browser version of Discord? Download the beta!",
+			"Do you want cool new features? Want to use PreMiD with the browser version of Discord? Download the beta!",
 		links: [
 			{
-				label: "Betab Release Page",
+				label: "Beta Release Page",
 				url: "https://premid.app/beta"
 			}
 		]
