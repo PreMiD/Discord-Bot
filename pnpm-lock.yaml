@@ -19,7 +19,7 @@ dependencies:
     version: 1.4.0
   discord.js:
     specifier: ^14.8.0
-    version: 14.15.1
+    version: 14.15.2
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -549,7 +549,7 @@ packages:
     resolution: {integrity: sha512-CuGCihwy2ipluP+5OalJQwJbnYnBpN+ZawChd7JvrVxdwWa4Wwxe+8GI4cluIyGL6IWt1g+Rxh27im5sgqk/+w==}
     dependencies:
       debug: 4.3.4
-      discord.js: 14.15.1
+      discord.js: 14.15.2
       source-map-support: 0.5.21
     transitivePeerDependencies:
       - bufferutil
@@ -557,8 +557,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /discord.js@14.15.1:
-    resolution: {integrity: sha512-Md87FiS2y5cMoikV6csH+5SF72Vt2sSVmgV6hfQKiWyT4cxrGWhOk64r99dwzMjB1VFATM98ExGe0WY4H981UA==}
+  /discord.js@14.15.2:
+    resolution: {integrity: sha512-wGD37YCaTUNprtpqMIRuNiswwsvSWXrHykBSm2SAosoTYut0VUDj9yo9t4iLtMKvuhI49zYkvKc2TNdzdvpJhg==}
     engines: {node: '>=16.11.0'}
     dependencies:
       '@discordjs/builders': 1.8.1
