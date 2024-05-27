@@ -10,6 +10,7 @@
 	},
 	"license": "MPL-2.0",
 	"dependencies": {
+		"@prisma/client": "5.14.0",
 		"@sapphire/decorators": "^6.1.0",
 		"@sapphire/fetch": "^3.0.2",
 		"@sapphire/framework": "^5.1.0",
