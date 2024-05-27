@@ -1,23 +1,20 @@
 FROM node:current-alpine as base
 WORKDIR /app
 
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
 RUN corepack enable
 
-COPY pnpm-lock.yaml .
-RUN pnpm fetch
+FROM base AS prod-deps
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
-FROM base as builder
-
-COPY . .
-
-RUN pnpm i --offline
-RUN pnpm build
+FROM base AS build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm run build
 
 FROM base
-
-ENV NODE_ENV=production
-
-COPY --from=builder /app/dist .
-RUN pnpm i --offline --prod
-
-CMD ["node", "index"]
+COPY --from=prod-deps /app/node_modules /app/node_modules
+COPY --from=build /app/node_modules/@prisma/client /app/node_modules/@prisma/client
+COPY --from=build /app/dist /app/dist
+CMD [ "node", "." ]

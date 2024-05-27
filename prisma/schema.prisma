@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_URI")
+}
+
+model userSettings {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId          String  @unique
+  showContributor Boolean
+}
+
+model betaUsers {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @unique
+}
+
+model alphaUsers {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @unique
+}
+
+model discordUsers {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId        String @unique
+  avatar        String
+  created       Int
+  discriminator String
+  username      String
+}
+
+model credits {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId        String   @unique
+  avatar        String
+  name          String
+  premium_since Int?
+  role          String
+  roleColor     String
+  roleId        String
+  roleIds       String[]
+  rolePosition  Int
+  roles         String[]
+  status        Json
+  tag           String
+  flags         Int
+}
+
+model presences {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  metadata PresenceMetadata @unique
+}
+
+type PresenceMetadata {
+  service      String
+  color        String
+  author       User
+  contributors User[]
+  url          String[]
+  description  Json
+  version      String
+  logo         String
+  category     String
+  tags         String[]
+}
+
+type User {
+  id String
+}

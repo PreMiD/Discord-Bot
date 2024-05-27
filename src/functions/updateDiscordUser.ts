@@ -1,20 +1,23 @@
-import { GuildMember } from "discord.js";
-
-import { pmdDB } from "..";
-import { DiscordUsers } from "../../@types/interfaces";
+import { container } from '@sapphire/pieces';
+import { GuildMember } from 'discord.js';
 
 export default async function (member: GuildMember) {
-	await pmdDB.collection<DiscordUsers>("discordUsers").updateOne(
-		{ userId: member.id },
-		{
-			$set: {
-				userId: member.id,
-				username: member.user.username,
-				discriminator: member.user.discriminator,
-				avatar: member.user.displayAvatarURL({ forceStatic: false }),
-				created: member.user.createdTimestamp
-			}
+	await container.database.discordUsers.upsert({
+		where: {
+			userId: member.id
 		},
-		{ upsert: true }
-	);
+		update: {
+			username: member.user.username,
+			discriminator: member.user.discriminator,
+			avatar: member.user.displayAvatarURL(),
+			created: member.user.createdTimestamp
+		},
+		create: {
+			userId: member.id,
+			username: member.user.username,
+			discriminator: member.user.discriminator,
+			avatar: member.user.displayAvatarURL(),
+			created: member.user.createdTimestamp
+		}
+	});
 }

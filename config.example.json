@@ -1,0 +1,13 @@
+{
+	"guildId": "",
+	"roles": {
+		"contributor": "",
+		"volunteer": "",
+		"presenceDev": "",
+		"beta": "",
+		"alpha": "",
+		"patron": "",
+		"donator": "",
+		"booster": ""
+	}
+}

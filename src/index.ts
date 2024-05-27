@@ -1,67 +1,44 @@
-import "source-map-support/register";
+// ORDER IS IMPORTANT.
+import 'source-map-support/register';
+import 'dotenv/config';
+import './instrument';
+import './config';
 
-import debug from "debug";
-import * as Discord from "discord.js";
-import { Db, MongoClient } from "mongodb";
+// Sapphire plugins
+import '@sapphire/plugin-logger/register';
+import '@sapphire/plugin-hmr/register';
 
-import { ClientCommand } from "../@types/djs-extender";
-import ModuleLoader from "discord-module-loader";
-import * as Sentry from "@sentry/node";
-import "@sentry/tracing";
-if (process.env.NODE_ENV !== "production") require("dotenv").config({ path: "../.env" });
+import { PreMiDClient } from './client/preMiDClient';
+import { s } from '@sapphire/shapeshift';
 
-Sentry.init({
-	dsn: process.env.SENTRY_DSN,
-	tracesSampleRate: process.env.NODE_ENV === "production" ? 0.5 : 1,
-	sampleRate: process.env.NODE_ENV === "production" ? 0.5 : 1,
-	environment: process.env.NODE_ENV
-});
+{
+	const processEnvValidationResult = s
+		.object({
+			TOKEN: s.string,
+			MONGO_URI: s.string.url()
+		})
+		.run(process.env);
 
-class Client extends Discord.Client {
-	commands = new Discord.Collection<string, ClientCommand>();
+	if (!processEnvValidationResult.isOk()) {
+		console.error(processEnvValidationResult.error);
+		process.exit(1);
+	}
 }
 
-if (!process.env.MONGO_URI) throw new Error("Please set the MONGO_URI environment variable");
+const client = new PreMiDClient();
 
-if (!process.env.TOKEN) throw new Error("Please set the TOKEN environment variable");
+(async () => {
+	await client.login();
+})();
 
-export let client = new Client({
-	intents: ["Guilds", "GuildMembers", "GuildMessages", "GuildPresences"]
-});
-
-export const mainLog = debug("PreMiD-Bot"),
-	mongodb = new MongoClient(process.env.MONGO_URI, {
-		appName: "PreMiD Bot"
-	}),
-	//@ts-ignore
-	moduleLoader = new ModuleLoader(client);
-
-debug.enable("PreMiD-Bot*");
-
-export let pmdDB: Db,
-	presencesStrings: string[] = [];
-
-async function run() {
-	await mongodb.connect();
-	pmdDB = mongodb.db("PreMiD");
-	mainLog("Connected to MongoDB");
-
-	await client.login(process.env.TOKEN);
-
-	mainLog("Loading commands and events");
-	await moduleLoader.loadAll();
-
-	await updatePresenceList();
-	setInterval(updatePresenceList, 1000 * 60 * 5);
+// We fully validated the process.env
+declare global {
+	namespace NodeJS {
+		interface ProcessEnv {
+			TOKEN: string;
+			MONGO_URI: string;
+			SENTRY_DSN: string;
+			NODE_ENV: string;
+		}
+	}
 }
-
-async function updatePresenceList() {
-	presencesStrings = await pmdDB
-		.collection("presences")
-		.find({}, { projection: { _id: false, name: true } })
-		.map(p => p.name)
-		.toArray();
-	mainLog("Updated presence list");
-}
-
-run();
