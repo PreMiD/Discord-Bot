@@ -3,10 +3,12 @@
 	"description": "Official PreMiD Discord Bot.",
 	"repository": "https://github.com/PreMiD/Discord-Bot",
 	"version": "4.0.0",
+	"main": "dist/index.js",
 	"scripts": {
-		"start": "cd dist && node index",
-		"build": "tsc && devScript --copyOnly",
-		"dev": "devScript"
+		"start": "node .",
+		"build": "prisma generate && tsc && pnpm sentry:sourcemaps",
+		"dev": "tsx watch ./src/index.ts",
+		"sentry:sourcemaps": "sentry-cli sourcemaps inject --org hayper --project node ./dist && sentry-cli sourcemaps upload --org hayper --project node ./dist"
 	},
 	"license": "MPL-2.0",
 	"dependencies": {
@@ -21,9 +23,12 @@
 		"@sapphire/shapeshift": "^3.9.7",
 		"@sapphire/time-utilities": "^1.7.12",
 		"@sapphire/utilities": "^3.15.3",
+		"@sentry/node": "^8.4.0",
+		"@sentry/profiling-node": "^8.4.0",
 		"discord-api-types": "^0.37.81",
 		"discord.js": "^14.14.1",
-		"dotenv": "^16.4.5"
+		"dotenv": "^16.4.5",
+		"source-map-support": "^0.5.21"
 	},
 	"optionalDependencies": {
 		"bufferutil": "^4.0.8",
@@ -33,7 +38,9 @@
 	"devDependencies": {
 		"@sapphire/prettier-config": "^2.0.0",
 		"@sapphire/ts-config": "^5.0.1",
+		"@sentry/cli": "^2.31.2",
 		"prisma": "^5.14.0",
+		"tsx": "^4.11.0",
 		"typescript": "^5.4.5"
 	}
 }
