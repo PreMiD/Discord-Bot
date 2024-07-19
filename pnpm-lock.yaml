@@ -36,7 +36,7 @@ devDependencies:
     version: 4.1.12
   '@types/lodash':
     specifier: ^4.14.191
-    version: 4.17.6
+    version: 4.17.7
   '@types/node':
     specifier: ^18.15.0
     version: 18.19.39
@@ -120,8 +120,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@mongodb-js/saslprep@1.1.7:
-    resolution: {integrity: sha512-dCHW/oEX0KJ4NjDULBo3JiOaK5+6axtpBbS+ao2ZInoAL9/YRQLhXzSNAFz7hP4nzLkIqsfYAK/PDE3+XHny0Q==}
+  /@mongodb-js/saslprep@1.1.8:
+    resolution: {integrity: sha512-qKwC/M/nNNaKUBMQ0nuzm47b7ZYWQHN3pcXq4IIcoSBc2hOIrflAxJduIvvqmhoz3gR2TacTAs8vlsCVPkiEdQ==}
     requiresBuild: true
     dependencies:
       sparse-bitfield: 3.0.3
@@ -277,8 +277,8 @@ packages:
       '@types/node': 18.19.39
     dev: true
 
-  /@types/lodash@4.17.6:
-    resolution: {integrity: sha512-OpXEVoCKSS3lQqjx9GGGOapBeuW5eUboYHRlHP9urXPX25IKZ6AnP5ZRxtVf63iieUbsHxLn8NQ5Nlftc6yzAA==}
+  /@types/lodash@4.17.7:
+    resolution: {integrity: sha512-8wTvZawATi/lsmNu10/j2hk1KEP0IvjubqPE3cu1Xz7xfXXt5oCq3SNUz4fMIP4XGF9Ky+Ue2tBA3hcS7LSBlA==}
     dev: true
 
   /@types/ms@0.7.34:
@@ -1034,7 +1034,7 @@ packages:
       mongodb-connection-string-url: 2.6.0
       socks: 2.7.1
     optionalDependencies:
-      '@mongodb-js/saslprep': 1.1.7
+      '@mongodb-js/saslprep': 1.1.8
     dev: false
 
   /ms@2.1.2:
