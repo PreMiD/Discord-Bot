@@ -13,7 +13,7 @@ dependencies:
     version: 7.114.0
   debug:
     specifier: ^4.3.4
-    version: 4.3.5
+    version: 4.3.6
   discord-module-loader:
     specifier: ^1.4.0
     version: 1.4.0
@@ -530,8 +530,8 @@ packages:
     resolution: {integrity: sha512-4UZlZP8Z99MGEY+Ovg/uJxJuvoXuN4M6B3hKaiackiHrgzQFEe3diJi1mf1PNHbFujM7FvLrK2bpgIaImbtZ1A==}
     dev: true
 
-  /debug@4.3.5:
-    resolution: {integrity: sha512-pt0bNEmneDIvdL1Xsd9oDQ/wrQRkXDT4AUWlNZNPKvW5x/jyO9VFXkJUP07vQ2upmw5PlaITaPKc31jK13V+jg==}
+  /debug@4.3.6:
+    resolution: {integrity: sha512-O/09Bd4Z1fBrU4VzkhFqVgpPzaGbw6Sm9FEkBT1A/YBXQFGuuSxa1dN2nxgxS34JmKXqYx8CZAwEVoJFImUXIg==}
     engines: {node: '>=6.0'}
     peerDependencies:
       supports-color: '*'
@@ -577,7 +577,7 @@ packages:
   /discord-module-loader@1.4.0:
     resolution: {integrity: sha512-CuGCihwy2ipluP+5OalJQwJbnYnBpN+ZawChd7JvrVxdwWa4Wwxe+8GI4cluIyGL6IWt1g+Rxh27im5sgqk/+w==}
     dependencies:
-      debug: 4.3.5
+      debug: 4.3.6
       discord.js: 14.15.3
       source-map-support: 0.5.21
     transitivePeerDependencies:
@@ -1353,7 +1353,7 @@ packages:
       chokidar: 3.5.3
       command-line-args: 5.2.1
       compare-versions: 5.0.3
-      debug: 4.3.5
+      debug: 4.3.6
       displayastree: 2.0.0
       fast-glob: 3.2.12
       fs-extra: 10.1.0
