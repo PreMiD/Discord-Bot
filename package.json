@@ -10,7 +10,7 @@
 	},
 	"license": "MPL-2.0",
 	"dependencies": {
-		"@sentry/node": "^7.42.0",
+		"@sentry/node": "^8.0.0",
 		"@sentry/tracing": "^7.42.0",
 		"debug": "^4.3.4",
 		"discord-module-loader": "^1.4.0",
